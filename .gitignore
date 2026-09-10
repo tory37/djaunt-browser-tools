@@ -1,0 +1,5 @@
+# Packed extension bundles are build output, not source.
+*.zip
+
+.DS_Store
+node_modules/

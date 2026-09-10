@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tab Volume</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="panel">
+    <header class="panel-head">
+      <span class="eyebrow">Tab volume</span>
+      <span class="host" id="host">—</span>
+    </header>
+
+    <section class="readout" id="readout-block">
+      <div class="readout-value">
+        <span id="readout">100</span><span class="readout-unit">%</span>
+      </div>
+      <svg class="speaker" id="speaker" viewBox="0 0 24 24" aria-hidden="true">
+        <path class="speaker-body" d="M11 5 6 9H3v6h3l5 4z" />
+        <path class="speaker-wave wave-near" d="M15.5 8.5a5 5 0 0 1 0 7" />
+        <path class="speaker-wave wave-far" d="M18.5 5.5a9 9 0 0 1 0 13" />
+        <path class="speaker-mute" d="M16 9.5l5 5m0-5l-5 5" />
+      </svg>
+    </section>
+
+    <input
+      class="slider"
+      id="slider"
+      type="range"
+      min="0"
+      max="100"
+      step="1"
+      value="100"
+      aria-label="Tab volume percent">
+
+    <div class="presets" id="presets">
+      <button type="button" data-value="0">0</button>
+      <button type="button" data-value="25">25</button>
+      <button type="button" data-value="50">50</button>
+      <button type="button" data-value="100">100</button>
+    </div>
+
+    <label class="persist" for="persist">
+      <input type="checkbox" id="persist">
+      <span class="persist-box" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 12.5 9 17.5 20 6.5" /></svg>
+      </span>
+      <span class="persist-copy">
+        <span class="persist-title">Keep for this domain</span>
+        <span class="persist-note" id="persist-note">Applies to every tab on this site</span>
+      </span>
+    </label>
+
+    <footer class="panel-foot">
+      <span class="scope" id="scope">This tab only</span>
+      <button type="button" class="reset" id="reset">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 12a8 8 0 1 0 3-6.2" />
+          <path d="M4 4v5h5" />
+        </svg>
+        Reset
+      </button>
+    </footer>
+
+    <p class="unsupported" id="unsupported" hidden>
+      Volume control is not available on this page.
+    </p>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>
