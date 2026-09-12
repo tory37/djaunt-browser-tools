@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dark Mode</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="panel">
+    <header class="panel-head">
+      <span class="eyebrow">Dark mode</span>
+      <span class="host" id="host">—</span>
+    </header>
+
+    <p class="detected" id="detected"></p>
+
+    <label class="toggle" for="global">
+      <input type="checkbox" id="global">
+      <span class="toggle-box" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 12.5 9 17.5 20 6.5" /></svg>
+      </span>
+      <span class="toggle-copy">
+        <span class="toggle-title">Enable everywhere</span>
+        <span class="toggle-note">Applies to every site, skipping ones that already look dark</span>
+      </span>
+    </label>
+
+    <section class="override" id="override-block">
+      <span class="override-label">For <span id="override-host">this site</span></span>
+      <div class="segmented" id="segmented">
+        <button type="button" data-value="auto">Auto</button>
+        <button type="button" data-value="on">Always on</button>
+        <button type="button" data-value="off">Always off</button>
+      </div>
+      <p class="override-note">Remembered until the browser restarts</p>
+    </section>
+
+    <footer class="panel-foot">
+      <span class="applied" id="applied">—</span>
+    </footer>
+
+    <p class="unsupported" id="unsupported" hidden>
+      Dark mode is not available on this page.
+    </p>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>
