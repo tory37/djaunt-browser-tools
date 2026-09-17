@@ -1,0 +1,263 @@
+/* Djaunt design tokens — v1
+   Source of truth. Do not hand-edit values in downstream projects; import this file.
+   Dark-first. Every theme below is a dark theme; there is one light mode (.dj-light).
+*/
+
+:root {
+  /* ---- Brand core ---- */
+  --dj-gold-300: #F6D77E;
+  --dj-gold-400: #F0C24B;
+  --dj-gold-500: #D4A017;
+  --dj-gold-600: #A87A12;
+  --dj-gold-700: #6E4A0E;
+  --dj-bone-100: #FBF8F1;
+  --dj-bone-200: #EDE6D6;
+  --dj-bone-300: #C8C0AE;
+  --dj-bone-400: #8E887A;
+  --dj-bone-500: #615C52;
+  --dj-ink-400: #3A342A;
+  --dj-ink-500: #2A251C;
+  --dj-ink-600: #1C1913;
+  --dj-ink-700: #14120F;
+  --dj-ink-800: #0D0C0A;
+  --dj-ink-900: #0A0908;
+
+  /* ---- Typography ---- */
+  --dj-font-display: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif;
+  --dj-font-body: 'IBM Plex Sans', 'Helvetica Neue', Helvetica, sans-serif;
+  --dj-font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --dj-text-xs: 0.75rem;
+  --dj-text-sm: 0.875rem;
+  --dj-text-base: 1rem;
+  --dj-text-lg: 1.125rem;
+  --dj-text-xl: 1.375rem;
+  --dj-text-2xl: 1.75rem;
+  --dj-text-3xl: 2.25rem;
+  --dj-text-4xl: 3rem;
+  --dj-text-5xl: 4rem;
+
+  --dj-tracking-display: -0.02em;  /* display caps run tight */
+  --dj-tracking-label: 0.14em;     /* mono eyebrows run wide */
+  --dj-leading-tight: 1.08;
+  --dj-leading-body: 1.6;
+
+  /* ---- Space (4px base) ---- */
+  --dj-space-1: 4px;  --dj-space-2: 8px;  --dj-space-3: 12px;
+  --dj-space-4: 16px; --dj-space-5: 24px; --dj-space-6: 32px;
+  --dj-space-7: 48px; --dj-space-8: 64px; --dj-space-9: 96px;
+
+  /* ---- Radius — scales are shallow; Djaunt is angular, not pill-shaped ---- */
+  --dj-radius-sm: 2px;
+  --dj-radius-md: 4px;
+  --dj-radius-lg: 8px;
+  --dj-radius-full: 999px; /* avatars and status dots only */
+
+  /* ---- Borders & elevation ---- */
+  --dj-border-width: 1px;
+  --dj-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.5);
+  --dj-shadow-md: 0 4px 16px rgb(0 0 0 / 0.55);
+  --dj-shadow-lg: 0 16px 48px rgb(0 0 0 / 0.6);
+
+  /* ---- Motion ---- */
+  --dj-ease: cubic-bezier(0.2, 0, 0.2, 1);
+  --dj-dur-fast: 120ms;
+  --dj-dur-base: 200ms;
+  --dj-dur-slow: 400ms;
+
+  /* ---- Semantic (theme-independent) ---- */
+  --dj-success: #5FBF7A;
+  --dj-warning: #F0C24B;
+  --dj-danger: #E0492E;
+  --dj-info: #7FD8F0;
+}
+
+/* ============================================================
+   THEMES — apply on <html> or any container: data-dj-theme="fire"
+   Default (no attribute) is Hoard.
+   ============================================================ */
+
+:root, [data-dj-theme="hoard"] {
+  --dj-accent: #D4A017;
+  --dj-accent-hi: #F0C24B;
+  --dj-accent-deep: #6E4A0E;
+  --dj-bg: #0D0C0A;
+  --dj-surface: #14120F;
+  --dj-surface-raised: #1C1913;
+  --dj-border: #2A251C;
+  --dj-text: var(--dj-bone-200);
+  --dj-text-muted: var(--dj-bone-400);
+  --dj-on-accent: #0D0C0A;
+  --dj-glow: 0 0 24px #D4A01733;
+}
+[data-dj-theme="fire"] {
+  --dj-accent: #FF6B2C;
+  --dj-accent-hi: #FF9560;
+  --dj-accent-deep: #7A2408;
+  --dj-bg: #100A07;
+  --dj-surface: #1A100B;
+  --dj-surface-raised: #241610;
+  --dj-border: #352115;
+  --dj-text: var(--dj-bone-200);
+  --dj-text-muted: var(--dj-bone-400);
+  --dj-on-accent: #100A07;
+  --dj-glow: 0 0 24px #FF6B2C33;
+}
+[data-dj-theme="frost"] {
+  --dj-accent: #7FD8F0;
+  --dj-accent-hi: #B3EAF8;
+  --dj-accent-deep: #14556E;
+  --dj-bg: #070F12;
+  --dj-surface: #0C1720;
+  --dj-surface-raised: #122029;
+  --dj-border: #1B2E38;
+  --dj-text: var(--dj-bone-200);
+  --dj-text-muted: var(--dj-bone-400);
+  --dj-on-accent: #070F12;
+  --dj-glow: 0 0 24px #7FD8F033;
+}
+[data-dj-theme="storm"] {
+  --dj-accent: #9B8CFF;
+  --dj-accent-hi: #C3B8FF;
+  --dj-accent-deep: #3B2C86;
+  --dj-bg: #0A0912;
+  --dj-surface: #12101F;
+  --dj-surface-raised: #1A1729;
+  --dj-border: #262138;
+  --dj-text: var(--dj-bone-200);
+  --dj-text-muted: var(--dj-bone-400);
+  --dj-on-accent: #0A0912;
+  --dj-glow: 0 0 24px #9B8CFF33;
+}
+[data-dj-theme="stone"] {
+  --dj-accent: #93A98C;
+  --dj-accent-hi: #BACBB4;
+  --dj-accent-deep: #3C4D39;
+  --dj-bg: #0A0C09;
+  --dj-surface: #111510;
+  --dj-surface-raised: #181D16;
+  --dj-border: #242A21;
+  --dj-text: var(--dj-bone-200);
+  --dj-text-muted: var(--dj-bone-400);
+  --dj-on-accent: #0A0C09;
+  --dj-glow: 0 0 24px #93A98C33;
+}
+[data-dj-theme="venom"] {
+  --dj-accent: #A8E01F;
+  --dj-accent-hi: #C9F05E;
+  --dj-accent-deep: #47660A;
+  --dj-bg: #080F04;
+  --dj-surface: #0F170A;
+  --dj-surface-raised: #15200E;
+  --dj-border: #1F2E14;
+  --dj-text: var(--dj-bone-200);
+  --dj-text-muted: var(--dj-bone-400);
+  --dj-on-accent: #080F04;
+  --dj-glow: 0 0 24px #A8E01F33;
+}
+[data-dj-theme="void"] {
+  --dj-accent: #B0A7C9;
+  --dj-accent-hi: #D6CFE6;
+  --dj-accent-deep: #3A3450;
+  --dj-bg: #08080B;
+  --dj-surface: #0F0F14;
+  --dj-surface-raised: #16161D;
+  --dj-border: #22222C;
+  --dj-text: var(--dj-bone-200);
+  --dj-text-muted: var(--dj-bone-400);
+  --dj-on-accent: #08080B;
+  --dj-glow: 0 0 24px #B0A7C933;
+}
+[data-dj-theme="radiant"] {
+  --dj-accent: #FFE9A3;
+  --dj-accent-hi: #FFF6D6;
+  --dj-accent-deep: #8A6A1E;
+  --dj-bg: #12100A;
+  --dj-surface: #1C1810;
+  --dj-surface-raised: #262016;
+  --dj-border: #342C1E;
+  --dj-text: var(--dj-bone-200);
+  --dj-text-muted: var(--dj-bone-400);
+  --dj-on-accent: #12100A;
+  --dj-glow: 0 0 24px #FFE9A333;
+}
+[data-dj-theme="deep"] {
+  --dj-accent: #2FB3C9;
+  --dj-accent-hi: #77D7E5;
+  --dj-accent-deep: #0E4A57;
+  --dj-bg: #050F11;
+  --dj-surface: #0B1A1D;
+  --dj-surface-raised: #102429;
+  --dj-border: #183339;
+  --dj-text: var(--dj-bone-200);
+  --dj-text-muted: var(--dj-bone-400);
+  --dj-on-accent: #050F11;
+  --dj-glow: 0 0 24px #2FB3C933;
+}
+
+/* ============================================================
+   LIGHT MODE — a single parchment variant. Dark is primary;
+   use light only when the host context demands it (print, email,
+   docs embedded in a light app).
+   ============================================================ */
+.dj-light, [data-dj-mode="light"] {
+  --dj-bg: #F7F3E9;
+  --dj-surface: #FFFDF7;
+  --dj-surface-raised: #FFFFFF;
+  --dj-border: #DED5C0;
+  --dj-text: #1A1712;
+  --dj-text-muted: #6B6355;
+  --dj-accent: var(--dj-gold-600);
+  --dj-accent-hi: var(--dj-gold-500);
+  --dj-accent-deep: var(--dj-gold-700);
+  --dj-on-accent: #FFFDF7;
+  --dj-glow: none;
+}
+
+/* ============================================================
+   TERMINAL / CLI — 16-color ANSI scheme
+   ============================================================ */
+:root {
+  --dj-term-bg: #0D0C0A;
+  --dj-term-fg: #EDE6D6;
+  --dj-term-cursor: #F0C24B;
+  --dj-term-selection: #2A251C;
+
+  --dj-ansi-black: #14120F;
+  --dj-ansi-red: #C7452B;
+  --dj-ansi-green: #7FA83F;
+  --dj-ansi-yellow: #D4A017;
+  --dj-ansi-blue: #4A7FA8;
+  --dj-ansi-magenta: #8A6FC4;
+  --dj-ansi-cyan: #3E9EAF;
+  --dj-ansi-white: #C8C0AE;
+
+  --dj-ansi-bright-black: #3A342A;
+  --dj-ansi-bright-red: #E0492E;
+  --dj-ansi-bright-green: #A8E01F;
+  --dj-ansi-bright-yellow: #F0C24B;
+  --dj-ansi-bright-blue: #7FB3D8;
+  --dj-ansi-bright-magenta: #B0A7C9;
+  --dj-ansi-bright-cyan: #7FD8F0;
+  --dj-ansi-bright-white: #FBF8F1;
+}
+
+/* ============================================================
+   CODE SYNTAX — "Djaunt Hoard"
+   ============================================================ */
+:root {
+  --dj-code-bg: #0A0908;
+  --dj-code-fg: #EDE6D6;
+  --dj-code-comment: #615C52;
+  --dj-code-keyword: #D4A017;
+  --dj-code-string: #A8E01F;
+  --dj-code-number: #FF9560;
+  --dj-code-function: #F6D77E;
+  --dj-code-type: #7FD8F0;
+  --dj-code-variable: #EDE6D6;
+  --dj-code-operator: #C8C0AE;
+  --dj-code-punctuation: #8E887A;
+  --dj-code-invalid: #E0492E;
+  --dj-code-line-highlight: #14120F;
+  --dj-code-selection: #2A251C;
+}
