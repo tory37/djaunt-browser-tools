@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-dj-theme="storm">
 <head>
   <meta charset="UTF-8">
   <title>Tab Volume</title>
@@ -7,8 +7,12 @@
 </head>
 <body>
   <main class="panel">
-    <header class="panel-head">
-      <span class="eyebrow">Tab volume</span>
+    <header class="dj-head" id="head" data-state="idle">
+      <span class="dj-mark" aria-hidden="true"></span>
+      <span class="dj-titles">
+        <span class="dj-eyebrow">djaunt</span>
+        <h1 class="dj-title">Tab volume</h1>
+      </span>
       <span class="host" id="host">—</span>
     </header>
 
@@ -63,7 +67,7 @@
       </button>
     </footer>
 
-    <p class="unsupported" id="unsupported" hidden>
+    <p class="unsupported dj-hint" id="unsupported" hidden>
       Volume control is not available on this page.
     </p>
   </main>

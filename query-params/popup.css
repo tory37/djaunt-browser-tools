@@ -1,4 +1,4 @@
-/* Host Swap popup — layout only. Every token and shared control comes from
+/* Query Params popup — layout only. Every token and shared control comes from
    brand/base.css; this file must not declare a raw color. */
 
 @import url('brand/base.css');
@@ -23,14 +23,14 @@ body {
   padding: var(--dj-space-4);
 }
 
-/* ---- collapsible swap row ---- */
+/* ---- collapsible tweak row ---- */
 
-.swap {
+.tweak {
   background: var(--dj-surface);
   border-bottom: var(--dj-border-width) solid var(--dj-border);
 }
 
-.swap-head {
+.tweak-head {
   display: flex;
   align-items: stretch;
 }
@@ -51,18 +51,18 @@ body {
   transition: transform var(--dj-dur-fast) var(--dj-ease);
 }
 
-.swap[data-open='true'] .caret {
+.tweak[data-open='true'] .caret {
   transform: rotate(90deg);
 }
 
-.swap-summary {
+.tweak-summary {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.swap-from,
-.swap-to {
+.tweak-host,
+.tweak-changes {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -72,20 +72,15 @@ body {
   color: var(--dj-text-muted);
 }
 
-.swap-to::before {
-  content: "→ ";
-  color: var(--dj-border);
-}
-
-.swap[data-state='active'] .swap-from {
+.tweak[data-state='active'] .tweak-host {
   color: var(--dj-text);
 }
 
-.swap[data-state='active'] .swap-to {
+.tweak[data-state='active'] .tweak-changes {
   color: var(--dj-accent);
 }
 
-.swap[data-state='error'] .swap-to {
+.tweak[data-state='error'] .tweak-changes {
   color: var(--dj-danger);
 }
 
@@ -108,13 +103,13 @@ body {
 }
 
 /* The expanded body recesses below the row it belongs to. */
-.swap-body {
+.tweak-body {
   display: none;
   background: var(--dj-bg);
   border-top: var(--dj-border-width) solid var(--dj-border);
 }
 
-.swap[data-open='true'] .swap-body {
+.tweak[data-open='true'] .tweak-body {
   display: block;
 }
 
