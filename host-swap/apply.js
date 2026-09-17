@@ -2,9 +2,9 @@ import { ALL_RULE_IDS, buildRules, resolveEnabledSwaps } from './swap.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 
-const BADGE_ACTIVE = '#A8E01F'; // --dj-accent, venom
+const BADGE_ACTIVE = '#D4A017'; // --dj-accent, hoard
 const BADGE_ERROR = '#E0492E'; // --dj-danger
-const BADGE_ON_ACCENT = '#080F04'; // --dj-on-accent, venom
+const BADGE_ON_ACCENT = '#0D0C0A'; // --dj-on-accent, hoard
 
 async function setBadge(state, count) {
   const text = { active: String(count), error: 'ERR', idle: '' }[state];
