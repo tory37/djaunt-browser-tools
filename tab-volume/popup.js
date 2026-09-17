@@ -1,5 +1,6 @@
 const elements = {
   body: document.body,
+  head: document.getElementById("head"),
   host: document.getElementById("host"),
   readout: document.getElementById("readout"),
   speaker: document.getElementById("speaker"),
@@ -43,9 +44,11 @@ function render(state) {
   elements.body.dataset.supported = String(Boolean(state.supported));
   elements.unsupported.hidden = Boolean(state.supported);
   if (!state.supported) {
+    elements.head.dataset.state = "error";
     elements.host.textContent = "unsupported page";
     return;
   }
+  elements.head.dataset.state = state.persisted || state.volume !== 1 ? "active" : "idle";
   elements.host.textContent = state.host;
   activeTabId = state.tabId;
   renderVolume(Math.round(state.volume * 100));

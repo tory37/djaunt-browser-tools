@@ -1,7 +1,8 @@
 import { ALL_RULE_IDS, buildRules, resolveEnabledSwaps } from './swap.js';
 
-const BADGE_ACTIVE = '#22d167';
-const BADGE_ERROR = '#ff4d4d';
+const BADGE_ACTIVE = '#A8E01F'; // --dj-accent, venom
+const BADGE_ERROR = '#E0492E'; // --dj-danger
+const BADGE_ON_ACCENT = '#080F04'; // --dj-on-accent, venom
 
 async function setBadge(state, count) {
   const text = { active: String(count), error: 'ERR', idle: '' }[state];

@@ -51,7 +51,8 @@ async function resolveVolume(tabId, url) {
 async function updateBadge(tabId, volume) {
   const percent = Math.round(volume * 100);
   try {
-    await chrome.action.setBadgeBackgroundColor({ tabId, color: "#4be08a" });
+    await chrome.action.setBadgeBackgroundColor({ tabId, color: "#9B8CFF" }); // --dj-accent, storm
+    await chrome.action.setBadgeTextColor({ tabId, color: "#0A0912" }); // --dj-on-accent
     await chrome.action.setBadgeText({
       tabId,
       text: percent === 100 ? "" : String(percent)

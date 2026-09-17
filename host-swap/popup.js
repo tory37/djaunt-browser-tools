@@ -9,6 +9,7 @@ const SAVE_DEBOUNCE_MS = 250;
 const LEGACY_KEYS = ['enabled', 'sourceHost', 'target', 'scope'];
 
 const els = {
+  head: document.getElementById('head'),
   pill: document.getElementById('pill'),
   list: document.getElementById('list'),
   empty: document.getElementById('empty'),
@@ -39,11 +40,11 @@ function paintRow(row, swap) {
   row.querySelector('.swap-from').textContent = from;
   row.querySelector('.swap-to').textContent = to;
 
-  const toggle = row.querySelector('.switch');
+  const toggle = row.querySelector('.dj-switch');
   toggle.setAttribute('aria-checked', String(Boolean(swap.enabled)));
 
   const isAll = swap.scope === 'all';
-  for (const seg of row.querySelectorAll('.seg')) {
+  for (const seg of row.querySelectorAll('.dj-seg')) {
     seg.setAttribute('aria-checked', String((seg.dataset.scope === 'all') === isAll));
   }
   row.querySelector('.scope-hint').textContent = isAll
@@ -83,8 +84,10 @@ function paintRow(row, swap) {
  */
 async function paintGlobal() {
   const { ready, broken } = await applySwaps(swaps);
-  els.pill.dataset.state = ready.length ? 'active' : (broken.length ? 'error' : 'idle');
-  els.pill.textContent = ready.length ? `${ready.length} ON` : (broken.length ? 'ERR' : 'OFF');
+  const state = ready.length ? 'active' : (broken.length ? 'error' : 'idle');
+  els.head.dataset.state = state;
+  els.pill.dataset.state = state;
+  els.pill.textContent = ready.length ? `${ready.length} on` : (broken.length ? 'err' : 'off');
 
   els.empty.hidden = swaps.length > 0;
   els.add.disabled = swaps.length >= MAX_SWAPS;
@@ -137,7 +140,7 @@ function createRow(swap) {
     setOpen(row, row.dataset.open !== 'true');
   });
 
-  row.querySelector('.switch').addEventListener('click', () => {
+  row.querySelector('.dj-switch').addEventListener('click', () => {
     swap.enabled = !swap.enabled;
     touch(true);
   });
@@ -148,7 +151,7 @@ function createRow(swap) {
     save({ immediate: true });
   });
 
-  for (const seg of row.querySelectorAll('.seg')) {
+  for (const seg of row.querySelectorAll('.dj-seg')) {
     seg.addEventListener('click', () => {
       swap.scope = seg.dataset.scope;
       touch(true);
