@@ -13,6 +13,7 @@ an index page showing off each extension. It's `index.html` at the repo root; en
 | [`query-params/`](query-params) | Chrome & Firefox | Removes and adds query string parameters on a chosen domain before the request resolves, leaving the scheme, host, path and fragment untouched. Built for flipping flags and locales on a launch URL you cannot hand-edit. Holds as many tweaks as you like, each toggled on its own. |
 | [`tab-volume/`](tab-volume) | Chrome & Firefox | Sets the volume of each tab from 0 to 100 percent, optionally saved for every tab on the same domain. |
 | [`dark-mode/`](dark-mode) | Chrome & Firefox | Forces a dark color scheme on any site, skipping ones that already look dark. Toggle it globally or override it per domain for the browsing session. |
+| [`color-picker/`](color-picker) | Chrome & Firefox | Picks any on-screen color, converts it between hex/RGB/HSL/OKLCH, checks WCAG contrast, and builds CSS gradients — with no host permissions at all. |
 
 Every extension runs on both browsers from the same folder — a tiny `globalThis.browser ??
 globalThis.chrome` shim is the only cross-browser code, and each `manifest.json` declares
@@ -48,6 +49,7 @@ semantics:
 ```
 node host-swap/test.mjs
 node query-params/test.mjs
+node color-picker/test.mjs
 ```
 
-Both exit non-zero on failure. `tab-volume` and `dark-mode` have no automated tests.
+All three exit non-zero on failure. `tab-volume` and `dark-mode` have no automated tests.

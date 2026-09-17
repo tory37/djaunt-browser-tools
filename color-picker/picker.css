@@ -1,0 +1,72 @@
+@import url('brand/tokens.css');
+@import url('brand/fonts.css');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--dj-ink-900);
+  cursor: crosshair;
+}
+
+#stage {
+  display: block;
+}
+
+.hint {
+  position: fixed;
+  top: var(--dj-space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-bone-200);
+  background: rgb(0 0 0 / 0.6);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: 6px var(--dj-space-3);
+  pointer-events: none;
+}
+
+.loupe {
+  position: fixed;
+  width: 110px;
+  height: 138px;
+  pointer-events: none;
+  filter: drop-shadow(var(--dj-shadow-md));
+}
+
+.loupe canvas {
+  display: block;
+  border: 2px solid var(--dj-bone-200);
+  border-radius: var(--dj-radius-full);
+  image-rendering: pixelated;
+}
+
+.loupe-crosshair {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--dj-bone-200);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.6);
+}
+
+.loupe-hex {
+  margin-top: 6px;
+  text-align: center;
+  font-family: var(--dj-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--dj-bone-200);
+  background: rgb(0 0 0 / 0.6);
+  border-radius: var(--dj-radius-sm);
+  padding: 2px 0;
+}

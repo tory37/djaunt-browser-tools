@@ -1,0 +1,307 @@
+/* Color Picker popup — layout only. Every token and shared control comes
+   from brand/base.css; this file must not declare a raw color except where
+   CSS has no choice (a swatch literally displaying a picked color). */
+
+@import url('brand/base.css');
+
+body {
+  width: 360px;
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs {
+  margin: var(--dj-space-3) var(--dj-space-4) 0;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-3);
+  padding: var(--dj-space-4);
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field[hidden] {
+  display: none;
+}
+
+.actions {
+  display: flex;
+}
+
+/* ---- pick panel ---- */
+
+.pick-btn {
+  padding: var(--dj-space-3);
+}
+
+.swatch-preview {
+  height: 64px;
+  border-radius: var(--dj-radius-md);
+  border: var(--dj-border-width) solid var(--dj-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image:
+    linear-gradient(45deg, var(--dj-surface-raised) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--dj-surface-raised) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--dj-surface-raised) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--dj-surface-raised) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+}
+
+.swatch-empty {
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+}
+
+.fmt-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-2);
+}
+
+.fmt-list[hidden] {
+  display: none;
+}
+
+.fmt-row {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  align-items: center;
+  gap: var(--dj-space-2);
+}
+
+.fmt-value {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text);
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: 6px var(--dj-space-2);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.copy-btn {
+  font-family: var(--dj-font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dj-text-muted);
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: 6px var(--dj-space-2);
+  transition: color var(--dj-dur-fast) var(--dj-ease), border-color var(--dj-dur-fast) var(--dj-ease);
+}
+
+.copy-btn:hover {
+  color: var(--dj-accent);
+  border-color: var(--dj-accent);
+}
+
+.copy-btn.copied {
+  color: var(--dj-on-accent);
+  background: var(--dj-accent);
+  border-color: var(--dj-accent);
+}
+
+/* ---- history panel ---- */
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+}
+
+.swatch-cell {
+  position: relative;
+  aspect-ratio: 1;
+}
+
+.swatch-select {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--dj-radius-sm);
+  border: var(--dj-border-width) solid var(--dj-border);
+  background-color: var(--swatch-color);
+  transition: border-color var(--dj-dur-fast) var(--dj-ease);
+}
+
+.swatch-select:hover {
+  border-color: var(--dj-accent);
+}
+
+.swatch-remove {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--dj-radius-full);
+  background: var(--dj-surface-raised);
+  border: var(--dj-border-width) solid var(--dj-border);
+  color: var(--dj-text-muted);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.swatch-cell:hover .swatch-remove {
+  display: flex;
+}
+
+.swatch-remove:hover {
+  color: var(--dj-danger);
+  border-color: var(--dj-danger);
+}
+
+.empty {
+  padding: var(--dj-space-3) 0;
+}
+
+/* ---- gradient panel ---- */
+
+.stop-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-2);
+}
+
+.stop-row {
+  display: grid;
+  grid-template-columns: 28px 1fr 64px 32px auto;
+  align-items: center;
+  gap: var(--dj-space-2);
+}
+
+.stop-swatch,
+.stop-swatch::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.stop-swatch {
+  width: 28px;
+  height: 28px;
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  background: none;
+  cursor: pointer;
+}
+
+.stop-pos-value {
+  text-align: right;
+}
+
+.stop-remove {
+  color: var(--dj-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stop-remove:hover {
+  color: var(--dj-danger);
+}
+
+.gradient-preview {
+  height: 72px;
+  border-radius: var(--dj-radius-md);
+  border: var(--dj-border-width) solid var(--dj-border);
+}
+
+.output-row {
+  grid-template-columns: 1fr auto;
+}
+
+/* ---- contrast panel ---- */
+
+.color-input-row {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: var(--dj-space-2);
+}
+
+.color-input-row input[type='color'] {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  background: none;
+  cursor: pointer;
+}
+
+.color-input-row input[type='color']::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.hex-input {
+  font-family: var(--dj-font-mono);
+}
+
+.contrast-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-2);
+  padding: var(--dj-space-4);
+  border-radius: var(--dj-radius-md);
+  border: var(--dj-border-width) solid var(--dj-border);
+  background: var(--contrast-bg);
+  color: var(--contrast-fg);
+}
+
+.contrast-sample-large {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.contrast-sample-normal {
+  font-size: var(--dj-text-sm);
+}
+
+.contrast-ratio {
+  text-align: center;
+  font-family: var(--dj-font-display);
+  font-size: var(--dj-text-2xl);
+  font-weight: 600;
+}
+
+.contrast-badges {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.contrast-badges .dj-pill {
+  text-align: center;
+  justify-content: center;
+  padding: 3px var(--dj-space-1);
+}
+
+.dj-pill[data-pass='true'] {
+  border-color: var(--dj-success);
+  color: var(--dj-success);
+}
+
+.dj-pill[data-pass='false'] {
+  border-color: var(--dj-danger);
+  color: var(--dj-danger);
+}

@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en" data-dj-theme="deep">
+<meta charset="utf-8">
+<title>Pick a color</title>
+<link rel="stylesheet" href="picker.css">
+<body>
+  <canvas id="stage"></canvas>
+  <div class="hint">Click a pixel to pick it · Esc to cancel</div>
+  <div class="loupe" id="loupe" hidden>
+    <canvas id="loupe-canvas" width="110" height="110"></canvas>
+    <div class="loupe-crosshair"></div>
+    <div class="loupe-hex" id="loupe-hex"></div>
+  </div>
+  <script type="module" src="picker.js"></script>
+</body>
+</html>
