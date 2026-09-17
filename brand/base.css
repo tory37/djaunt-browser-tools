@@ -64,13 +64,15 @@ button {
   min-width: 0;
 }
 
-.dj-eyebrow {
+/* The wordmark is painted as a mask (like the dragon mark) so it inherits
+   the theme accent instead of being locked to a baked-in fill. Sized to the
+   brand package's stated minimum (80px wide) and scaled by aspect-ratio. */
+.dj-wordmark {
   display: block;
-  font-family: var(--dj-font-mono);
-  font-size: 9px;
-  letter-spacing: var(--dj-tracking-label);
-  text-transform: uppercase;
-  color: var(--dj-accent);
+  width: 80px;
+  aspect-ratio: 465.39 / 50.14;
+  background: var(--dj-accent);
+  mask: url('wordmark.svg') left center / contain no-repeat;
 }
 
 .dj-title {
