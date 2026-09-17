@@ -3,6 +3,8 @@ import {
   MAX_SWAPS, RULES_PER_SWAP, migrateConfig, newSwap, previewSwap, resolveSwap,
 } from './swap.js';
 
+const api = globalThis.browser ?? globalThis.chrome;
+
 const SAMPLE_HOST = 'old-host.example.com';
 const SAMPLE_QUERY = '/?token=abc123&id=42';
 const SAVE_DEBOUNCE_MS = 250;
@@ -92,7 +94,7 @@ async function paintGlobal() {
   els.empty.hidden = swaps.length > 0;
   els.add.disabled = swaps.length >= MAX_SWAPS;
 
-  const installed = await chrome.declarativeNetRequest.getDynamicRules();
+  const installed = await api.declarativeNetRequest.getDynamicRules();
   const expected = ready.length * RULES_PER_SWAP;
   const stale = installed.length !== expected;
   els.status.classList.toggle('error', stale || (broken.length > 0 && ready.length === 0));
@@ -108,8 +110,8 @@ async function paintGlobal() {
 function save({ immediate = false } = {}) {
   clearTimeout(saveTimer);
   const commit = async () => {
-    await chrome.storage.local.set({ swaps });
-    await chrome.storage.local.remove(LEGACY_KEYS);
+    await api.storage.local.set({ swaps });
+    await api.storage.local.remove(LEGACY_KEYS);
     await paintGlobal();
   };
   if (immediate) return commit();
@@ -188,11 +190,11 @@ els.add.addEventListener('click', () => {
 });
 
 (async () => {
-  const stored = await chrome.storage.local.get(null);
+  const stored = await api.storage.local.get(null);
   swaps = migrateConfig(stored).swaps;
   // Persist the migrated shape immediately so nothing depends on a later edit.
-  await chrome.storage.local.set({ swaps });
-  await chrome.storage.local.remove(LEGACY_KEYS);
+  await api.storage.local.set({ swaps });
+  await api.storage.local.remove(LEGACY_KEYS);
   renderAll();
   // A single swap has nothing to compare against, so open it straight away.
   if (els.list.firstElementChild && swaps.length === 1) setOpen(els.list.firstElementChild, true);

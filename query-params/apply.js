@@ -1,14 +1,16 @@
 import { ALL_RULE_IDS, buildRules, resolveEnabledTweaks } from './params.js';
 
+const api = globalThis.browser ?? globalThis.chrome;
+
 const BADGE_ACTIVE = '#7FD8F0'; // --dj-accent, frost
 const BADGE_ERROR = '#E0492E'; // --dj-danger
 const BADGE_ON_ACCENT = '#070F12'; // --dj-on-accent, frost
 
 async function setBadge(state, count) {
   const text = { active: String(count), error: 'ERR', idle: '' }[state];
-  await chrome.action.setBadgeText({ text });
+  await api.action.setBadgeText({ text });
   if (state === 'idle') return;
-  await chrome.action.setBadgeBackgroundColor({
+  await api.action.setBadgeBackgroundColor({
     color: state === 'active' ? BADGE_ACTIVE : BADGE_ERROR,
   });
 }
@@ -28,9 +30,9 @@ let inFlight = Promise.resolve();
 export async function applyTweaks(tweaks) {
   const { ready, broken } = resolveEnabledTweaks(tweaks);
   const run = async () => {
-    const installed = await chrome.declarativeNetRequest.getDynamicRules();
+    const installed = await api.declarativeNetRequest.getDynamicRules();
     const removeRuleIds = [...new Set([...ALL_RULE_IDS, ...installed.map((rule) => rule.id)])];
-    await chrome.declarativeNetRequest.updateDynamicRules({
+    await api.declarativeNetRequest.updateDynamicRules({
       removeRuleIds,
       addRules: buildRules(ready),
     });

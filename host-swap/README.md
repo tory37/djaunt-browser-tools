@@ -1,8 +1,8 @@
 # Host Swap
 
-A Chrome extension that rewrites hosts to other hosts **before the request resolves**, keeping
-the path, query string and fragment byte-identical. Keep as many swaps as you like and turn
-them on one at a time.
+A Chrome & Firefox extension (Manifest V3) that rewrites hosts to other hosts **before the
+request resolves**, keeping the path, query string and fragment byte-identical. Keep as many
+swaps as you like and turn them on one at a time.
 
 Built for testing branch deploys. An app sends you to a fixed host, and this points that
 navigation at your per-branch build instead — without you hand-editing a URL that carries
@@ -10,10 +10,21 @@ live auth tokens.
 
 ## Install
 
+**Chrome:**
+
 1. Open `chrome://extensions`.
 2. Turn on **Developer mode** (top right).
 3. Click **Load unpacked** and pick this folder.
 4. Pin the extension so the toolbar button is visible.
+
+**Firefox** (115+ for `declarativeNetRequest`, 121+ for this manifest's dual background key):
+
+1. Open `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on…** and select this folder's `manifest.json`.
+
+This load is temporary and drops on restart; for a persistent install, package the folder
+with [`web-ext`](https://github.com/mozilla/web-ext) and sign it, or run it in a channel that
+allows unsigned extensions.
 
 There is nothing to build and no dependencies to install.
 

@@ -1,3 +1,5 @@
+const api = globalThis.browser ?? globalThis.chrome;
+
 const GLOBAL_KEY = "darkModeGlobal";
 const DOMAIN_KEY = "darkModeDomains";
 
@@ -28,7 +30,7 @@ function hostOf(url) {
 
 async function getStatus(tabId) {
   try {
-    return await browser.tabs.sendMessage(tabId, { type: "getStatus" });
+    return await api.tabs.sendMessage(tabId, { type: "getStatus" });
   } catch (error) {
     return null;
   }
@@ -58,8 +60,8 @@ function renderSegmented(overrideValue) {
 }
 
 async function refresh() {
-  const globalStore = await browser.storage.local.get(GLOBAL_KEY);
-  const domainStore = await browser.storage.session.get(DOMAIN_KEY);
+  const globalStore = await api.storage.local.get(GLOBAL_KEY);
+  const domainStore = await api.storage.session.get(DOMAIN_KEY);
   const domains = domainStore[DOMAIN_KEY] || {};
 
   elements.global.checked = Boolean(globalStore[GLOBAL_KEY]);
@@ -72,7 +74,7 @@ async function refresh() {
 }
 
 elements.global.addEventListener("change", async (event) => {
-  await browser.storage.local.set({ [GLOBAL_KEY]: event.target.checked });
+  await api.storage.local.set({ [GLOBAL_KEY]: event.target.checked });
   setTimeout(refresh, 150);
 });
 
@@ -81,7 +83,7 @@ elements.segmented.addEventListener("click", async (event) => {
   if (!button) return;
   const value = button.dataset.value;
 
-  const domainStore = await browser.storage.session.get(DOMAIN_KEY);
+  const domainStore = await api.storage.session.get(DOMAIN_KEY);
   const domains = domainStore[DOMAIN_KEY] || {};
 
   if (value === "auto") {
@@ -89,12 +91,12 @@ elements.segmented.addEventListener("click", async (event) => {
   } else {
     domains[activeHost] = value;
   }
-  await browser.storage.session.set({ [DOMAIN_KEY]: domains });
+  await api.storage.session.set({ [DOMAIN_KEY]: domains });
   setTimeout(refresh, 150);
 });
 
 async function init() {
-  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+  const [tab] = await api.tabs.query({ active: true, currentWindow: true });
   const host = tab ? hostOf(tab.url) : null;
   const supported = Boolean(host);
 

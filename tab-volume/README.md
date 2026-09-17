@@ -1,13 +1,24 @@
 # Tab Volume
 
-Chrome extension (Manifest V3) that sets the volume of each tab from 0 to 100 percent
-of the system volume, with an option to save that level for every tab on the domain.
+Chrome & Firefox extension (Manifest V3) that sets the volume of each tab from 0 to 100
+percent of the system volume, with an option to save that level for every tab on the domain.
 
 ## Install
+
+**Chrome:**
 
 1. Open `chrome://extensions`.
 2. Turn on **Developer mode**.
 3. Click **Load unpacked** and select this folder.
+
+**Firefox** (128+, for the `MAIN`-world content script):
+
+1. Open `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on…** and select this folder's `manifest.json`.
+
+This load is temporary and drops on restart; for a persistent install, package the folder
+with [`web-ext`](https://github.com/mozilla/web-ext) and sign it, or run it in a channel that
+allows unsigned extensions.
 
 ## Use
 

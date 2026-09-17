@@ -1,10 +1,19 @@
 # Dark Mode
 
-Firefox extension (Manifest V3) that forces a dark color scheme on any site, skipping pages
-that already look dark. Turn it on globally, or override it per domain for the rest of the
-browsing session.
+Chrome & Firefox extension (Manifest V3) that forces a dark color scheme on any site,
+skipping pages that already look dark. Turn it on globally, or override it per domain for
+the rest of the browsing session.
 
 ## Install
+
+**Chrome:**
+
+1. Open `chrome://extensions`.
+2. Turn on **Developer mode** (top right).
+3. Click **Load unpacked** and select this folder.
+4. Pin the extension so the toolbar button is visible.
+
+**Firefox** (121+, for this manifest's dual background key):
 
 1. Open `about:debugging#/runtime/this-firefox`.
 2. Click **Load Temporary Add-on…** and select this folder's `manifest.json`.

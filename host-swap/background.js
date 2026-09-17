@@ -1,14 +1,16 @@
 import { applySwaps } from './apply.js';
 import { migrateConfig } from './swap.js';
 
+const api = globalThis.browser ?? globalThis.chrome;
+
 async function reconcile() {
-  const stored = await chrome.storage.local.get(null);
+  const stored = await api.storage.local.get(null);
   await applySwaps(migrateConfig(stored).swaps);
 }
 
-chrome.runtime.onInstalled.addListener(reconcile);
-chrome.runtime.onStartup.addListener(reconcile);
-chrome.storage.onChanged.addListener((_changes, area) => {
+api.runtime.onInstalled.addListener(reconcile);
+api.runtime.onStartup.addListener(reconcile);
+api.storage.onChanged.addListener((_changes, area) => {
   if (area === 'local') reconcile();
 });
 

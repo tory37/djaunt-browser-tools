@@ -1,7 +1,8 @@
 # Query Params
 
-A Chrome extension that **removes and adds query string parameters** on a domain you choose,
-before the request resolves. Keep as many tweaks as you like and turn them on one at a time.
+A Chrome & Firefox extension (Manifest V3) that **removes and adds query string parameters**
+on a domain you choose, before the request resolves. Keep as many tweaks as you like and turn
+them on one at a time.
 
 Built for testing flags and locales. The app hands you a launch URL, and this strips the
 params that get in the way and pins the ones you want — without you hand-editing a URL that
@@ -12,10 +13,21 @@ and nothing is tied to a tab or a session.
 
 ## Install
 
+**Chrome:**
+
 1. Open `chrome://extensions`.
 2. Turn on **Developer mode** (top right).
 3. Click **Load unpacked** and pick this folder.
 4. Pin the extension so the toolbar button is visible.
+
+**Firefox** (115+ for `declarativeNetRequest`, 121+ for this manifest's dual background key):
+
+1. Open `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on…** and select this folder's `manifest.json`.
+
+This load is temporary and drops on restart; for a persistent install, package the folder
+with [`web-ext`](https://github.com/mozilla/web-ext) and sign it, or run it in a channel that
+allows unsigned extensions.
 
 There is nothing to build and no dependencies to install.
 

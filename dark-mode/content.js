@@ -2,6 +2,8 @@
   const host = location.hostname;
   if (!host) return;
 
+  const api = globalThis.browser ?? globalThis.chrome;
+
   const GLOBAL_KEY = "darkModeGlobal";
   const DOMAIN_KEY = "darkModeDomains";
   const DARK_CLASS = "djaunt-dark-mode";
@@ -38,7 +40,7 @@
   }
 
   function reportStatus() {
-    browser.runtime
+    api.runtime
       .sendMessage({ type: "darkModeStatus", host, applied, alreadyDark })
       .catch(() => {});
   }
@@ -81,10 +83,10 @@
 
   async function readSettings() {
     const [localStore, sessionStore] = await Promise.all([
-      browser.storage.local.get(GLOBAL_KEY),
+      api.storage.local.get(GLOBAL_KEY),
       // Access can be denied for a moment right after install, before the
       // background script has widened storage.session to content scripts.
-      browser.storage.session.get(DOMAIN_KEY).catch(() => ({}))
+      api.storage.session.get(DOMAIN_KEY).catch(() => ({}))
     ]);
     return {
       globalEnabled: Boolean(localStore[GLOBAL_KEY]),
@@ -120,12 +122,12 @@
     });
   }
 
-  browser.storage.onChanged.addListener((changes, areaName) => {
+  api.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === "local" && GLOBAL_KEY in changes) evaluate();
     if (areaName === "session" && DOMAIN_KEY in changes) evaluate();
   });
 
-  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  api.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message && message.type === "getStatus") {
       sendResponse({ host, applied, alreadyDark });
       return true;

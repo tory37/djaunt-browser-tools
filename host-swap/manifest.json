@@ -3,6 +3,12 @@
   "name": "Host Swap",
   "version": "2.0.1",
   "description": "Rewrites hosts to other hosts before the request resolves, keeping the path and query string intact.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "host-swap@djaunt-browser-tools",
+      "strict_min_version": "121.0"
+    }
+  },
   "permissions": [
     "declarativeNetRequest",
     "storage"
@@ -12,6 +18,7 @@
   ],
   "background": {
     "service_worker": "background.js",
+    "scripts": ["background.js"],
     "type": "module"
   },
   "action": {

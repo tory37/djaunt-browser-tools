@@ -1,6 +1,7 @@
 // Isolated-world bridge: carries the volume from the service worker to the
-// page-world script, which cannot use the chrome.* APIs itself.
+// page-world script, which cannot use extension APIs itself.
 (() => {
+  const api = globalThis.browser ?? globalThis.chrome;
   const SET_EVENT = "__tabVolume:set";
   const READY_EVENT = "__tabVolume:ready";
 
@@ -15,13 +16,13 @@
   // value once the page-world script announces itself.
   document.addEventListener(READY_EVENT, () => pushToPage(lastKnownVolume));
 
-  chrome.runtime.onMessage.addListener((message) => {
+  api.runtime.onMessage.addListener((message) => {
     if (message && message.type === "applyVolume") {
       pushToPage(message.volume);
     }
   });
 
-  chrome.runtime
+  api.runtime
     .sendMessage({ type: "requestVolume" })
     .then((response) => {
       if (response && typeof response.volume === "number") {

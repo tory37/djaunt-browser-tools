@@ -6,12 +6,13 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "dark-mode@djaunt-browser-tools",
-      "strict_min_version": "115.0"
+      "strict_min_version": "121.0"
     }
   },
   "permissions": ["storage", "tabs", "scripting"],
   "host_permissions": ["<all_urls>"],
   "background": {
+    "service_worker": "background.js",
     "scripts": ["background.js"]
   },
   "action": {

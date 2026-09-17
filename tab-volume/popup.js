@@ -1,3 +1,5 @@
+const api = globalThis.browser ?? globalThis.chrome;
+
 const elements = {
   body: document.body,
   head: document.getElementById("head"),
@@ -55,7 +57,7 @@ function render(state) {
   renderScope(state.persisted, state.host);
 }
 
-const send = (message) => chrome.runtime.sendMessage(message);
+const send = (message) => api.runtime.sendMessage(message);
 
 async function refresh() {
   render(await send({ type: "getPopupState" }));

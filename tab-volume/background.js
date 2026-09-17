@@ -1,3 +1,5 @@
+const api = globalThis.browser ?? globalThis.chrome;
+
 const DOMAIN_STORE_KEY = "domainVolumes";
 const TAB_STORE_KEY = "tabVolumes";
 const FULL_VOLUME = 1;
@@ -16,21 +18,21 @@ function hostOf(url) {
 }
 
 async function readDomainVolumes() {
-  const stored = await chrome.storage.local.get(DOMAIN_STORE_KEY);
+  const stored = await api.storage.local.get(DOMAIN_STORE_KEY);
   return stored[DOMAIN_STORE_KEY] || {};
 }
 
 async function writeDomainVolumes(volumes) {
-  await chrome.storage.local.set({ [DOMAIN_STORE_KEY]: volumes });
+  await api.storage.local.set({ [DOMAIN_STORE_KEY]: volumes });
 }
 
 async function readTabVolumes() {
-  const stored = await chrome.storage.session.get(TAB_STORE_KEY);
+  const stored = await api.storage.session.get(TAB_STORE_KEY);
   return stored[TAB_STORE_KEY] || {};
 }
 
 async function writeTabVolumes(volumes) {
-  await chrome.storage.session.set({ [TAB_STORE_KEY]: volumes });
+  await api.storage.session.set({ [TAB_STORE_KEY]: volumes });
 }
 
 // A volume set on this tab alone wins over the setting saved for the domain.
@@ -51,9 +53,9 @@ async function resolveVolume(tabId, url) {
 async function updateBadge(tabId, volume) {
   const percent = Math.round(volume * 100);
   try {
-    await chrome.action.setBadgeBackgroundColor({ tabId, color: "#9B8CFF" }); // --dj-accent, storm
-    await chrome.action.setBadgeTextColor({ tabId, color: "#0A0912" }); // --dj-on-accent
-    await chrome.action.setBadgeText({
+    await api.action.setBadgeBackgroundColor({ tabId, color: "#9B8CFF" }); // --dj-accent, storm
+    await api.action.setBadgeTextColor({ tabId, color: "#0A0912" }); // --dj-on-accent
+    await api.action.setBadgeText({
       tabId,
       text: percent === 100 ? "" : String(percent)
     });
@@ -64,7 +66,7 @@ async function updateBadge(tabId, volume) {
 
 async function applyToTab(tabId, volume) {
   try {
-    await chrome.tabs.sendMessage(tabId, { type: "applyVolume", volume });
+    await api.tabs.sendMessage(tabId, { type: "applyVolume", volume });
   } catch (error) {
     // No content script in this tab (chrome:// page, PDF viewer, discarded tab).
   }
@@ -72,7 +74,7 @@ async function applyToTab(tabId, volume) {
 }
 
 async function applyToAllTabsOnHost(host, volume) {
-  const tabs = await chrome.tabs.query({});
+  const tabs = await api.tabs.query({});
   await Promise.all(
     tabs
       .filter((tab) => hostOf(tab.url) === host)
@@ -112,13 +114,13 @@ const messageHandlers = {
   },
 
   async getPopupState() {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const [tab] = await api.tabs.query({ active: true, currentWindow: true });
     if (!tab) return { supported: false };
     return buildPopupState(tab);
   },
 
   async setVolume({ tabId, volume }) {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const [tab] = await api.tabs.query({ active: true, currentWindow: true });
     const host = tab ? hostOf(tab.url) : null;
     const domainVolumes = await readDomainVolumes();
     const nextVolume = clamp(volume);
@@ -136,7 +138,7 @@ const messageHandlers = {
   },
 
   async setPersisted({ tabId, persisted }) {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const [tab] = await api.tabs.query({ active: true, currentWindow: true });
     const host = tab ? hostOf(tab.url) : null;
     if (!host) return { ok: false };
 
@@ -159,7 +161,7 @@ const messageHandlers = {
   },
 
   async reset({ tabId }) {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const [tab] = await api.tabs.query({ active: true, currentWindow: true });
     const host = tab ? hostOf(tab.url) : null;
     await clearTabVolume(tabId);
     if (host) {
@@ -173,16 +175,16 @@ const messageHandlers = {
   }
 };
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+api.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const handler = messageHandlers[message && message.type];
   if (!handler) return false;
   handler(message, sender).then(sendResponse);
   return true;
 });
 
-chrome.tabs.onRemoved.addListener((tabId) => clearTabVolume(tabId));
+api.tabs.onRemoved.addListener((tabId) => clearTabVolume(tabId));
 
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+api.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (!changeInfo.status && !changeInfo.url) return;
   const volume = await resolveVolume(tabId, tab.url);
   await applyToTab(tabId, volume);
@@ -191,7 +193,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 // Content scripts only auto-inject into pages loaded after installation, so
 // seed the tabs that are already open.
 async function injectIntoOpenTabs() {
-  const tabs = await chrome.tabs.query({});
+  const tabs = await api.tabs.query({});
   for (const tab of tabs) {
     if (!hostOf(tab.url)) continue;
     for (const script of [
@@ -199,7 +201,7 @@ async function injectIntoOpenTabs() {
       { file: "content/bridge.js", world: "ISOLATED" }
     ]) {
       try {
-        await chrome.scripting.executeScript({
+        await api.scripting.executeScript({
           target: { tabId: tab.id, allFrames: true },
           files: [script.file],
           world: script.world
@@ -212,5 +214,5 @@ async function injectIntoOpenTabs() {
   }
 }
 
-chrome.runtime.onInstalled.addListener(injectIntoOpenTabs);
-chrome.runtime.onStartup.addListener(injectIntoOpenTabs);
+api.runtime.onInstalled.addListener(injectIntoOpenTabs);
+api.runtime.onStartup.addListener(injectIntoOpenTabs);
