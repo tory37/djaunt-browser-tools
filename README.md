@@ -3,6 +3,10 @@
 Browser extensions (Manifest V3) I use day to day for testing web apps. No build step, no
 dependencies — load each folder unpacked.
 
+**[tory37.github.io/djaunt-browser-tools](https://tory37.github.io/djaunt-browser-tools/)** —
+an index page showing off each extension. It's `index.html` at the repo root; enable it under
+**Settings → Pages → Deploy from a branch → `main` / `/ (root)`** to serve it.
+
 | Extension | Browser | What it does |
 |---|---|---|
 | [`host-swap/`](host-swap) | Chrome | Rewrites hosts to other hosts before the request resolves, keeping the path, query string and fragment byte-identical. Built for pointing a fixed launch URL at a branch deploy without hand-editing a URL that carries live auth tokens. Holds as many swaps as you like, enabled one at a time. |

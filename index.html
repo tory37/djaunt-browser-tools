@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>djaunt-browser-tools</title>
+<meta name="description" content="Small, dependency-free browser extensions for testing web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%B0%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    color-scheme: dark light;
+    --bg: #0a0a0a;
+    --surface: #121212;
+    --surface-hover: #1a1a1a;
+    --border: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(255, 255, 255, 0.22);
+    --text: #f2f2f2;
+    --muted: #9a9a9a;
+    --muted-2: #707070;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --step-1: 4px;
+    --step-2: 8px;
+    --step-3: 12px;
+    --step-4: 16px;
+    --step-5: 24px;
+    --step-6: 32px;
+    --step-7: 48px;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f7f7f5;
+      --surface: #ffffff;
+      --surface-hover: #f0f0ee;
+      --border: rgba(0, 0, 0, 0.12);
+      --border-strong: rgba(0, 0, 0, 0.28);
+      --text: #101010;
+      --muted: #5d5d5d;
+      --muted-2: #838383;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    padding: var(--step-6) var(--step-4) var(--step-7);
+  }
+
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--step-3);
+    padding-bottom: var(--step-6);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: var(--step-6);
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .hero h1 {
+    font-size: clamp(24px, 4vw, 34px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0;
+    max-width: 22ch;
+  }
+
+  .lede {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--muted);
+    max-width: 56ch;
+    margin: 0;
+  }
+
+  .hero-links {
+    margin-top: var(--step-2);
+    display: flex;
+    gap: var(--step-3);
+    flex-wrap: wrap;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--step-2);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    border: 1px solid var(--border-strong);
+    padding: var(--step-2) var(--step-4);
+    transition: background 120ms ease-out, border-color 120ms ease-out;
+  }
+
+  .button:hover {
+    background: var(--surface-hover);
+    border-color: var(--muted);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--step-5);
+  }
+
+  .card {
+    --accent: #4be08a;
+    display: flex;
+    flex-direction: column;
+    gap: var(--step-3);
+    padding: var(--step-5);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: var(--step-4);
+  }
+
+  .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    flex: 0 0 auto;
+  }
+
+  .card-head h2 {
+    font-size: 17px;
+    margin: 0 0 4px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 2px 7px;
+  }
+
+  .card p.desc {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .features li {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--muted);
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .features li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+  }
+
+  .card-links {
+    margin-top: auto;
+    padding-top: var(--step-3);
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: var(--step-4);
+  }
+
+  .card-links a {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .card-links a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  footer {
+    margin-top: var(--step-7);
+    padding-top: var(--step-5);
+    border-top: 1px solid var(--border);
+  }
+
+  footer p {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--muted-2);
+    max-width: 64ch;
+    margin: 0;
+  }
+
+  footer code {
+    font-family: var(--mono);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1px 5px;
+    font-size: 11.5px;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <span class="eyebrow">djaunt-browser-tools</span>
+      <h1>Small browser extensions for testing web apps</h1>
+      <p class="lede">
+        No build step, no dependencies. Each folder below is a complete, unpacked extension —
+        clone the repo and load the one you want.
+      </p>
+      <div class="hero-links">
+        <a class="button" href="https://github.com/tory37/djaunt-browser-tools">View source on GitHub</a>
+      </div>
+    </header>
+
+    <section class="grid">
+      <article class="card" style="--accent:#4be08a">
+        <div class="card-head">
+          <img class="icon" src="host-swap/icons/icon128.png" alt="">
+          <div>
+            <h2>Host Swap</h2>
+            <span class="badge">Chrome</span>
+          </div>
+        </div>
+        <p class="desc">
+          Rewrites hosts to other hosts before the request resolves, keeping the path, query
+          string and fragment byte-identical. Point a fixed launch URL at a branch deploy
+          without hand-editing a URL that carries live auth tokens.
+        </p>
+        <ul class="features">
+          <li>Holds as many swaps as you like, enabled one at a time</li>
+          <li>Redirects before DNS resolves — the original host is never contacted</li>
+          <li>Rules persist across browser restarts</li>
+        </ul>
+        <div class="card-links">
+          <a href="https://github.com/tory37/djaunt-browser-tools/tree/main/host-swap">Source</a>
+          <a href="https://github.com/tory37/djaunt-browser-tools/blob/main/host-swap/README.md">README</a>
+        </div>
+      </article>
+
+      <article class="card" style="--accent:#4be08a">
+        <div class="card-head">
+          <img class="icon" src="tab-volume/icons/icon128.png" alt="">
+          <div>
+            <h2>Tab Volume</h2>
+            <span class="badge">Chrome</span>
+          </div>
+        </div>
+        <p class="desc">
+          Sets the volume of each tab from 0 to 100 percent of the system volume, with an
+          option to save that level for every tab on the same domain.
+        </p>
+        <ul class="features">
+          <li>Per-tab level, or "keep for this domain" to apply it site-wide</li>
+          <li>Covers both media elements and Web Audio playback</li>
+          <li>Attenuates only — never boosts past the system volume</li>
+        </ul>
+        <div class="card-links">
+          <a href="https://github.com/tory37/djaunt-browser-tools/tree/main/tab-volume">Source</a>
+          <a href="https://github.com/tory37/djaunt-browser-tools/blob/main/tab-volume/README.md">README</a>
+        </div>
+      </article>
+
+      <article class="card" style="--accent:#a78bfa">
+        <div class="card-head">
+          <img class="icon" src="dark-mode/icons/icon128.png" alt="">
+          <div>
+            <h2>Dark Mode</h2>
+            <span class="badge">Firefox</span>
+          </div>
+        </div>
+        <p class="desc">
+          Forces a dark color scheme on any site, skipping pages that already look dark.
+          Turn it on globally, or override it per domain for the rest of the browsing session.
+        </p>
+        <ul class="features">
+          <li>Detects an already-dark page by its background luminance</li>
+          <li>Global switch persists; per-domain overrides last for the session</li>
+          <li>A storage change reaches every open tab instantly</li>
+        </ul>
+        <div class="card-links">
+          <a href="https://github.com/tory37/djaunt-browser-tools/tree/main/dark-mode">Source</a>
+          <a href="https://github.com/tory37/djaunt-browser-tools/blob/main/dark-mode/README.md">README</a>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      <p>
+        Chrome extensions load from <code>chrome://extensions</code> with <strong>Developer
+        mode</strong> on and <strong>Load unpacked</strong> pointed at the extension's folder.
+        The Firefox extension loads temporarily from
+        <code>about:debugging#/runtime/this-firefox</code>. See each folder's README for
+        details and update instructions.
+      </p>
+    </footer>
+  </div>
+</body>
+</html>
