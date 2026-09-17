@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-dj-theme="void">
 <head>
   <meta charset="UTF-8">
   <title>Dark Mode</title>
@@ -7,39 +7,44 @@
 </head>
 <body>
   <main class="panel">
-    <header class="panel-head">
-      <span class="eyebrow">Dark mode</span>
-      <span class="host" id="host">—</span>
+    <header class="dj-head" id="head" data-state="idle">
+      <span class="dj-mark" aria-hidden="true"></span>
+      <span class="dj-titles">
+        <span class="dj-eyebrow">djaunt</span>
+        <h1 class="dj-title">Dark mode</h1>
+      </span>
+      <span class="dj-pill" id="pill" data-state="idle">off</span>
     </header>
 
-    <p class="detected" id="detected"></p>
+    <p class="host" id="host">—</p>
+    <p class="detected dj-hint" id="detected"></p>
 
-    <label class="toggle" for="global">
-      <input type="checkbox" id="global">
-      <span class="toggle-box" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M4 12.5 9 17.5 20 6.5" /></svg>
-      </span>
-      <span class="toggle-copy">
-        <span class="toggle-title">Enable everywhere</span>
-        <span class="toggle-note">Applies to every site, skipping ones that already look dark</span>
-      </span>
-    </label>
-
-    <section class="override" id="override-block">
-      <span class="override-label">For <span id="override-host">this site</span></span>
-      <div class="segmented" id="segmented">
-        <button type="button" data-value="auto">Auto</button>
-        <button type="button" data-value="on">Always on</button>
-        <button type="button" data-value="off">Always off</button>
+    <div class="field">
+      <div class="row">
+        <button type="button" class="dj-switch" id="global" role="switch" aria-checked="false"
+                aria-label="Enable dark mode everywhere">
+          <span class="dj-knob"></span>
+        </button>
+        <span class="row-copy">
+          <span class="row-title">Enable everywhere</span>
+          <span class="dj-hint">Applies to every site, skipping ones that already look dark</span>
+        </span>
       </div>
-      <p class="override-note">Remembered until the browser restarts</p>
+    </div>
+
+    <section class="field" id="override-block">
+      <span class="dj-label">For <span id="override-host">this site</span></span>
+      <div class="dj-seg-group" id="segmented" role="radiogroup" aria-label="Per-site override">
+        <button type="button" class="dj-seg" role="radio" aria-checked="true" data-value="auto">Auto</button>
+        <button type="button" class="dj-seg" role="radio" aria-checked="false" data-value="on">Always on</button>
+        <button type="button" class="dj-seg" role="radio" aria-checked="false" data-value="off">Always off</button>
+      </div>
+      <p class="dj-hint">Remembered until the browser restarts</p>
     </section>
 
-    <footer class="panel-foot">
-      <span class="applied" id="applied">—</span>
-    </footer>
+    <footer class="dj-foot" id="applied" role="status"></footer>
 
-    <p class="unsupported" id="unsupported" hidden>
+    <p class="unsupported dj-hint" id="unsupported" hidden>
       Dark mode is not available on this page.
     </p>
   </main>

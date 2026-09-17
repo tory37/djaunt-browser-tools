@@ -1,246 +1,71 @@
-:root {
-  color-scheme: dark light;
-  --bg: #0a0a0a;
-  --surface: #141414;
-  --surface-hover: #1c1c1c;
-  --border: rgba(255, 255, 255, 0.1);
-  --border-strong: rgba(255, 255, 255, 0.22);
-  --text: #f2f2f2;
-  --muted: #8f8f8f;
-  --accent: #a78bfa;
-  --accent-ink: #170f2e;
-  --step-1: 4px;
-  --step-2: 8px;
-  --step-3: 12px;
-  --step-4: 16px;
-  --step-5: 20px;
-  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-}
+/* Dark Mode popup — layout only. Every token and shared control comes from
+   brand/base.css; this file must not declare a raw color. */
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg: #f7f7f5;
-    --surface: #ffffff;
-    --surface-hover: #efefec;
-    --border: rgba(0, 0, 0, 0.12);
-    --border-strong: rgba(0, 0, 0, 0.28);
-    --text: #101010;
-    --muted: #5d5d5d;
-    --accent: #7c3aed;
-    --accent-ink: #ffffff;
-  }
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-}
+@import url('brand/base.css');
 
 body {
   width: 300px;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  -webkit-font-smoothing: antialiased;
 }
 
 .panel {
   display: flex;
   flex-direction: column;
-  gap: var(--step-4);
-  padding: var(--step-4);
+  gap: var(--dj-space-4);
+  padding: var(--dj-space-4);
 }
 
-.panel-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--step-2);
-  padding-bottom: var(--step-3);
-  border-bottom: 1px solid var(--border);
-}
-
-.eyebrow {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
+.dj-head {
+  padding: 0 0 var(--dj-space-3);
 }
 
 .host {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--text);
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 180px;
-  direction: rtl;
-  text-align: right;
 }
 
 .detected {
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.4;
   min-height: 14px;
 }
 
-.toggle {
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-2);
+}
+
+.row {
   display: flex;
   align-items: flex-start;
-  gap: var(--step-3);
-  padding: var(--step-3);
-  border: 1px solid var(--border);
-  background: var(--surface);
-  cursor: pointer;
-  transition: border-color 120ms ease-out;
+  gap: var(--dj-space-3);
 }
 
-.toggle:hover {
-  border-color: var(--border-strong);
-}
-
-.toggle input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.toggle-box {
-  flex: 0 0 auto;
-  width: 16px;
-  height: 16px;
+.row .dj-switch {
   margin-top: 1px;
-  border: 1px solid var(--border-strong);
-  display: grid;
-  place-items: center;
 }
 
-.toggle-box svg {
-  width: 12px;
-  height: 12px;
-  fill: none;
-  stroke: var(--accent-ink);
-  stroke-width: 3;
-  stroke-linecap: round;
-  opacity: 0;
-}
-
-.toggle input:checked + .toggle-box {
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.toggle input:checked + .toggle-box svg {
-  opacity: 1;
-}
-
-.toggle input:focus-visible + .toggle-box {
-  outline: 1px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.toggle-copy {
+.row-copy {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.toggle-title {
-  font-size: 12px;
+.row-title {
+  font-size: var(--dj-text-sm);
   font-weight: 600;
+  color: var(--dj-text);
 }
 
-.toggle-note {
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.35;
+.dj-foot {
+  padding: var(--dj-space-3) 0 0;
+  border-top: var(--dj-border-width) solid var(--dj-border);
 }
 
-.override {
-  display: flex;
-  flex-direction: column;
-  gap: var(--step-2);
-}
-
-.override-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-#override-host {
-  color: var(--text);
-}
-
-.segmented {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border: 1px solid var(--border);
-}
-
-.segmented button {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--muted);
-  background: var(--surface);
-  border: 0;
-  border-left: 1px solid var(--border);
-  padding: var(--step-2) 0;
-  cursor: pointer;
-  transition: color 120ms ease-out, background 120ms ease-out;
-}
-
-.segmented button:first-child {
-  border-left: 0;
-}
-
-.segmented button:hover {
-  background: var(--surface-hover);
-  color: var(--text);
-}
-
-.segmented button[data-active="true"] {
-  background: var(--accent);
-  color: var(--accent-ink);
-}
-
-.override-note {
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.35;
-}
-
-.panel-foot {
-  display: flex;
-  align-items: center;
-  padding-top: var(--step-3);
-  border-top: 1px solid var(--border);
-}
-
-.applied {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.unsupported {
-  font-size: 11px;
-  line-height: 1.4;
-  color: var(--muted);
-}
-
-body[data-supported="false"] .detected,
-body[data-supported="false"] .toggle,
-body[data-supported="false"] .override,
-body[data-supported="false"] .panel-foot {
+body[data-supported='false'] .detected,
+body[data-supported='false'] .field,
+body[data-supported='false'] .dj-foot {
   display: none;
 }

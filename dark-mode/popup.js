@@ -5,6 +5,8 @@ const DOMAIN_KEY = "darkModeDomains";
 
 const elements = {
   body: document.body,
+  head: document.getElementById("head"),
+  pill: document.getElementById("pill"),
   host: document.getElementById("host"),
   detected: document.getElementById("detected"),
   global: document.getElementById("global"),
@@ -47,15 +49,20 @@ function renderDetected(status) {
 }
 
 function renderApplied(status) {
-  elements.applied.textContent = status && status.applied
+  const isApplied = Boolean(status && status.applied);
+  const state = isApplied ? "active" : "idle";
+  elements.head.dataset.state = state;
+  elements.pill.dataset.state = state;
+  elements.pill.textContent = isApplied ? "on" : "off";
+  elements.applied.textContent = isApplied
     ? "Dark mode is on for this tab"
     : "Dark mode is off for this tab";
 }
 
 function renderSegmented(overrideValue) {
   const value = overrideValue || "auto";
-  for (const button of elements.segmented.querySelectorAll("button")) {
-    button.dataset.active = String(button.dataset.value === value);
+  for (const seg of elements.segmented.querySelectorAll(".dj-seg")) {
+    seg.setAttribute("aria-checked", String(seg.dataset.value === value));
   }
 }
 
@@ -64,7 +71,7 @@ async function refresh() {
   const domainStore = await api.storage.session.get(DOMAIN_KEY);
   const domains = domainStore[DOMAIN_KEY] || {};
 
-  elements.global.checked = Boolean(globalStore[GLOBAL_KEY]);
+  elements.global.setAttribute("aria-checked", String(Boolean(globalStore[GLOBAL_KEY])));
   elements.overrideHost.textContent = activeHost;
   renderSegmented(domains[activeHost]);
 
@@ -73,15 +80,16 @@ async function refresh() {
   renderDetected(status);
 }
 
-elements.global.addEventListener("change", async (event) => {
-  await api.storage.local.set({ [GLOBAL_KEY]: event.target.checked });
+elements.global.addEventListener("click", async () => {
+  const next = elements.global.getAttribute("aria-checked") !== "true";
+  await api.storage.local.set({ [GLOBAL_KEY]: next });
   setTimeout(refresh, 150);
 });
 
 elements.segmented.addEventListener("click", async (event) => {
-  const button = event.target.closest("button");
-  if (!button) return;
-  const value = button.dataset.value;
+  const seg = event.target.closest(".dj-seg");
+  if (!seg) return;
+  const value = seg.dataset.value;
 
   const domainStore = await api.storage.session.get(DOMAIN_KEY);
   const domains = domainStore[DOMAIN_KEY] || {};

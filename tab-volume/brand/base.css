@@ -70,7 +70,7 @@ button {
   font-size: 9px;
   letter-spacing: var(--dj-tracking-label);
   text-transform: uppercase;
-  color: var(--dj-text-muted);
+  color: var(--dj-accent);
 }
 
 .dj-title {
