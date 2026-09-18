@@ -3,3 +3,6 @@
 
 .DS_Store
 node_modules/
+
+# Agent working files — plans, research, generated output.
+.agents/
