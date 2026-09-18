@@ -78,6 +78,5 @@
 		"commandCenter.background": "#0d0d0d",
 		"commandCenter.activeBorder": "#dc2626"
 	},
-	"window.title": "Lexa (Reading Client)",
-	"makefile.configureOnOpen": false
+	"window.title": "Djaunt Browser Tools"
 }
