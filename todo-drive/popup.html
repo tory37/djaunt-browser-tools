@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" data-dj-theme="stone">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo Drive</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="panel">
+    <header class="dj-head" id="head" data-state="idle">
+      <span class="dj-mark" aria-hidden="true"></span>
+      <span class="dj-titles">
+        <span class="dj-wordmark" role="img" aria-label="Djaunt"></span>
+        <h1 class="dj-title">Todo Drive</h1>
+      </span>
+      <span class="dj-pill" id="pill" data-state="idle">signed out</span>
+    </header>
+
+    <section id="signed-out" class="field">
+      <p class="dj-hint">
+        Saves to a hidden, app-only file in your own Google Drive. Nothing is sent
+        anywhere else, and there's no account with us.
+      </p>
+      <button type="button" class="dj-btn" id="sign-in">Sign in with Google</button>
+    </section>
+
+    <section id="signed-in" class="field" hidden>
+      <form id="add-form" class="add-row">
+        <input type="text" id="add-input" placeholder="Add a todo…" autocomplete="off">
+        <button type="submit" class="dj-btn" id="add-submit">Add</button>
+      </form>
+
+      <ul class="todo-list" id="todo-list"></ul>
+
+      <p class="dj-hint empty-hint" id="empty-hint" hidden>Nothing here yet.</p>
+
+      <div class="row-actions">
+        <button type="button" class="dj-btn" id="clear-completed">Clear completed</button>
+        <button type="button" class="dj-btn" id="sign-out">Sign out</button>
+      </div>
+    </section>
+
+    <footer class="dj-foot" id="status" role="status"></footer>
+  </main>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

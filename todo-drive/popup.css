@@ -1,0 +1,114 @@
+/* Todo Drive popup — layout only. Every token and shared control comes from
+   brand/base.css; this file must not declare a raw color. */
+
+@import url('brand/base.css');
+
+body {
+  width: 320px;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-4);
+  padding-bottom: var(--dj-space-3);
+}
+
+#signed-out:not([hidden]),
+#signed-in:not([hidden]) {
+  padding: 0 var(--dj-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-3);
+}
+
+.add-row {
+  display: flex;
+  gap: var(--dj-space-2);
+}
+
+.add-row input {
+  flex: 1 1 auto;
+}
+
+.add-row .dj-btn {
+  width: auto;
+  padding-inline: var(--dj-space-3);
+}
+
+.todo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-1);
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dj-space-2);
+  padding: var(--dj-space-2);
+  border-radius: var(--dj-radius-sm);
+}
+
+.todo-item:hover {
+  background: var(--dj-surface);
+}
+
+.todo-check {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  background: var(--dj-surface);
+}
+
+.todo-item[data-done='true'] .todo-check {
+  background: var(--dj-accent);
+  border-color: var(--dj-accent);
+}
+
+.todo-text {
+  flex: 1 1 auto;
+  font-size: var(--dj-text-sm);
+  color: var(--dj-text);
+  word-break: break-word;
+}
+
+.todo-item[data-done='true'] .todo-text {
+  color: var(--dj-text-muted);
+  text-decoration: line-through;
+}
+
+.todo-remove {
+  flex: 0 0 auto;
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+  opacity: 0;
+  transition: opacity var(--dj-dur-fast) var(--dj-ease), color var(--dj-dur-fast) var(--dj-ease);
+}
+
+.todo-item:hover .todo-remove {
+  opacity: 1;
+}
+
+.todo-remove:hover {
+  color: var(--dj-danger);
+}
+
+.empty-hint {
+  text-align: center;
+  padding: var(--dj-space-3) 0;
+}
+
+.row-actions {
+  display: flex;
+  gap: var(--dj-space-2);
+}

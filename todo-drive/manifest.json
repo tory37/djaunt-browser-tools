@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Todo Drive",
+  "version": "1.0.0",
+  "description": "A todo list that saves to your own Google Drive — no account with us, no server we run, nothing to self-host.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "todo-drive@djaunt-browser-tools",
+      "strict_min_version": "121.0"
+    }
+  },
+  "permissions": ["identity", "storage"],
+  "host_permissions": ["https://www.googleapis.com/*", "https://accounts.google.com/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Todo Drive",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

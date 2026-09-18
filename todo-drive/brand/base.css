@@ -1,0 +1,312 @@
+/* Djaunt popup primitives — shared by every extension in this repo.
+   Consumes role variables from tokens.css only; never a raw hex.
+   Each extension sets its element theme with data-dj-theme on <html>. */
+
+@import url('tokens.css');
+@import url('fonts.css');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--dj-bg);
+  color: var(--dj-text);
+  font-family: var(--dj-font-body);
+  font-size: var(--dj-text-sm);
+  line-height: var(--dj-leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* ---- header: dragon mark, mono eyebrow over a display heading, status pill ---- */
+
+.dj-head {
+  display: flex;
+  align-items: center;
+  gap: var(--dj-space-3);
+  padding: var(--dj-space-3) var(--dj-space-4);
+  border-bottom: var(--dj-border-width) solid var(--dj-border);
+}
+
+/* The mark is painted as a mask so it inherits the theme accent like an icon
+   would. An <img> would lock it to the fill baked into the SVG. */
+.dj-mark {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  background: var(--dj-text-muted);
+  mask: url('dragon.svg') center / contain no-repeat;
+  transition: background var(--dj-dur-base) var(--dj-ease);
+}
+
+/* The one sanctioned glow, on one element: the dragon lights when rules are live. */
+.dj-head[data-state='active'] .dj-mark {
+  background: var(--dj-accent);
+  filter: drop-shadow(0 0 5px var(--dj-accent));
+}
+
+.dj-head[data-state='error'] .dj-mark {
+  background: var(--dj-danger);
+}
+
+.dj-titles {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* The wordmark is painted as a mask (like the dragon mark) so it inherits
+   the theme accent instead of being locked to a baked-in fill. Sized to the
+   brand package's stated minimum (80px wide) and scaled by aspect-ratio. */
+.dj-wordmark {
+  display: block;
+  width: 80px;
+  aspect-ratio: 465.39 / 50.14;
+  background: var(--dj-accent);
+  mask: url('wordmark.svg') left center / contain no-repeat;
+}
+
+.dj-title {
+  font-family: var(--dj-font-display);
+  font-size: var(--dj-text-lg);
+  font-weight: 600;
+  letter-spacing: var(--dj-tracking-display);
+  line-height: var(--dj-leading-tight);
+  color: var(--dj-text);
+}
+
+.dj-pill {
+  flex: 0 0 auto;
+  font-family: var(--dj-font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: var(--dj-tracking-label);
+  padding: 3px var(--dj-space-2) 3px 9px;
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  color: var(--dj-text-muted);
+  transition: color var(--dj-dur-base) var(--dj-ease),
+              border-color var(--dj-dur-base) var(--dj-ease);
+}
+
+.dj-pill[data-state='active'] {
+  border-color: var(--dj-accent);
+  color: var(--dj-accent);
+}
+
+.dj-pill[data-state='error'] {
+  border-color: var(--dj-danger);
+  color: var(--dj-danger);
+}
+
+/* ---- labels, hints, data ---- */
+
+.dj-label {
+  font-family: var(--dj-font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: var(--dj-tracking-label);
+  text-transform: uppercase;
+  color: var(--dj-text-muted);
+}
+
+.dj-hint {
+  font-size: var(--dj-text-xs);
+  line-height: 1.45;
+  color: var(--dj-text-muted);
+}
+
+.dj-hint code {
+  font-family: var(--dj-font-mono);
+  background: var(--dj-surface-raised);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: 0 3px;
+}
+
+/* ---- inputs ---- */
+
+input[type='text'],
+textarea {
+  display: block;
+  width: 100%;
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-sm);
+  color: var(--dj-text);
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: 7px var(--dj-space-2);
+  transition: border-color var(--dj-dur-fast) var(--dj-ease);
+}
+
+input[type='text']::placeholder,
+textarea::placeholder {
+  color: var(--dj-bone-500);
+}
+
+input[type='text']:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--dj-accent);
+}
+
+input[type='text'].invalid {
+  border-color: var(--dj-danger);
+}
+
+textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* ---- buttons ---- */
+
+.dj-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dj-space-2);
+  width: 100%;
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dj-text);
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: var(--dj-space-2);
+  transition: border-color var(--dj-dur-base) var(--dj-ease),
+              color var(--dj-dur-base) var(--dj-ease),
+              background var(--dj-dur-base) var(--dj-ease);
+}
+
+.dj-btn:hover:not(:disabled) {
+  border-color: var(--dj-accent);
+  color: var(--dj-accent);
+  background: var(--dj-surface-raised);
+}
+
+.dj-btn:disabled {
+  color: var(--dj-text-muted);
+  cursor: not-allowed;
+}
+
+.dj-icon {
+  flex: 0 0 auto;
+  display: block;
+}
+
+/* ---- switch ---- */
+
+.dj-switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 20px;
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  transition: border-color var(--dj-dur-base) var(--dj-ease),
+              background var(--dj-dur-base) var(--dj-ease);
+}
+
+.dj-switch[aria-checked='true'] {
+  border-color: var(--dj-accent);
+  background: var(--dj-accent-deep);
+}
+
+.dj-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: var(--dj-text-muted);
+  border-radius: 1px;
+  transition: transform var(--dj-dur-base) var(--dj-ease),
+              background var(--dj-dur-base) var(--dj-ease);
+}
+
+.dj-switch[aria-checked='true'] .dj-knob {
+  transform: translateX(16px);
+  background: var(--dj-accent);
+}
+
+/* ---- segmented control ---- */
+
+.dj-seg-group {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+}
+
+.dj-seg {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  padding: 6px var(--dj-space-1);
+  transition: color var(--dj-dur-base) var(--dj-ease),
+              border-color var(--dj-dur-base) var(--dj-ease);
+}
+
+.dj-seg:first-child {
+  border-radius: var(--dj-radius-sm) 0 0 var(--dj-radius-sm);
+}
+
+.dj-seg:last-child {
+  border-radius: 0 var(--dj-radius-sm) var(--dj-radius-sm) 0;
+}
+
+.dj-seg + .dj-seg {
+  border-left: none;
+}
+
+.dj-seg[aria-checked='true'] {
+  color: var(--dj-text);
+  border-color: var(--dj-accent);
+}
+
+.dj-seg[aria-checked='true'] + .dj-seg {
+  border-left-color: var(--dj-accent);
+}
+
+/* ---- footer status line ---- */
+
+.dj-foot {
+  padding: var(--dj-space-2) var(--dj-space-4);
+  min-height: 30px;
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+}
+
+.dj-foot.error {
+  color: var(--dj-danger);
+}
+
+/* ---- focus ---- */
+
+:focus-visible {
+  outline: var(--dj-border-width) solid var(--dj-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
