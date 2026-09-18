@@ -1,5 +1,14 @@
 # Todo Sync
 
+> **Status: paused, non-operational.** The code here works — sign in, add/toggle/delete
+> todos, sync to a private GitHub repo — but it isn't finished as a *product* decision.
+> GitHub accounts are close to universal among developers and close to nonexistent among
+> everyone else, so requiring one locks this out for a general audience the way the
+> earlier Google Drive-backed version didn't. It's off the root README's index page and
+> `index.html`'s card until that's resolved — either back to Drive, or both backends
+> offered and picked at sign-in. Coming back to this later; nothing below is stale, it's
+> just paused mid-decision.
+
 Chrome & Firefox extension (Manifest V3) that is a todo list — nothing more — that saves
 to a private repo in **your own** GitHub account. There's no account with us, no server
 we run, no database to manage, and nothing to self-host.

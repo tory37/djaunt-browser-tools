@@ -14,7 +14,7 @@ an index page showing off each extension. It's `index.html` at the repo root; en
 | [`tab-volume/`](tab-volume) | Chrome & Firefox | Sets the volume of each tab from 0 to 100 percent, optionally saved for every tab on the same domain. |
 | [`dark-mode/`](dark-mode) | Chrome & Firefox | Forces a dark color scheme on any site, skipping ones that already look dark. Toggle it globally or override it per domain for the browsing session. |
 | [`color-picker/`](color-picker) | Chrome & Firefox | Picks any on-screen color, converts it between hex/RGB/HSL/OKLCH, checks WCAG contrast, and builds CSS gradients — with no host permissions at all. |
-| [`todo-sync/`](todo-sync) | Chrome & Firefox | A todo list that saves to a private repo in your own GitHub account — no account with us, no server we run, nothing to self-host. Needs a one-time OAuth app setup; see its README. |
+| [`todo-sync/`](todo-sync) | ⏸ Paused | A todo list synced to a per-account backend. Not on the index page for now — its current GitHub-account backend doesn't suit a general audience; see its README's Status note before picking this back up. |
 
 Every extension runs on both browsers from the same folder — a tiny `globalThis.browser ??
 globalThis.chrome` shim is the only cross-browser code, and each `manifest.json` declares
