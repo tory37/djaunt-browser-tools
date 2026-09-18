@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Query Params",
+  "name": "Djaunt Query Params",
   "version": "1.0.0",
   "description": "Removes and adds query string parameters on a chosen domain before the request resolves.",
   "browser_specific_settings": {
@@ -23,7 +23,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Query Params",
+    "default_title": "Djaunt Query Params",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",

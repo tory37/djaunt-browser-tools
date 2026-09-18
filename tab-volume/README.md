@@ -1,4 +1,4 @@
-# Tab Volume
+# Djaunt Tab Volume
 
 Chrome & Firefox extension (Manifest V3) that sets the volume of each tab from 0 to 100
 percent of the system volume, with an option to save that level for every tab on the domain.

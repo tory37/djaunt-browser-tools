@@ -1,4 +1,4 @@
-# Color Picker
+# Djaunt Color Picker
 
 A Chrome & Firefox extension (Manifest V3) that picks any on-screen color, converts it
 between formats, checks WCAG contrast, and builds CSS gradients.

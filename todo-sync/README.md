@@ -1,4 +1,4 @@
-# Todo Sync
+# Djaunt Todo Sync
 
 > **Status: paused, non-operational.** The code here works — sign in, add/toggle/delete
 > todos, sync to a private GitHub repo — but it isn't finished as a *product* decision.

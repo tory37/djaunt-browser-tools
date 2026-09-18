@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Tab Volume",
+  "name": "Djaunt Tab Volume",
   "version": "1.0.0",
   "description": "Set the volume of each tab from 0 to 100 percent, and optionally keep that setting for every tab on the same domain.",
   "browser_specific_settings": {
@@ -16,7 +16,7 @@
     "scripts": ["background.js"]
   },
   "action": {
-    "default_title": "Tab Volume",
+    "default_title": "Djaunt Tab Volume",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",

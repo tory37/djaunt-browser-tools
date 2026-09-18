@@ -1,4 +1,4 @@
-# Net Mock
+# Djaunt Net Mock
 
 A Chrome & Firefox extension (Manifest V3) that **intercepts the page's own network calls
 and answers the ones you choose with a response you wrote**. Mock an API that does not exist

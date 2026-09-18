@@ -1,4 +1,4 @@
-# Host Swap
+# Djaunt Host Swap
 
 A Chrome & Firefox extension (Manifest V3) that rewrites hosts to other hosts **before the
 request resolves**, keeping the path, query string and fragment byte-identical. Keep as many

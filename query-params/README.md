@@ -1,4 +1,4 @@
-# Query Params
+# Djaunt Query Params
 
 A Chrome & Firefox extension (Manifest V3) that **removes and adds query string parameters**
 on a domain you choose, before the request resolves. Keep as many tweaks as you like and turn

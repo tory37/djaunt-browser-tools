@@ -1,4 +1,4 @@
-# Dark Mode
+# Djaunt Dark Mode
 
 Chrome & Firefox extension (Manifest V3) that forces a dark color scheme on any site,
 skipping pages that already look dark. Turn it on globally, or override it per domain for

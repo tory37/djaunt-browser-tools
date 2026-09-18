@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Todo Sync",
+  "name": "Djaunt Todo Sync",
   "version": "1.0.0",
   "description": "A todo list that saves to a private GitHub repo in your own account — no account with us, no server we run, nothing to self-host.",
   "browser_specific_settings": {
@@ -13,7 +13,7 @@
   "host_permissions": ["https://github.com/*", "https://api.github.com/*"],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Todo Sync",
+    "default_title": "Djaunt Todo Sync",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",

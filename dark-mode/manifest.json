@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Dark Mode",
+  "name": "Djaunt Dark Mode",
   "version": "1.0.0",
   "description": "Forces a dark color scheme on any site, skipping pages that already look dark. Toggle it globally or override it per domain for the browser session.",
   "browser_specific_settings": {
@@ -16,7 +16,7 @@
     "scripts": ["background.js"]
   },
   "action": {
-    "default_title": "Dark Mode",
+    "default_title": "Djaunt Dark Mode",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
