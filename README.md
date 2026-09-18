@@ -1,7 +1,7 @@
 # djaunt-browser-tools
 
-Browser extensions (Manifest V3) I use day to day for testing web apps. No build step, no
-dependencies — load each folder unpacked.
+Browser-based tools I use day to day — mostly Manifest V3 extensions, occasionally a plain
+web page. No build step, no dependencies — load each folder unpacked.
 
 **[tory37.github.io/djaunt-browser-tools](https://tory37.github.io/djaunt-browser-tools/)** —
 an index page showing off each extension. It's `index.html` at the repo root; enable it under
