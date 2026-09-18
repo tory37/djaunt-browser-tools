@@ -1,16 +1,20 @@
-import { getAccessToken, isSignedIn, signOut } from './auth.js';
-import { loadRemote, remoteModifiedTime, saveRemote } from './drive.js';
+import { beginSignIn, getPendingDeviceFlow, getStoredToken, pollOnce, signOut } from './github-auth.js';
+import { loadRemote, saveRemote } from './github-store.js';
 import { addTodo, clearCompleted, mergeTodos, removeTodo, sortTodos, toggleTodo } from './todos.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 
-const CACHE_KEY = 'todoDriveCache';
+const CACHE_KEY = 'todoSyncCache';
 const SAVE_DEBOUNCE_MS = 600;
 
 const elements = {
   head: document.getElementById('head'),
   pill: document.getElementById('pill'),
   signedOut: document.getElementById('signed-out'),
+  deviceCode: document.getElementById('device-code'),
+  deviceCodeValue: document.getElementById('device-code-value'),
+  deviceCodeStatus: document.getElementById('device-code-status'),
+  reopenGithub: document.getElementById('reopen-github'),
   signedIn: document.getElementById('signed-in'),
   signIn: document.getElementById('sign-in'),
   signOut: document.getElementById('sign-out'),
@@ -22,26 +26,31 @@ const elements = {
   status: document.getElementById('status'),
 };
 
-let state = { fileId: null, modifiedTime: null, todos: [] };
+let state = { owner: null, sha: null, todos: [] };
 let saveTimer = null;
 let saveToken = 0;
+let pollTimer = null;
 
 function setStatus(text, isError = false) {
   elements.status.textContent = text;
   elements.status.classList.toggle('error', isError);
 }
 
+function showPanel(name) {
+  elements.signedOut.hidden = name !== 'signed-out';
+  elements.deviceCode.hidden = name !== 'device-code';
+  elements.signedIn.hidden = name !== 'signed-in';
+}
+
 function setPresence(signedIn) {
   elements.head.dataset.state = signedIn ? 'active' : 'idle';
   elements.pill.dataset.state = signedIn ? 'active' : 'idle';
   elements.pill.textContent = signedIn ? 'synced' : 'signed out';
-  elements.signedOut.hidden = signedIn;
-  elements.signedIn.hidden = !signedIn;
 }
 
 async function readCache() {
   const stored = await api.storage.local.get(CACHE_KEY);
-  return stored[CACHE_KEY] ?? { fileId: null, modifiedTime: null, todos: [] };
+  return stored[CACHE_KEY] ?? { owner: null, sha: null, todos: [] };
 }
 
 async function writeCache() {
@@ -89,23 +98,22 @@ function scheduleSave() {
 async function save(token) {
   try {
     setStatus('Saving…');
-    if (state.fileId) {
-      const current = await remoteModifiedTime(state.fileId);
-      if (current !== state.modifiedTime) {
-        // Someone else (another device) changed the file since we last synced —
-        // fold their copy in rather than overwriting it.
-        const remote = await loadRemote();
-        state.todos = mergeTodos(state.todos, remote.todos);
-        if (token !== saveToken) return; // a newer edit landed while we were merging
-        render();
-      }
-    }
-    const saved = await saveRemote({ fileId: state.fileId, todos: state.todos });
+    const result = await saveRemote({ owner: state.owner, sha: state.sha, todos: state.todos });
     if (token !== saveToken) return; // superseded by a newer edit
-    state.fileId = saved.id;
-    state.modifiedTime = saved.modifiedTime;
+
+    if (result.conflict) {
+      // Someone else (another device) changed the file since we last synced — fold
+      // their copy in rather than overwriting it, then retry the save.
+      const remote = await loadRemote();
+      state.sha = remote.sha;
+      state.todos = mergeTodos(state.todos, remote.todos);
+      render();
+      return save(token);
+    }
+
+    state.sha = result.sha;
     await writeCache();
-    setStatus('Saved to Drive');
+    setStatus('Saved to GitHub');
   } catch (error) {
     setStatus(`Couldn't save: ${error.message}`, true);
   }
@@ -145,10 +153,10 @@ elements.clearCompleted.addEventListener('click', () => {
 
 elements.signIn.addEventListener('click', async () => {
   elements.signIn.disabled = true;
-  setStatus('Opening Google sign-in…');
   try {
-    await getAccessToken({ interactive: true });
-    await enterSignedIn();
+    const pending = await beginSignIn();
+    showDeviceCode(pending);
+    startPolling(pending);
   } catch (error) {
     setStatus(`Sign-in failed: ${error.message}`, true);
   } finally {
@@ -156,39 +164,81 @@ elements.signIn.addEventListener('click', async () => {
   }
 });
 
+elements.reopenGithub.addEventListener('click', async () => {
+  const pending = await getPendingDeviceFlow();
+  if (pending) await api.tabs.create({ url: pending.verificationUri });
+});
+
 elements.signOut.addEventListener('click', async () => {
   await signOut();
   await api.storage.local.remove(CACHE_KEY);
-  state = { fileId: null, modifiedTime: null, todos: [] };
+  state = { owner: null, sha: null, todos: [] };
   render();
   setPresence(false);
+  showPanel('signed-out');
   setStatus('');
 });
 
+function showDeviceCode(pending) {
+  showPanel('device-code');
+  elements.deviceCodeValue.textContent = pending.userCode;
+  elements.deviceCodeStatus.textContent = 'Waiting for you to authorize…';
+}
+
+function startPolling(pending) {
+  clearTimeout(pollTimer);
+  const tick = async () => {
+    try {
+      const result = await pollOnce(pending);
+      if (result.done) {
+        await enterSignedIn();
+        return;
+      }
+      pending.interval = result.interval;
+      pollTimer = setTimeout(tick, pending.interval * 1000);
+    } catch (error) {
+      elements.deviceCodeStatus.textContent = error.message;
+    }
+  };
+  // Polls right away rather than waiting a full interval first — if the popup was
+  // closed and reopened after the user already authorized on github.com, this
+  // notices immediately instead of leaving them staring at a stale code.
+  tick();
+}
+
 async function enterSignedIn() {
+  clearTimeout(pollTimer);
+  showPanel('signed-in');
   setPresence(true);
   state = await readCache();
   render();
   setStatus('Syncing…');
   try {
     const remote = await loadRemote();
-    state.fileId = remote.fileId;
-    state.modifiedTime = remote.modifiedTime;
+    state.owner = remote.owner;
+    state.sha = remote.sha;
     state.todos = mergeTodos(state.todos, remote.todos);
     render();
     await writeCache();
     setStatus('Up to date');
   } catch (error) {
-    setStatus(`Couldn't reach Drive: ${error.message}`, true);
+    setStatus(`Couldn't reach GitHub: ${error.message}`, true);
   }
 }
 
 async function init() {
-  if (await isSignedIn()) {
+  if (await getStoredToken()) {
     await enterSignedIn();
-  } else {
-    setPresence(false);
+    return;
   }
+  const pending = await getPendingDeviceFlow();
+  if (pending) {
+    showDeviceCode(pending);
+    startPolling(pending);
+    return;
+  }
+  showPanel('signed-out');
+  setPresence(false);
 }
 
 init();

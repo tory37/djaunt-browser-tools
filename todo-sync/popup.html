@@ -2,7 +2,7 @@
 <html lang="en" data-dj-theme="stone">
 <head>
   <meta charset="UTF-8">
-  <title>Todo Drive</title>
+  <title>Todo Sync</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
@@ -11,17 +11,26 @@
       <span class="dj-mark" aria-hidden="true"></span>
       <span class="dj-titles">
         <span class="dj-wordmark" role="img" aria-label="Djaunt"></span>
-        <h1 class="dj-title">Todo Drive</h1>
+        <h1 class="dj-title">Todo Sync</h1>
       </span>
       <span class="dj-pill" id="pill" data-state="idle">signed out</span>
     </header>
 
     <section id="signed-out" class="field">
       <p class="dj-hint">
-        Saves to a hidden, app-only file in your own Google Drive. Nothing is sent
-        anywhere else, and there's no account with us.
+        Saves to a private repo in your own GitHub account. Nothing is sent anywhere
+        else, and there's no account with us.
       </p>
-      <button type="button" class="dj-btn" id="sign-in">Sign in with Google</button>
+      <button type="button" class="dj-btn" id="sign-in">Sign in with GitHub</button>
+    </section>
+
+    <section id="device-code" class="field" hidden>
+      <p class="dj-hint">
+        A GitHub tab just opened. Enter this code there to finish signing in:
+      </p>
+      <p class="device-code-value" id="device-code-value">••••••••</p>
+      <button type="button" class="dj-btn" id="reopen-github">Open GitHub again</button>
+      <p class="dj-hint" id="device-code-status">Waiting for you to authorize…</p>
     </section>
 
     <section id="signed-in" class="field" hidden>

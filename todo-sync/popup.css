@@ -1,4 +1,4 @@
-/* Todo Drive popup — layout only. Every token and shared control comes from
+/* Todo Sync popup — layout only. Every token and shared control comes from
    brand/base.css; this file must not declare a raw color. */
 
 @import url('brand/base.css');
@@ -14,12 +14,28 @@ body {
   padding-bottom: var(--dj-space-3);
 }
 
+/* :not([hidden]) matters: an ID selector otherwise outranks the browser's own
+   [hidden] { display: none }, so the section would stay visible despite the attribute. */
 #signed-out:not([hidden]),
+#device-code:not([hidden]),
 #signed-in:not([hidden]) {
   padding: 0 var(--dj-space-4);
   display: flex;
   flex-direction: column;
   gap: var(--dj-space-3);
+}
+
+.device-code-value {
+  font-family: var(--dj-font-mono);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-align: center;
+  color: var(--dj-accent);
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: var(--dj-space-3);
 }
 
 .add-row {

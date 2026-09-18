@@ -1,19 +1,19 @@
 {
   "manifest_version": 3,
-  "name": "Todo Drive",
+  "name": "Todo Sync",
   "version": "1.0.0",
-  "description": "A todo list that saves to your own Google Drive — no account with us, no server we run, nothing to self-host.",
+  "description": "A todo list that saves to a private GitHub repo in your own account — no account with us, no server we run, nothing to self-host.",
   "browser_specific_settings": {
     "gecko": {
-      "id": "todo-drive@djaunt-browser-tools",
+      "id": "todo-sync@djaunt-browser-tools",
       "strict_min_version": "121.0"
     }
   },
-  "permissions": ["identity", "storage"],
-  "host_permissions": ["https://www.googleapis.com/*", "https://accounts.google.com/*"],
+  "permissions": ["storage"],
+  "host_permissions": ["https://github.com/*", "https://api.github.com/*"],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Todo Drive",
+    "default_title": "Todo Sync",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",
