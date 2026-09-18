@@ -26,7 +26,7 @@ const elements = {
   status: document.getElementById('status'),
 };
 
-let state = { owner: null, sha: null, todos: [] };
+let state = { owner: null, repoName: null, sha: null, todos: [] };
 let saveTimer = null;
 let saveToken = 0;
 let pollTimer = null;
@@ -50,7 +50,7 @@ function setPresence(signedIn) {
 
 async function readCache() {
   const stored = await api.storage.local.get(CACHE_KEY);
-  return stored[CACHE_KEY] ?? { owner: null, sha: null, todos: [] };
+  return stored[CACHE_KEY] ?? { owner: null, repoName: null, sha: null, todos: [] };
 }
 
 async function writeCache() {
@@ -98,7 +98,9 @@ function scheduleSave() {
 async function save(token) {
   try {
     setStatus('Saving…');
-    const result = await saveRemote({ owner: state.owner, sha: state.sha, todos: state.todos });
+    const result = await saveRemote({
+      owner: state.owner, repoName: state.repoName, sha: state.sha, todos: state.todos,
+    });
     if (token !== saveToken) return; // superseded by a newer edit
 
     if (result.conflict) {
@@ -172,7 +174,7 @@ elements.reopenGithub.addEventListener('click', async () => {
 elements.signOut.addEventListener('click', async () => {
   await signOut();
   await api.storage.local.remove(CACHE_KEY);
-  state = { owner: null, sha: null, todos: [] };
+  state = { owner: null, repoName: null, sha: null, todos: [] };
   render();
   setPresence(false);
   showPanel('signed-out');
@@ -216,6 +218,7 @@ async function enterSignedIn() {
   try {
     const remote = await loadRemote();
     state.owner = remote.owner;
+    state.repoName = remote.repoName;
     state.sha = remote.sha;
     state.todos = mergeTodos(state.todos, remote.todos);
     render();

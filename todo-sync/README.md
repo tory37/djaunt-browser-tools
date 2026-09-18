@@ -14,9 +14,11 @@ Being upfront about the mechanism, since it's unusual for a todo app:
   flow needs no redirect URL and no client secret — GitHub's own docs say not to send
   one — which is why it was picked over a normal OAuth redirect.
 - The first time you sign in, the extension creates a **private repository** named
-  `todo-sync-data` under your account and stores everything in one `todos.json` file in
-  it, using GitHub's Contents API. You'll see that repo if you browse your own GitHub
-  repos — it's not hidden from *you*, just private to everyone else.
+  `todo-sync-data-<your account's numeric GitHub id>` under your account and stores
+  everything in one `todos.json` file in it, using GitHub's Contents API. You'll see that
+  repo if you browse your own GitHub repos — it's not hidden from *you*, just private to
+  everyone else. The numeric id (permanent, unlike a username you can rename) is there so
+  an unrelated repo you already have can never be mistaken for this one — see below.
 - Every edit re-renders instantly from an in-memory copy, then a debounced save pushes
   the whole file to GitHub. GitHub rejects the write (409) if the file changed since you
   last read it — e.g. you edited on another device in the meantime — and the extension
@@ -32,12 +34,18 @@ Yes, but it's worth explaining *why*, because an earlier design for this used a 
   docs say plainly that anyone who gets the link can view a secret Gist's contents, no
   GitHub account required. The privacy is security-through-obscurity: guess or leak the
   URL, and the data is readable by anyone.
-- A **private repository** is genuinely access-controlled. Even though this extension
-  always uses the same repo name (`todo-sync-data`), that name being predictable buys an
-  attacker nothing: GitHub returns `404 Not Found` — not even a `403`, specifically so it
-  doesn't confirm the repo exists — to anyone querying it without a valid token for your
-  account. Knowing the name isn't knowing a secret; you still need to actually be signed
-  in as you (or be a collaborator you added).
+- A **private repository** is genuinely access-controlled. The name being predictable —
+  or not — buys an attacker nothing either way: GitHub returns `404 Not Found` — not even
+  a `403`, specifically so it doesn't confirm the repo exists — to anyone querying it
+  without a valid token for your account. Knowing the name isn't knowing a secret; you
+  still need to actually be signed in as you (or be a collaborator you added). The
+  account-numbered name (above) is about avoiding an accidental collision with some other
+  repo of yours, not about hiding anything — a private repo is exactly as private whether
+  it's named `todos` or something unguessable.
+- As a second, independent guard against that same collision: before writing to a repo
+  that already exists under that name, the extension checks its description for a fixed
+  marker string it always sets when it creates one. A repo with the right name but no
+  marker fails loudly with an error instead of being silently read from or written to.
 
 The tradeoff that comes with this: to create and write to "a repo" via the API, the
 OAuth scope requested is `repo` — full read/write access to *all* of your private repos,
@@ -94,7 +102,7 @@ allows unsigned extensions.
 - Click the **✕** that appears on hover to delete one, or **Clear completed** to drop all
   done items at once.
 - **Sign out** forgets the saved token and clears the local cache; your data stays in the
-  `todo-sync-data` repo and picks back up next time you sign in.
+  `todo-sync-data-<your account id>` repo and picks back up next time you sign in.
 
 ## How it works
 
@@ -102,8 +110,10 @@ allows unsigned extensions.
   popup is open — there's no background service worker keeping a poll loop alive, since
   Manifest V3 can kill a service worker after ~30 seconds idle and nothing guarantees a
   polling loop survives that. Closing and reopening the popup resumes it instead.
-- `github-store.js` reads and writes `todos.json` in the `todo-sync-data` repo via
-  GitHub's REST Contents API — no other host permissions, no third-party server.
+- `github-store.js` reads and writes `todos.json` in that per-account repo via GitHub's
+  REST Contents API — no other host permissions, no third-party server. It checks the
+  repo's description against a fixed marker before touching one that already exists, so
+  an unrelated repo you happen to already have never gets silently treated as this one.
 - `todos.js` is the list logic (add/toggle/remove/sort/merge) with no browser API at all,
   so it's covered by `test.mjs` without needing a browser or a mock of one.
 

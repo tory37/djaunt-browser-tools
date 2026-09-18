@@ -6,9 +6,16 @@ import { getStoredToken } from './github-auth.js';
  * access control) was chosen over a Gist (an unlisted-but-public URL, not actually
  * access-controlled) — and for the `repo` scope tradeoff that goes with it.
  */
-const REPO_NAME = 'todo-sync-data';
 const FILE_PATH = 'todos.json';
 const API_ROOT = 'https://api.github.com';
+
+// A marker checked on an existing repo before writing to it, and a name built from the
+// account's numeric id (permanent, unlike a username you can rename) rather than a fixed
+// string — not for secrecy (a private repo is already only visible to the account it
+// belongs to), just so an unrelated repo that happens to share the name is never mistaken
+// for this one.
+const REPO_DESCRIPTION = 'Todo Sync data — auto-created by the extension. Safe to ignore; '
+  + 'deleting it clears your todos. Marker: djaunt-todo-sync-v1';
 
 function utf8ToBase64(text) {
   return btoa(String.fromCharCode(...new TextEncoder().encode(text)));
@@ -34,25 +41,34 @@ async function authedFetch(path, options = {}) {
   });
 }
 
-async function getUsername() {
+async function getAccount() {
   const res = await authedFetch('/user');
   if (!res.ok) throw new Error(`Couldn't read GitHub account: ${res.status}`);
-  return (await res.json()).login;
+  const { login, id } = await res.json();
+  return { login, repoName: `todo-sync-data-${id}` };
 }
 
-async function ensureRepo(owner) {
-  const check = await authedFetch(`/repos/${owner}/${REPO_NAME}`);
-  if (check.ok) return;
+async function ensureRepo(owner, repoName) {
+  const check = await authedFetch(`/repos/${owner}/${repoName}`);
+  if (check.ok) {
+    const repo = await check.json();
+    if (!repo.description?.includes('djaunt-todo-sync-v1')) {
+      throw new Error(
+        `A repo named "${repoName}" already exists but wasn't created by Todo Sync — `
+        + 'rename or delete it, then sign in again.',
+      );
+    }
+    return;
+  }
   if (check.status !== 404) throw new Error(`Couldn't check for the data repo: ${check.status}`);
 
   const create = await authedFetch('/user/repos', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      name: REPO_NAME,
+      name: repoName,
       private: true,
-      description: 'Todo Sync data — auto-created by the extension. Safe to ignore; '
-        + 'deleting it clears your todos.',
+      description: REPO_DESCRIPTION,
       auto_init: true,
     }),
   });
@@ -61,15 +77,15 @@ async function ensureRepo(owner) {
 
 /** Fetches the current todo list and the file's sha, or nulls if it doesn't exist yet. */
 export async function loadRemote() {
-  const owner = await getUsername();
-  await ensureRepo(owner);
+  const { login: owner, repoName } = await getAccount();
+  await ensureRepo(owner, repoName);
 
-  const res = await authedFetch(`/repos/${owner}/${REPO_NAME}/contents/${FILE_PATH}`);
-  if (res.status === 404) return { owner, sha: null, todos: [] };
+  const res = await authedFetch(`/repos/${owner}/${repoName}/contents/${FILE_PATH}`);
+  if (res.status === 404) return { owner, repoName, sha: null, todos: [] };
   if (!res.ok) throw new Error(`Couldn't read todos: ${res.status}`);
 
   const file = await res.json();
-  return { owner, sha: file.sha, todos: JSON.parse(base64ToUtf8(file.content)) };
+  return { owner, repoName, sha: file.sha, todos: JSON.parse(base64ToUtf8(file.content)) };
 }
 
 /**
@@ -77,8 +93,8 @@ export async function loadRemote() {
  * match the file's current version — the same "someone else changed this" signal Drive's
  * modifiedTime check gave us, but enforced by GitHub itself instead of hand-checked.
  */
-export async function saveRemote({ owner, sha, todos }) {
-  const res = await authedFetch(`/repos/${owner}/${REPO_NAME}/contents/${FILE_PATH}`, {
+export async function saveRemote({ owner, repoName, sha, todos }) {
+  const res = await authedFetch(`/repos/${owner}/${repoName}/contents/${FILE_PATH}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
