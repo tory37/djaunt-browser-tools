@@ -32,7 +32,20 @@ async function postForm(url, params) {
     },
     body: new URLSearchParams(params),
   });
-  return res.json();
+  const data = await res.json().catch(() => ({}));
+
+  // GitHub's device-code endpoint replies "Not Found" (not a normal OAuth error code)
+  // for two very different, easily-confused misconfigurations: an unrecognized
+  // client_id, or a real OAuth App that just hasn't had "Enable Device Flow" checked
+  // in its settings. Both look identical from here, so name both instead of guessing.
+  if (res.status === 404 || data.error === 'Not Found') {
+    throw new Error(
+      "GitHub doesn't recognize this sign-in request (404). Either CLIENT_ID in "
+      + "github-auth.js doesn't match a real OAuth App, or that app doesn't have "
+      + '"Enable Device Flow" checked in its settings — see README.md.',
+    );
+  }
+  return data;
 }
 
 export async function getStoredToken() {
@@ -49,6 +62,9 @@ export async function getPendingDeviceFlow() {
 
 /** Requests a device code, opens GitHub's entry page, and stores the pending flow. */
 export async function beginSignIn() {
+  if (CLIENT_ID === 'REPLACE_WITH_YOUR_GITHUB_OAUTH_CLIENT_ID') {
+    throw new Error('CLIENT_ID in github-auth.js is still a placeholder — see README.md.');
+  }
   const data = await postForm(DEVICE_CODE_URL, { client_id: CLIENT_ID, scope: SCOPE });
   if (data.error) throw new Error(data.error_description || data.error);
 

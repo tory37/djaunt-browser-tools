@@ -66,7 +66,10 @@ extension repeats.
 2. Fill in an application name and a homepage URL (this repo's URL is fine). The
    **Authorization callback URL** field is required by the form but unused by device
    flow — the homepage URL again works.
-3. After creating it, open the app's settings and check **Enable Device Flow**.
+3. After creating it, open the app's settings and check **Enable Device Flow**, then
+   save. It's easy to miss since it's a separate step from creating the app — if you skip
+   it, sign-in fails with a "Not Found" error that looks identical to having pasted the
+   wrong Client ID, since GitHub returns the same error for both.
 4. Copy the **Client ID** — that's the only credential this needs. Open `github-auth.js`
    in this folder and replace `CLIENT_ID` with it.
 
