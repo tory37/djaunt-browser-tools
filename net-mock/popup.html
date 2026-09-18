@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en" data-dj-theme="venom">
+<meta charset="utf-8">
+<title>Net Mock</title>
+<link rel="stylesheet" href="popup.css">
+<body>
+<div class="shell">
+  <header class="dj-head" id="head" data-state="idle">
+    <span class="dj-mark" aria-hidden="true"></span>
+    <span class="dj-titles">
+      <span class="dj-wordmark" role="img" aria-label="Djaunt"></span>
+      <h1 class="dj-title">Net mock</h1>
+    </span>
+    <span class="dj-pill" id="pill" data-state="idle">off</span>
+  </header>
+
+  <div class="list" id="list"></div>
+
+  <p class="empty dj-hint" id="empty" hidden>No mock rules yet.</p>
+
+  <div class="actions">
+    <button type="button" class="dj-btn" id="add">
+      <svg class="dj-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14"/><path d="M12 5v14"/>
+      </svg>
+      Add
+    </button>
+    <button type="button" class="dj-btn" id="import">
+      <svg class="dj-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/>
+      </svg>
+      Import
+    </button>
+    <button type="button" class="dj-btn" id="export">
+      <svg class="dj-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M4 21h16"/>
+      </svg>
+      Export
+    </button>
+  </div>
+
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+
+  <section class="log" id="log" data-open="false">
+    <button type="button" class="log-head" id="logToggle" aria-expanded="false">
+      <svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <path d="m9 18 6-6-6-6"/>
+      </svg>
+      <span class="dj-label">Match log</span>
+      <span class="log-count" id="logCount"></span>
+    </button>
+
+    <div class="log-body">
+      <div class="log-list" id="logList"></div>
+      <p class="log-empty dj-hint" id="logEmpty" hidden>
+        Nothing intercepted yet. The log fills as the page makes requests.
+      </p>
+      <div class="log-actions">
+        <button type="button" class="dj-btn" id="clearLog">Clear log</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="dj-foot" id="status" role="status"></footer>
+</div>
+
+<template id="rowTemplate">
+  <section class="rule" data-open="false" data-mode="mock">
+    <div class="rule-head">
+      <button type="button" class="disclose" aria-expanded="false">
+        <svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+        <span class="rule-summary">
+          <span class="rule-target"></span>
+          <span class="rule-effect"></span>
+        </span>
+      </button>
+      <button type="button" class="dj-switch" role="switch" aria-checked="false"
+              aria-label="Enable this rule">
+        <span class="dj-knob"></span>
+      </button>
+      <button type="button" class="remove" aria-label="Delete this rule">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="rule-body">
+      <div class="field">
+        <label class="dj-label">URL pattern</label>
+        <input type="text" class="url" spellcheck="false" autocomplete="off"
+               placeholder="*/api/students/*">
+        <p class="dj-hint">
+          <code>*</code> matches any run of characters. Start with <code>re:</code> for a
+          regular expression. Matched against the full absolute URL.
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="dj-label">Method</label>
+        <input type="text" class="method" spellcheck="false" autocomplete="off"
+               placeholder="*">
+        <p class="dj-hint">One method, or <code>*</code> for any.</p>
+      </div>
+
+      <div class="field">
+        <span class="dj-label">What to do</span>
+        <div class="dj-seg-group" role="radiogroup" aria-label="Response mode">
+          <button type="button" class="dj-seg" role="radio" aria-checked="true"
+                  data-mode="mock">Mock</button>
+          <button type="button" class="dj-seg" role="radio" aria-checked="false"
+                  data-mode="fail">Fail</button>
+          <button type="button" class="dj-seg" role="radio" aria-checked="false"
+                  data-mode="passthrough">Pass</button>
+        </div>
+        <p class="dj-hint mode-hint"></p>
+      </div>
+
+      <div class="field-row">
+        <div class="field mock-only">
+          <label class="dj-label">Status</label>
+          <input type="text" class="status" inputmode="numeric" spellcheck="false"
+                 autocomplete="off" placeholder="200">
+        </div>
+        <div class="field">
+          <label class="dj-label">Delay ms</label>
+          <input type="text" class="delay" inputmode="numeric" spellcheck="false"
+                 autocomplete="off" placeholder="0">
+        </div>
+        <div class="field">
+          <label class="dj-label">Times</label>
+          <input type="text" class="times" inputmode="numeric" spellcheck="false"
+                 autocomplete="off" placeholder="0">
+        </div>
+      </div>
+
+      <div class="field mock-only">
+        <label class="dj-label">Response headers</label>
+        <textarea class="headers" rows="2" spellcheck="false" autocomplete="off"
+                  placeholder="Content-Type: application/json"></textarea>
+        <p class="dj-hint">One <code>Name: value</code> per line.</p>
+      </div>
+
+      <div class="field mock-only">
+        <label class="dj-label">Response body</label>
+        <textarea class="body" rows="4" spellcheck="false" autocomplete="off"
+                  placeholder='{"name":"Test"}'></textarea>
+        <p class="dj-hint">A JSON body gets a JSON content type on its own.</p>
+      </div>
+
+      <div class="field">
+        <label class="dj-label">Label</label>
+        <input type="text" class="label" spellcheck="false" autocomplete="off"
+               placeholder="students 200">
+        <p class="dj-hint">Optional. Names the rule in the list and the match log.</p>
+      </div>
+
+      <p class="row-error" hidden></p>
+    </div>
+  </section>
+</template>
+
+<script type="module" src="popup.js"></script>
+</body>
+</html>
