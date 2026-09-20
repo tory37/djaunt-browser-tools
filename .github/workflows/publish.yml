@@ -1,0 +1,57 @@
+name: Publish to Chrome Web Store
+
+# Manual only — this bumps a real published extension's version and submits it for
+# review, so it never runs on its own. Only usable for an extension that already has a
+# non-empty id in store-listing/item-ids.json (i.e. its first submission was already done
+# by hand in the Developer Dashboard — see PUBLISHING.md).
+on:
+  workflow_dispatch:
+    inputs:
+      extension:
+        description: Extension to publish
+        required: true
+        type: choice
+        options:
+          - host-swap
+          - query-params
+          - tab-volume
+          - dark-mode
+          - color-picker
+          - net-mock
+      bump:
+        description: Version bump
+        required: true
+        type: choice
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Bump version and rebuild zips
+        run: node scripts/bump-store-version.mjs "${{ inputs.extension }}" "${{ inputs.bump }}"
+      - name: Commit the version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${{ inputs.extension }}/manifest.json" "downloads/${{ inputs.extension }}.zip"
+          git commit -m "Bump ${{ inputs.extension }} version for Chrome Web Store release [skip ci]"
+          git push
+      - name: Upload and publish
+        env:
+          CWS_CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          CWS_REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+        run: node scripts/publish-to-store.mjs "${{ inputs.extension }}"

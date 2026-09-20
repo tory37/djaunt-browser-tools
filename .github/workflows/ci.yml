@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run each extension's test suite
+        run: |
+          for ext in host-swap query-params color-picker net-mock todo-sync; do
+            echo "::group::$ext"
+            node "$ext/test.mjs"
+            echo "::endgroup::"
+          done
+
+  # Keeps downloads/*.zip (index.html's Download buttons) from silently going stale —
+  # CLAUDE.md's "regenerate its download zip on every file change" rule, enforced instead
+  # of relied on. On a PR this only fails the check, since it's someone else's branch; on
+  # a push to main it commits the fix itself so main is never left with stale zips.
+  sync-download-zips:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rebuild downloads/*.zip
+        run: ./scripts/build-zips.sh
+      - name: Check for drift (pull_request)
+        if: github.event_name == 'pull_request'
+        run: |
+          if ! git diff --quiet -- downloads/; then
+            echo "::error::downloads/*.zip is stale for this change. Run ./scripts/build-zips.sh and commit the result."
+            git diff --stat -- downloads/
+            exit 1
+          fi
+      - name: Commit if changed (push to main)
+        if: github.event_name == 'push'
+        run: |
+          if git diff --quiet -- downloads/; then
+            echo "Already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add downloads/
+          git commit -m "Rebuild downloads/*.zip [skip ci]"
+          git push

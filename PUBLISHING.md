@@ -35,6 +35,20 @@ parts that are unavoidably manual (the dashboard is a web UI with no public API 
 `store-zips/`, `store-assets/`, and `.tmp-profile/` are gitignored — they're regenerable
 publishing artifacts, not source, the same way `node_modules/` is.
 
+### What CI does automatically
+
+`.github/workflows/ci.yml` runs on every push to `main` and every PR:
+
+- Runs every extension's `test.mjs` suite.
+- Rebuilds `downloads/*.zip` and, on a push to `main`, commits the result itself if it
+  drifted from source — the "regenerate the zip or the download button goes stale" rule
+  in `CLAUDE.md` becomes a safety net instead of something to remember. On a PR it fails
+  the check instead of committing to someone else's branch.
+
+This only covers `downloads/*.zip` (the plain unzip-and-load ones). `store-zips/*.zip` and
+`store-assets/` aren't rebuilt in this workflow since they're not committed at all —
+`.github/workflows/publish.yml` (below) builds them fresh at publish time instead.
+
 ## Submitting one extension
 
 Recommended order: **`color-picker` first** — it's the only one with no host permissions,
@@ -67,3 +81,55 @@ Do this for every change after the first release, however small (a UI tweak coun
 5. Submit for review. It goes through review again, but a no-new-permissions update
    typically clears faster than the first submission. Existing installs update
    automatically once it's approved — no action from users, no re-download.
+
+Steps 2-5 above are exactly what `.github/workflows/publish.yml` automates (see below) —
+use that instead once it's set up, it's the same result with no manual dashboard visit.
+
+## Automating updates with GitHub Actions
+
+Chrome has a real API for pushing an update to an *existing* listing and submitting it for
+review — no dashboard visit needed. It cannot create the listing itself (no API for
+permissions justifications, screenshots, or category), so this only ever covers step 2
+onward, per extension, after that extension's first manual submission exists.
+
+### One-time setup (per Google account, not per extension)
+
+1. In [Google Cloud Console](https://console.cloud.google.com/), create a project (or reuse
+   one) and enable the **Chrome Web Store API** under APIs & Services → Library.
+2. APIs & Services → Credentials → **Create Credentials** → **OAuth client ID** → application
+   type **Desktop app**. Note the Client ID and Client Secret.
+3. Get a refresh token for that client, scoped to the Chrome Web Store API. The easiest way
+   is the [OAuth 2.0 Playground](https://developers.google.com/oauthplayground/):
+   - Click the gear icon → check **Use your own OAuth credentials** → paste the Client ID
+     and Client Secret from step 2.
+   - In Step 1, under "Input your own scopes," enter
+     `https://www.googleapis.com/auth/chromewebstore` → **Authorize APIs** → sign in with
+     the same Google account that owns the Chrome Web Store listings.
+   - In Step 2, click **Exchange authorization code for tokens** → copy the **Refresh
+     token** shown. This doesn't expire under normal use, so this is a one-time step.
+4. In the GitHub repo → **Settings → Secrets and variables → Actions**, add three repository
+   secrets: `CWS_CLIENT_ID`, `CWS_CLIENT_SECRET`, `CWS_REFRESH_TOKEN`.
+
+### Per extension, after its first manual submission
+
+The Developer Dashboard URL for an item looks like
+`chrome.google.com/webstore/devconsole/<account-id>/<item-id>/edit` — copy the `<item-id>`
+segment and set it in `store-listing/item-ids.json`:
+
+```json
+{
+  "color-picker": "abcdefghijklmnopqrstuvwxyzabcdef"
+}
+```
+
+Commit that. From then on, updates to that extension can go through Actions instead of the
+dashboard.
+
+### Running it
+
+GitHub repo → **Actions** tab → **Publish to Chrome Web Store** → **Run workflow** → pick
+the extension and the version bump size (patch/minor/major) → **Run workflow**. It bumps the
+version, commits that, rebuilds the store zip, uploads it, and submits it for review —
+equivalent to steps 2-5 in "Updating a published extension" above, with nothing to do in a
+browser. Check the workflow run's logs for the outcome; a rejected upload (e.g. a policy
+violation) reports Google's own error message there.

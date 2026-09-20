@@ -76,3 +76,11 @@ and `dark-mode`:
   `scripts/bump-store-version.mjs`) — a UI change to an already-published extension still
   needs a version bump via `bump-store-version.mjs` before the store will accept the
   update, even if nothing in `store-listing/` needs editing.
+
+- **CI is a backstop, not a replacement, for the two rules above.**
+  `.github/workflows/ci.yml` reruns every `test.mjs` and rebuilds `downloads/*.zip` on every
+  push to `main` (committing the fix itself if it drifted) and fails the check on a PR that
+  didn't. Still run `./scripts/build-zips.sh` yourself before committing — don't rely on CI
+  to clean up after you. Publishing an update to the Chrome Web Store itself can go through
+  `.github/workflows/publish.yml` (manual trigger) once an extension's first submission and
+  `store-listing/item-ids.json` entry exist — see `PUBLISHING.md`.
