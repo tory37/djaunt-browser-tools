@@ -3,11 +3,11 @@
   if (!host) return;
 
   const api = globalThis.browser ?? globalThis.chrome;
+  const { parseColor, isAlreadyDark, resolveApplied } = globalThis.__djauntDarkMode;
 
   const GLOBAL_KEY = "darkModeGlobal";
   const DOMAIN_KEY = "darkModeDomains";
   const DARK_CLASS = "djaunt-dark-mode";
-  const ALREADY_DARK_THRESHOLD = 0.4;
 
   const CSS = `
     html.${DARK_CLASS} {
@@ -45,21 +45,14 @@
       .catch(() => {});
   }
 
-  function relativeLuminance(r, g, b) {
-    return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-  }
-
   function detectAlreadyDark() {
     const candidates = [document.body, document.documentElement];
     for (const el of candidates) {
       if (!el) continue;
-      const bg = getComputedStyle(el).backgroundColor;
-      const match = bg.match(/rgba?\(([^)]+)\)/);
-      if (!match) continue;
-      const parts = match[1].split(",").map((part) => parseFloat(part));
-      const [r, g, b, a = 1] = parts;
-      if (a === 0) continue;
-      return relativeLuminance(r, g, b) < ALREADY_DARK_THRESHOLD;
+      const color = parseColor(getComputedStyle(el).backgroundColor);
+      if (!color) continue;
+      const dark = isAlreadyDark(color);
+      if (dark !== null) return dark;
     }
     return false;
   }
@@ -96,26 +89,15 @@
 
   async function evaluate() {
     const { globalEnabled, override } = await readSettings();
+    setApplied(resolveApplied({ override, globalEnabled }));
 
-    if (override === "on") {
-      setApplied(true);
-      detectOnce().then(reportStatus);
-      return;
-    }
-    if (override === "off") {
-      setApplied(false);
-      detectOnce().then(reportStatus);
-      return;
-    }
-    if (!globalEnabled) {
-      setApplied(false);
+    if (override || !globalEnabled) {
       detectOnce().then(reportStatus);
       return;
     }
 
-    // No override, global is on: apply right away to avoid a flash of light
-    // content, then back off once we can tell the page is already dark.
-    setApplied(true);
+    // No override, global is on: applied optimistically above to avoid a flash of
+    // light content, then back off once we can tell the page is already dark.
     detectOnce().then((dark) => {
       if (dark) setApplied(false);
       else reportStatus();

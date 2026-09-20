@@ -1,21 +1,9 @@
+import { FULL_VOLUME, clamp, hostOf, pickVolume } from "./logic.js";
+
 const api = globalThis.browser ?? globalThis.chrome;
 
 const DOMAIN_STORE_KEY = "domainVolumes";
 const TAB_STORE_KEY = "tabVolumes";
-const FULL_VOLUME = 1;
-
-const clamp = (value) => Math.min(1, Math.max(0, Number(value) || 0));
-
-function hostOf(url) {
-  try {
-    const parsed = new URL(url);
-    return parsed.protocol === "http:" || parsed.protocol === "https:"
-      ? parsed.hostname
-      : null;
-  } catch (error) {
-    return null;
-  }
-}
 
 async function readDomainVolumes() {
   const stored = await api.storage.local.get(DOMAIN_STORE_KEY);
@@ -35,19 +23,13 @@ async function writeTabVolumes(volumes) {
   await api.storage.session.set({ [TAB_STORE_KEY]: volumes });
 }
 
-// A volume set on this tab alone wins over the setting saved for the domain.
 async function resolveVolume(tabId, url) {
   const [tabVolumes, domainVolumes] = await Promise.all([
     readTabVolumes(),
     readDomainVolumes()
   ]);
-  const tabVolume = tabVolumes[String(tabId)];
-  if (typeof tabVolume === "number") return tabVolume;
   const host = hostOf(url);
-  if (host && typeof domainVolumes[host] === "number") {
-    return domainVolumes[host];
-  }
-  return FULL_VOLUME;
+  return pickVolume(tabVolumes[String(tabId)], host ? domainVolumes[host] : undefined);
 }
 
 async function updateBadge(tabId, volume) {

@@ -1,3 +1,5 @@
+import { levelFor } from "./logic.js";
+
 const api = globalThis.browser ?? globalThis.chrome;
 
 const elements = {
@@ -16,13 +18,6 @@ const elements = {
 };
 
 let activeTabId = null;
-
-const levelFor = (percent) => {
-  if (percent === 0) return "muted";
-  if (percent < 34) return "low";
-  if (percent < 67) return "mid";
-  return "high";
-};
 
 function renderVolume(percent) {
   elements.readout.textContent = String(percent);
