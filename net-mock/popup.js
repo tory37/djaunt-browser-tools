@@ -62,8 +62,8 @@ function describeEffect(rule) {
 }
 
 function paintRow(row, rule) {
-  row.querySelector('.rule-target').textContent = describeTarget(rule);
-  row.querySelector('.rule-effect').textContent = describeEffect(rule);
+  row.querySelector('.dj-row-line-from').textContent = describeTarget(rule);
+  row.querySelector('.dj-row-line-to').textContent = describeEffect(rule);
   row.querySelector('.dj-switch').setAttribute('aria-checked', String(Boolean(rule.enabled)));
 
   row.dataset.mode = rule.respond.mode;
@@ -84,7 +84,7 @@ function paintRow(row, rule) {
   const showProblem = Boolean(problem) && !incomplete;
   row.querySelector('.url').classList.toggle('invalid', showProblem);
 
-  const rowError = row.querySelector('.row-error');
+  const rowError = row.querySelector('.dj-row-error');
   rowError.textContent = showProblem ? problem : '';
   rowError.hidden = !showProblem;
 
@@ -119,7 +119,7 @@ function save({ immediate = false } = {}) {
 
 function setOpen(row, open) {
   row.dataset.open = String(open);
-  row.querySelector('.disclose').setAttribute('aria-expanded', String(open));
+  row.querySelector('.dj-row-disclose').setAttribute('aria-expanded', String(open));
 }
 
 function createRow(rule) {
@@ -145,7 +145,7 @@ function createRow(rule) {
     save({ immediate });
   };
 
-  row.querySelector('.disclose').addEventListener('click', () => {
+  row.querySelector('.dj-row-disclose').addEventListener('click', () => {
     setOpen(row, row.dataset.open !== 'true');
   });
 
@@ -154,7 +154,7 @@ function createRow(rule) {
     touch(true);
   });
 
-  row.querySelector('.remove').addEventListener('click', () => {
+  row.querySelector('.dj-row-remove').addEventListener('click', () => {
     rules = rules.filter((entry) => entry.id !== rule.id);
     row.remove();
     save({ immediate: true });

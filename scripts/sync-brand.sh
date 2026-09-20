@@ -62,3 +62,14 @@ for ext in "${extensions[@]}"; do
 done
 
 echo "synced brand/ from $SRC into root + ${#extensions[@]} extensions"
+
+# components/list-row is only used by the extensions built around a
+# collapsible row list — vendor it straight (no path rewrite needed, it has
+# no asset references of its own).
+list_row_extensions=(host-swap query-params net-mock)
+fetch "components/list-row/list-row.css" "list-row.css"
+for ext in "${list_row_extensions[@]}"; do
+  cp "$tmp/list-row.css" "$ext/brand/list-row.css"
+done
+
+echo "synced components/list-row into ${#list_row_extensions[@]} extensions"

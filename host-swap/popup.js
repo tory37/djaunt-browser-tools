@@ -39,8 +39,8 @@ function summarize(swap) {
 
 function paintRow(row, swap) {
   const { from, to } = summarize(swap);
-  row.querySelector('.swap-from').textContent = from;
-  row.querySelector('.swap-to').textContent = to;
+  row.querySelector('.dj-row-line-from').textContent = from;
+  row.querySelector('.dj-row-line-to').textContent = to;
 
   const toggle = row.querySelector('.dj-switch');
   toggle.setAttribute('aria-checked', String(Boolean(swap.enabled)));
@@ -66,14 +66,14 @@ function paintRow(row, swap) {
   row.querySelector('.source-host').classList.toggle('invalid', showProblem);
   row.querySelector('.target').classList.toggle('invalid', showProblem);
 
-  const rowError = row.querySelector('.row-error');
+  const rowError = row.querySelector('.dj-row-error');
   rowError.textContent = showProblem ? problem : '';
   rowError.hidden = !showProblem;
 
   const sample = sampleUrlFor(swap);
-  row.querySelector('.preview-from').textContent = sample;
+  row.querySelector('.dj-row-preview-from').textContent = sample;
   const swapped = resolved ? previewSwap(resolved, sample) : null;
-  const previewTo = row.querySelector('.preview-to');
+  const previewTo = row.querySelector('.dj-row-preview-to');
   previewTo.textContent = swapped ?? (incomplete ? 'Fill in both hosts' : '—');
   previewTo.classList.toggle('muted', !swapped);
 
@@ -121,7 +121,7 @@ function save({ immediate = false } = {}) {
 
 function setOpen(row, open) {
   row.dataset.open = String(open);
-  row.querySelector('.disclose').setAttribute('aria-expanded', String(open));
+  row.querySelector('.dj-row-disclose').setAttribute('aria-expanded', String(open));
 }
 
 function createRow(swap) {
@@ -138,7 +138,7 @@ function createRow(swap) {
     save({ immediate });
   };
 
-  row.querySelector('.disclose').addEventListener('click', () => {
+  row.querySelector('.dj-row-disclose').addEventListener('click', () => {
     setOpen(row, row.dataset.open !== 'true');
   });
 
@@ -147,7 +147,7 @@ function createRow(swap) {
     touch(true);
   });
 
-  row.querySelector('.remove').addEventListener('click', () => {
+  row.querySelector('.dj-row-remove').addEventListener('click', () => {
     swaps = swaps.filter((entry) => entry.id !== swap.id);
     row.remove();
     save({ immediate: true });

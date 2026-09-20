@@ -14,9 +14,9 @@
     <span class="dj-pill" id="pill" data-state="idle">off</span>
   </header>
 
-  <div class="list" id="list"></div>
+  <div class="dj-list" id="list"></div>
 
-  <p class="empty dj-hint" id="empty" hidden>No mock rules yet.</p>
+  <p class="dj-list-empty dj-hint" id="empty" hidden>No mock rules yet.</p>
 
   <div class="actions">
     <button type="button" class="dj-btn" id="add">
@@ -73,24 +73,24 @@
 </div>
 
 <template id="rowTemplate">
-  <section class="rule" data-open="false" data-mode="mock">
-    <div class="rule-head">
-      <button type="button" class="disclose" aria-expanded="false">
-        <svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none"
+  <section class="dj-row" data-open="false" data-mode="mock">
+    <div class="dj-row-head">
+      <button type="button" class="dj-row-disclose" aria-expanded="false">
+        <svg class="dj-row-caret" width="14" height="14" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
              stroke-linejoin="round" aria-hidden="true">
           <path d="m9 18 6-6-6-6"/>
         </svg>
-        <span class="rule-summary">
-          <span class="rule-target"></span>
-          <span class="rule-effect"></span>
+        <span class="dj-row-summary">
+          <span class="dj-row-line dj-row-line-from"></span>
+          <span class="dj-row-line dj-row-line-to"></span>
         </span>
       </button>
       <button type="button" class="dj-switch" role="switch" aria-checked="false"
               aria-label="Enable this rule">
         <span class="dj-knob"></span>
       </button>
-      <button type="button" class="remove" aria-label="Delete this rule">
+      <button type="button" class="dj-row-remove" aria-label="Delete this rule">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
              aria-hidden="true">
@@ -99,8 +99,8 @@
       </button>
     </div>
 
-    <div class="rule-body">
-      <div class="field">
+    <div class="dj-row-body">
+      <div class="dj-row-field">
         <label class="dj-label">URL pattern</label>
         <input type="text" class="url" spellcheck="false" autocomplete="off"
                placeholder="*/api/students/*">
@@ -110,14 +110,14 @@
         </p>
       </div>
 
-      <div class="field">
+      <div class="dj-row-field">
         <label class="dj-label">Method</label>
         <input type="text" class="method" spellcheck="false" autocomplete="off"
                placeholder="*">
         <p class="dj-hint">One method, or <code>*</code> for any.</p>
       </div>
 
-      <div class="field">
+      <div class="dj-row-field">
         <span class="dj-label">What to do</span>
         <div class="dj-seg-group" role="radiogroup" aria-label="Response mode">
           <button type="button" class="dj-seg" role="radio" aria-checked="true"
@@ -131,45 +131,45 @@
       </div>
 
       <div class="field-row">
-        <div class="field mock-only">
+        <div class="dj-row-field mock-only">
           <label class="dj-label">Status</label>
           <input type="text" class="status" inputmode="numeric" spellcheck="false"
                  autocomplete="off" placeholder="200">
         </div>
-        <div class="field">
+        <div class="dj-row-field">
           <label class="dj-label">Delay ms</label>
           <input type="text" class="delay" inputmode="numeric" spellcheck="false"
                  autocomplete="off" placeholder="0">
         </div>
-        <div class="field">
+        <div class="dj-row-field">
           <label class="dj-label">Times</label>
           <input type="text" class="times" inputmode="numeric" spellcheck="false"
                  autocomplete="off" placeholder="0">
         </div>
       </div>
 
-      <div class="field mock-only">
+      <div class="dj-row-field mock-only">
         <label class="dj-label">Response headers</label>
         <textarea class="headers" rows="2" spellcheck="false" autocomplete="off"
                   placeholder="Content-Type: application/json"></textarea>
         <p class="dj-hint">One <code>Name: value</code> per line.</p>
       </div>
 
-      <div class="field mock-only">
+      <div class="dj-row-field mock-only">
         <label class="dj-label">Response body</label>
         <textarea class="body" rows="4" spellcheck="false" autocomplete="off"
                   placeholder='{"name":"Test"}'></textarea>
         <p class="dj-hint">A JSON body gets a JSON content type on its own.</p>
       </div>
 
-      <div class="field">
+      <div class="dj-row-field">
         <label class="dj-label">Label</label>
         <input type="text" class="label" spellcheck="false" autocomplete="off"
                placeholder="students 200">
         <p class="dj-hint">Optional. Names the rule in the list and the match log.</p>
       </div>
 
-      <p class="row-error" hidden></p>
+      <p class="dj-row-error" hidden></p>
     </div>
   </section>
 </template>

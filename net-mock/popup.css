@@ -2,6 +2,7 @@
    brand/base.css; this file must not declare a raw color. */
 
 @import url('brand/base.css');
+@import url('brand/list-row.css');
 
 body {
   width: 380px;
@@ -12,129 +13,12 @@ body {
   flex-direction: column;
 }
 
-.list {
-  display: flex;
-  flex-direction: column;
-  max-height: 380px;
-  overflow-y: auto;
-}
-
 /* A Chrome popup is capped around 600px tall. Rules and the log each get the whole
    of that rather than stacking into a scrollbar that swallows the header. */
-body[data-log-open='true'] .list,
-body[data-log-open='true'] .empty,
+body[data-log-open='true'] .dj-list,
+body[data-log-open='true'] .dj-list-empty,
 body[data-log-open='true'] .actions {
   display: none;
-}
-
-.empty {
-  padding: var(--dj-space-4);
-}
-
-/* ---- collapsible rule row ---- */
-
-.rule {
-  background: var(--dj-surface);
-  border-bottom: var(--dj-border-width) solid var(--dj-border);
-}
-
-.rule-head {
-  display: flex;
-  align-items: stretch;
-}
-
-.disclose {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  gap: var(--dj-space-2);
-  min-width: 0;
-  padding: var(--dj-space-2) var(--dj-space-2) var(--dj-space-2) var(--dj-space-3);
-  text-align: left;
-}
-
-.caret {
-  flex: 0 0 auto;
-  color: var(--dj-text-muted);
-  transition: transform var(--dj-dur-fast) var(--dj-ease);
-}
-
-.rule[data-open='true'] .caret {
-  transform: rotate(90deg);
-}
-
-.rule-summary {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.rule-target,
-.rule-effect {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-family: var(--dj-font-mono);
-  font-size: var(--dj-text-xs);
-  line-height: 1.4;
-  color: var(--dj-text-muted);
-}
-
-.rule[data-state='active'] .rule-target {
-  color: var(--dj-text);
-}
-
-.rule[data-state='active'] .rule-effect {
-  color: var(--dj-accent);
-}
-
-.rule[data-state='error'] .rule-effect {
-  color: var(--dj-danger);
-}
-
-.dj-switch {
-  align-self: center;
-}
-
-.remove {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  color: var(--dj-text-muted);
-  transition: color var(--dj-dur-base) var(--dj-ease);
-}
-
-.remove:hover {
-  color: var(--dj-danger);
-}
-
-/* The expanded body recesses below the row it belongs to. */
-.rule-body {
-  display: none;
-  background: var(--dj-bg);
-  border-top: var(--dj-border-width) solid var(--dj-border);
-}
-
-.rule[data-open='true'] .rule-body {
-  display: block;
-}
-
-/* ---- fields ---- */
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--dj-space-2);
-  padding: var(--dj-space-3) var(--dj-space-4);
-}
-
-.field + .field,
-.field-row + .field,
-.field + .field-row,
-.field-row + .field-row {
-  border-top: var(--dj-border-width) solid var(--dj-border);
 }
 
 /* Three short numeric fields share one band so the editor stays one screen tall. */
@@ -145,24 +29,23 @@ body[data-log-open='true'] .actions {
   padding: var(--dj-space-3) var(--dj-space-4);
 }
 
-.field-row .field {
+.field-row + .dj-row-field,
+.dj-row-field + .field-row {
+  border-top: var(--dj-border-width) solid var(--dj-border);
+}
+
+.field-row .dj-row-field {
   padding: 0;
 }
 
-.field-row .field + .field {
+.field-row .dj-row-field + .dj-row-field {
   border-top: none;
 }
 
 /* Fields that only mean something for a mocked response. */
-.rule[data-mode='fail'] .mock-only,
-.rule[data-mode='passthrough'] .mock-only {
+.dj-row[data-mode='fail'] .mock-only,
+.dj-row[data-mode='passthrough'] .mock-only {
   display: none;
-}
-
-.row-error {
-  padding: 0 var(--dj-space-4) var(--dj-space-3);
-  font-size: var(--dj-text-xs);
-  color: var(--dj-danger);
 }
 
 /* ---- actions ---- */
@@ -188,6 +71,14 @@ body[data-log-open='true'] .actions {
   width: 100%;
   padding: var(--dj-space-2) var(--dj-space-4) var(--dj-space-2) var(--dj-space-3);
   text-align: left;
+}
+
+/* The log's own disclosure caret — a lone one, not part of a .dj-list, so it
+   isn't covered by .dj-row-caret. */
+.caret {
+  flex: 0 0 auto;
+  color: var(--dj-text-muted);
+  transition: transform var(--dj-dur-fast) var(--dj-ease);
 }
 
 .log[data-open='true'] .caret {
