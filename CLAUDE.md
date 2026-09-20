@@ -59,3 +59,10 @@ and `dark-mode`:
 
   All three must reflect the current, full set of extensions and browsers every time — not
   just the one you touched.
+
+- **Regenerate its download zip on every file change**: `index.html`'s Download buttons
+  link to pre-built `downloads/<extension>.zip` files (for people who don't use git), not
+  something built live from the repo. After changing any file inside an extension's
+  folder, run `./scripts/build-zips.sh` and commit the updated zip alongside the change —
+  otherwise the download button silently serves stale files. This doesn't apply to
+  `todo-sync/`, which is paused and has no Download button.

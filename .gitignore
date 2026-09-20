@@ -1,5 +1,8 @@
-# Packed extension bundles are build output, not source.
+# A stray packed extension bundle elsewhere is build output, not source — but
+# downloads/*.zip is the deliberate exception: index.html's Download buttons link to
+# those, so they're committed on purpose. Regenerate them with scripts/build-zips.sh.
 *.zip
+!/downloads/*.zip
 
 .DS_Store
 node_modules/

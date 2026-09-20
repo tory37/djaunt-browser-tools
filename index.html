@@ -196,6 +196,26 @@
     background: var(--accent);
   }
 
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: var(--bg);
+    background: var(--accent);
+    text-decoration: none;
+    padding: var(--step-2) var(--step-4);
+    transition: opacity 120ms ease-out;
+  }
+
+  .download-btn:hover {
+    opacity: 0.82;
+  }
+
   .card-links {
     margin-top: auto;
     padding-top: var(--step-3);
@@ -274,6 +294,7 @@
           <li>Redirects before DNS resolves — the original host is never contacted</li>
           <li>Rules persist across browser restarts</li>
         </ul>
+        <a class="download-btn" href="downloads/host-swap.zip" download>Download .zip</a>
         <div class="card-links">
           <a href="https://github.com/tory37/djaunt-browser-tools/tree/main/host-swap">Source</a>
           <a href="https://github.com/tory37/djaunt-browser-tools/blob/main/host-swap/README.md">README</a>
@@ -298,6 +319,7 @@
           <li>Applies per domain — no expiry, no tab or session scoping</li>
           <li>Rewrites before the request resolves, so nothing is ever double-fetched</li>
         </ul>
+        <a class="download-btn" href="downloads/query-params.zip" download>Download .zip</a>
         <div class="card-links">
           <a href="https://github.com/tory37/djaunt-browser-tools/tree/main/query-params">Source</a>
           <a href="https://github.com/tory37/djaunt-browser-tools/blob/main/query-params/README.md">README</a>
@@ -321,6 +343,7 @@
           <li>Covers both media elements and Web Audio playback</li>
           <li>Attenuates only — never boosts past the system volume</li>
         </ul>
+        <a class="download-btn" href="downloads/tab-volume.zip" download>Download .zip</a>
         <div class="card-links">
           <a href="https://github.com/tory37/djaunt-browser-tools/tree/main/tab-volume">Source</a>
           <a href="https://github.com/tory37/djaunt-browser-tools/blob/main/tab-volume/README.md">README</a>
@@ -344,6 +367,7 @@
           <li>Global switch persists; per-domain overrides last for the session</li>
           <li>A storage change reaches every open tab instantly</li>
         </ul>
+        <a class="download-btn" href="downloads/dark-mode.zip" download>Download .zip</a>
         <div class="card-links">
           <a href="https://github.com/tory37/djaunt-browser-tools/tree/main/dark-mode">Source</a>
           <a href="https://github.com/tory37/djaunt-browser-tools/blob/main/dark-mode/README.md">README</a>
@@ -368,6 +392,7 @@
           <li>WCAG contrast checker and a linear/radial gradient builder built in</li>
           <li>Zero host permissions — the fallback only ever sees a screenshot you asked for</li>
         </ul>
+        <a class="download-btn" href="downloads/color-picker.zip" download>Download .zip</a>
         <div class="card-links">
           <a href="https://github.com/tory37/djaunt-browser-tools/tree/main/color-picker">Source</a>
           <a href="https://github.com/tory37/djaunt-browser-tools/blob/main/color-picker/README.md">README</a>

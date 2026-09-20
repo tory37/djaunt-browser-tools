@@ -23,6 +23,10 @@ both a `service_worker` and a Firefox-compatible `scripts` background entry.
 
 ## Install one
 
+Don't use git? Each card on the [index page](https://tory37.github.io/djaunt-browser-tools/)
+has a **Download .zip** button — unzip it and point **Load unpacked** at the extracted
+folder. No clone, no terminal.
+
 **Chrome:**
 
 1. Open `chrome://extensions`.
@@ -31,7 +35,8 @@ both a `service_worker` and a Firefox-compatible `scripts` background entry.
 4. Pin it so the toolbar button is visible.
 
 Chrome reads the folder from disk, so a `git pull` plus **Reload** on the extension card is
-the whole update process.
+the whole update process (re-downloading and re-extracting the zip works too, just less
+convenient for updates).
 
 **Firefox:**
 
