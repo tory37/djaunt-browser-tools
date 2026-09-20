@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — djaunt-browser-tools</title>
+<meta name="description" content="Privacy policy covering every extension in djaunt-browser-tools.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  :root {
+    color-scheme: dark light;
+    --bg: #0a0a0a;
+    --surface: #121212;
+    --border: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(255, 255, 255, 0.22);
+    --text: #f2f2f2;
+    --muted: #9a9a9a;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f7f7f5;
+      --surface: #ffffff;
+      --border: rgba(0, 0, 0, 0.12);
+      --border-strong: rgba(0, 0, 0, 0.28);
+      --text: #101010;
+      --muted: #5d5d5d;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    padding: 48px 16px 64px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  a { color: var(--text); }
+  a:hover { color: #4da3ff; }
+  h1 { font-size: 1.6rem; margin-bottom: 4px; }
+  .updated { color: var(--muted); font-size: 13px; margin-top: 0; }
+  h2 { font-size: 1.05rem; margin-top: 40px; }
+  p, li { line-height: 1.6; color: var(--text); }
+  ul { padding-left: 20px; }
+  code {
+    font-family: var(--mono);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1px 5px;
+    font-size: 0.9em;
+  }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  .home { display: inline-block; margin-top: 40px; border-bottom: 1px solid var(--border-strong); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Privacy Policy</h1>
+    <p class="updated">Covers every extension published from
+      <a href="https://github.com/tory37/djaunt-browser-tools">tory37/djaunt-browser-tools</a> —
+      Djaunt Host Swap, Djaunt Query Params, Djaunt Tab Volume, Djaunt Dark Mode,
+      Djaunt Color Picker, and Djaunt Net Mock.</p>
+
+    <h2>Short version</h2>
+    <p>
+      None of these extensions collect, transmit, sell, or share any data, anywhere, ever.
+      Nothing you do in them is sent to a server — there is no server. Everything each one
+      needs to remember is stored locally in your own browser via the standard
+      <code>chrome.storage</code>/<code>browser.storage</code> API, and never leaves your
+      device.
+    </p>
+
+    <h2>What each extension actually touches</h2>
+    <table>
+      <tr><th>Extension</th><th>Reads or acts on</th><th>Ever leaves your browser?</th></tr>
+      <tr>
+        <td>Host Swap</td>
+        <td>Request URLs on hosts <em>you</em> configure, rewritten locally via
+          <code>declarativeNetRequest</code> before the request is sent.</td>
+        <td>No.</td>
+      </tr>
+      <tr>
+        <td>Query Params</td>
+        <td>Request URLs on domains <em>you</em> configure, edited locally the same way.</td>
+        <td>No.</td>
+      </tr>
+      <tr>
+        <td>Tab Volume</td>
+        <td>The audio level of the tab you're on, adjusted locally in-page.</td>
+        <td>No.</td>
+      </tr>
+      <tr>
+        <td>Dark Mode</td>
+        <td>The page's own rendered colors, to decide whether to apply a dark filter.</td>
+        <td>No.</td>
+      </tr>
+      <tr>
+        <td>Color Picker</td>
+        <td>Pixels you explicitly click on screen, to read a color value. Requests no host
+          permissions at all.</td>
+        <td>No.</td>
+      </tr>
+      <tr>
+        <td>Net Mock</td>
+        <td>The page's own <code>fetch</code>/<code>XMLHttpRequest</code> calls, to answer
+          the ones you've configured a rule for with a response <em>you</em> wrote.</td>
+        <td>No.</td>
+      </tr>
+    </table>
+
+    <h2>Why some of these ask for access to every site</h2>
+    <p>
+      Host Swap, Query Params, Tab Volume, Dark Mode, and Net Mock request permission to act
+      on any site (<code>&lt;all_urls&gt;</code>) because what site they act on is something
+      <em>you</em> choose per extension, at install time you haven't told them which sites
+      yet. That permission is used only to perform the specific, local behavior described in
+      the table above — rewriting a URL, adjusting volume, applying a color filter, or
+      answering a mocked network call — never to read, log, or transmit page content,
+      browsing history, or any other data.
+    </p>
+
+    <h2>Analytics, ads, and third parties</h2>
+    <p>None of these extensions include analytics, telemetry, crash reporting, ads, or any
+      third-party script or service of any kind.</p>
+
+    <h2>Changes</h2>
+    <p>If this policy changes, the update will be committed to this same file in the
+      repository's public history.</p>
+
+    <h2>Contact</h2>
+    <p>Open an issue on the
+      <a href="https://github.com/tory37/djaunt-browser-tools/issues">GitHub repository</a>.</p>
+
+    <a class="home" href="index.html">&larr; Back to the extensions</a>
+  </div>
+</body>
+</html>

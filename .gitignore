@@ -7,5 +7,12 @@
 .DS_Store
 node_modules/
 
+# Store-submission build output — regenerate with scripts/build-store-zips.sh and
+# scripts/capture-store-screenshots.mjs. Not committed, unlike downloads/*.zip above:
+# these are dev-only publishing artifacts, not something end users download.
+/store-zips/
+/store-assets/
+/.tmp-profile/
+
 # Agent working files — plans, research, generated output.
 .agents/

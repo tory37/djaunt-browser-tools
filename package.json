@@ -1,0 +1,12 @@
+{
+  "name": "djaunt-browser-tools",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only tooling for this repo (store screenshot capture). The extensions themselves have no dependencies and no build step.",
+  "scripts": {
+    "store:screenshots": "node scripts/capture-store-screenshots.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}

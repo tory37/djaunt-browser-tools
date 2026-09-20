@@ -21,6 +21,10 @@ Every extension runs on both browsers from the same folder — a tiny `globalThi
 globalThis.chrome` shim is the only cross-browser code, and each `manifest.json` declares
 both a `service_worker` and a Firefox-compatible `scripts` background entry.
 
+See [`PUBLISHING.md`](PUBLISHING.md) for the Chrome Web Store submission pipeline (none of
+these are published there yet — for now, install unpacked as below or via the download
+buttons).
+
 ## Install one
 
 Don't use git? Each card on the [index page](https://tory37.github.io/djaunt-browser-tools/)

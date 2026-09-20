@@ -66,3 +66,13 @@ and `dark-mode`:
   folder, run `./scripts/build-zips.sh` and commit the updated zip alongside the change —
   otherwise the download button silently serves stale files. This doesn't apply to
   `todo-sync/`, which is paused and has no Download button.
+
+- **If an extension is published to the Chrome Web Store, keep `store-listing/<ext>.md` in
+  sync too** — same trigger as the docs-sync rule above (adding/removing/renaming an
+  extension, or changing what one does, its permissions, or its `host_permissions`). A
+  permission change in particular needs its justification text updated there, since the
+  dashboard requires one per permission. See `PUBLISHING.md` for the full publish/update
+  pipeline (`scripts/build-store-zips.sh`, `scripts/capture-store-screenshots.mjs`,
+  `scripts/bump-store-version.mjs`) — a UI change to an already-published extension still
+  needs a version bump via `bump-store-version.mjs` before the store will accept the
+  update, even if nothing in `store-listing/` needs editing.
