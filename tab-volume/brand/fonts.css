@@ -1,5 +1,6 @@
-/* Djaunt brand faces, self-hosted. Extension popups have no network budget,
-   so the woff2 files ship with the extension instead of loading from a CDN. */
+/* Djaunt brand faces, self-hosted. For contexts with no network budget for a
+   font CDN (browser extension popups, offline tools) — ship these woff2
+   files with the project instead of linking Google Fonts. */
 
 @font-face {
   font-family: 'Archivo';
