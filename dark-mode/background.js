@@ -38,7 +38,7 @@ async function injectIntoOpenTabs() {
     try {
       await api.scripting.executeScript({
         target: { tabId: tab.id, allFrames: true },
-        files: ["content.js"]
+        files: ["logic.js", "content.js"]
       });
     } catch (error) {
       // Restricted page or a tab that went away.
