@@ -1,7 +1,7 @@
 # Chrome Web Store listing — Djaunt Query Params
 
 Copy-paste source for the Developer Dashboard forms. Keep this in sync with
-`query-params/README.md` and its `index.html` card when either changes.
+`README.md` and its `index.html` card when either changes.
 
 ## Store listing tab
 
@@ -25,8 +25,8 @@ Copy-paste source for the Developer Dashboard forms. Keep this in sync with
   - No account, no network calls, no data collection. Source and full docs:
     https://github.com/tory37/djaunt-browser-tools/tree/main/query-params
 
-- **Icon**: `query-params/icons/icon128.png`
-- **Screenshot(s)**: `store-assets/query-params/popup.png` (run `npm run store:screenshots`
+- **Icon**: `icons/icon128.png`
+- **Screenshot(s)**: `store-assets/popup.png` (run `npm run store:screenshots`
   to generate). Consider a second, hand-taken screenshot showing an expanded row with real
   remove/add params filled in.
 

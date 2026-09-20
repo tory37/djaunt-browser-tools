@@ -12,42 +12,46 @@ parts that are unavoidably manual (the dashboard is a web UI with no public API 
 
 ## The pipeline in this repo
 
-- `./scripts/build-store-zips.sh` — builds `store-zips/<ext>-<version>.zip` for every
+- `./scripts/build-store-zips.sh` — builds `<ext>/store-zips/<ext>-<version>.zip` for every
   extension, with `manifest.json` at the zip root (the dashboard rejects a zip with the
-  extension folder nested inside, which is what `downloads/<ext>.zip` deliberately has for
-  the "unzip and Load unpacked" flow — the two zip layouts serve different audiences and are
-  not interchangeable).
+  extension folder nested inside, which is what `<ext>/downloads/<ext>.zip` deliberately has
+  for the "unzip and Load unpacked" flow — the two zip layouts serve different audiences and
+  are not interchangeable).
 - `npm run store:screenshots` (or `node scripts/capture-store-screenshots.mjs`) — loads each
   extension into a real Chromium via Playwright and captures its popup at 1280x800 into
-  `store-assets/<ext>/popup.png`. Needs a display; if there isn't one, run it under
+  `<ext>/store-assets/popup.png`. Needs a display; if there isn't one, run it under
   `xvfb-run -a npm run store:screenshots`. First run: `npm install`.
 - `node scripts/bump-store-version.mjs <ext> [patch|minor|major]` — bumps that extension's
   `manifest.json` version and rebuilds both zip flavors in one step. Use this for every
   future update, not just the first submission (the store rejects a re-upload with an
   unchanged version number).
-- `store-listing/<ext>.md` — the actual copy for the dashboard forms (title, description,
+- `<ext>/store-listing.md` — the actual copy for the dashboard forms (title, description,
   category, permission justifications, data-usage answers, privacy policy URL). Kept in
-  sync with each extension's own README and its `index.html` card.
+  sync with that extension's own README and its `index.html` card.
 - `privacy.html` — one privacy policy covering every extension, served at
   `https://tory37.github.io/djaunt-browser-tools/privacy.html` once GitHub Pages is on.
   Required by the dashboard for any listing requesting broad host permissions.
 
-`store-zips/`, `store-assets/`, and `.tmp-profile/` are gitignored — they're regenerable
-publishing artifacts, not source, the same way `node_modules/` is.
+`<ext>/store-zips/`, `<ext>/store-assets/`, and `.tmp-profile/` are gitignored — they're
+regenerable publishing artifacts, not source, the same way `node_modules/` is.
+`scripts/item-ids.json` (the store item-id lookup, one entry per extension) is the only
+publishing file that isn't inside an extension's own folder, since it's a single
+cross-extension table rather than something scoped to one extension.
 
 ### What CI does automatically
 
 `.github/workflows/ci.yml` runs on every push to `main` and every PR:
 
 - Runs every extension's `test.mjs` suite.
-- Rebuilds `downloads/*.zip` and, on a push to `main`, commits the result itself if it
-  drifted from source — the "regenerate the zip or the download button goes stale" rule
-  in `CLAUDE.md` becomes a safety net instead of something to remember. On a PR it fails
-  the check instead of committing to someone else's branch.
+- Rebuilds every `<ext>/downloads/*.zip` and, on a push to `main`, commits the result
+  itself if it drifted from source — the "regenerate the zip or the download button goes
+  stale" rule in `CLAUDE.md` becomes a safety net instead of something to remember. On a
+  PR it fails the check instead of committing to someone else's branch.
 
-This only covers `downloads/*.zip` (the plain unzip-and-load ones). `store-zips/*.zip` and
-`store-assets/` aren't rebuilt in this workflow since they're not committed at all —
-`.github/workflows/publish.yml` (below) builds them fresh at publish time instead.
+This only covers `<ext>/downloads/*.zip` (the plain unzip-and-load ones).
+`<ext>/store-zips/*.zip` and `<ext>/store-assets/` aren't rebuilt in this workflow since
+they're not committed at all — `.github/workflows/publish.yml` (below) builds them fresh
+at publish time instead.
 
 ## Submitting one extension
 
@@ -57,10 +61,10 @@ extensions, which get closer scrutiny.
 
 1. `npm install` (first time only), then `xvfb-run -a npm run store:screenshots` and
    `./scripts/build-store-zips.sh` if you haven't already.
-2. Dashboard → **New Item** → upload `store-zips/<ext>-<version>.zip`.
-3. **Store listing** tab → fill in from `store-listing/<ext>.md`: title, summary,
+2. Dashboard → **New Item** → upload `<ext>/store-zips/<ext>-<version>.zip`.
+3. **Store listing** tab → fill in from `<ext>/store-listing.md`: title, summary,
    description, category, language, icon (already in the zip, but the dashboard also wants
-   it uploaded separately), screenshot(s) from `store-assets/<ext>/`.
+   it uploaded separately), screenshot(s) from `<ext>/store-assets/`.
 4. **Privacy practices** tab → fill in from the same file: single purpose, a justification
    per permission and per host permission, the remote-code question (no), data usage
    (does not collect user data), and the privacy policy URL.
@@ -75,7 +79,7 @@ Do this for every change after the first release, however small (a UI tweak coun
 1. Make and test the change locally as usual.
 2. `node scripts/bump-store-version.mjs <ext>` (defaults to a patch bump; pass `minor` or
    `major` if it's a bigger change). This bumps the version and rebuilds both zips.
-3. Dashboard → that listing → **Package** tab → upload the new `store-zips/<ext>-<version>.zip`.
+3. Dashboard → that listing → **Package** tab → upload the new `<ext>/store-zips/<ext>-<version>.zip`.
 4. Only touch the Store listing / Privacy practices tabs if what changed actually affects
    them (new permission, different behavior) — otherwise leave them as-is.
 5. Submit for review. It goes through review again, but a no-new-permissions update
@@ -114,7 +118,7 @@ onward, per extension, after that extension's first manual submission exists.
 
 The Developer Dashboard URL for an item looks like
 `chrome.google.com/webstore/devconsole/<account-id>/<item-id>/edit` — copy the `<item-id>`
-segment and set it in `store-listing/item-ids.json`:
+segment and set it in `scripts/item-ids.json`:
 
 ```json
 {

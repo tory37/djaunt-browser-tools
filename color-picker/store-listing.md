@@ -1,7 +1,7 @@
 # Chrome Web Store listing — Djaunt Color Picker
 
 Copy-paste source for the Developer Dashboard forms. Keep this in sync with
-`color-picker/README.md` and its `index.html` card when either changes.
+`README.md` and its `index.html` card when either changes.
 
 ## Store listing tab
 
@@ -26,8 +26,8 @@ Copy-paste source for the Developer Dashboard forms. Keep this in sync with
   - No account, no network calls, no data collection. Source and full docs:
     https://github.com/tory37/djaunt-browser-tools/tree/main/color-picker
 
-- **Icon**: `color-picker/icons/icon128.png`
-- **Screenshot(s)**: `store-assets/color-picker/popup.png` (run `npm run store:screenshots`
+- **Icon**: `icons/icon128.png`
+- **Screenshot(s)**: `store-assets/popup.png` (run `npm run store:screenshots`
   to generate). Consider additional screenshots of the History, Gradient, and Contrast tabs
   with real content in them.
 

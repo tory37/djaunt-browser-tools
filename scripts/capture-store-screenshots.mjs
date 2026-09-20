@@ -6,7 +6,7 @@
 //
 //   xvfb-run -a node scripts/capture-store-screenshots.mjs
 //
-// Output goes to store-assets/<ext>/popup.png — gitignored, regenerate on demand.
+// Output goes to <ext>/store-assets/popup.png — gitignored, regenerate on demand.
 // This only captures the popup UI. Extensions with a bigger surface (host-swap and
 // query-params expanded rows, dark-mode/tab-volume applied to a real page, net-mock's
 // rule list) are worth a second, hand-taken screenshot showing that in action before
@@ -74,10 +74,10 @@ async function captureOne(ext) {
       `,
     });
 
-    const outDir = path.join(root, 'store-assets', ext);
+    const outDir = path.join(root, ext, 'store-assets');
     await mkdir(outDir, { recursive: true });
     await page.screenshot({ path: path.join(outDir, 'popup.png') });
-    console.log(`captured store-assets/${ext}/popup.png`);
+    console.log(`captured ${ext}/store-assets/popup.png`);
   } finally {
     await context.close();
   }

@@ -60,27 +60,35 @@ and `dark-mode`:
   All three must reflect the current, full set of extensions and browsers every time — not
   just the one you touched.
 
-- **Regenerate its download zip on every file change**: `index.html`'s Download buttons
-  link to pre-built `downloads/<extension>.zip` files (for people who don't use git), not
-  something built live from the repo. After changing any file inside an extension's
-  folder, run `./scripts/build-zips.sh` and commit the updated zip alongside the change —
-  otherwise the download button silently serves stale files. This doesn't apply to
-  `todo-sync/`, which is paused and has no Download button.
+- **Every publishing artifact lives inside the extension's own folder** — `downloads/`,
+  `store-listing.md`, and `store-assets/` all nest under `<extension>/`, alongside its
+  code, icons, and README. There's no repo-root `downloads/`, `store-listing/`, or
+  `store-assets/` folder; don't recreate one. The one exception is `scripts/item-ids.json`,
+  which maps every extension to its Chrome Web Store item id and stays in `scripts/`
+  since it's a single cross-extension lookup table, not something scoped to one
+  extension.
 
-- **If an extension is published to the Chrome Web Store, keep `store-listing/<ext>.md` in
-  sync too** — same trigger as the docs-sync rule above (adding/removing/renaming an
+- **Regenerate its download zip on every file change**: `index.html`'s Download buttons
+  link to pre-built `<extension>/downloads/<extension>.zip` files (for people who don't
+  use git), not something built live from the repo. After changing any file inside an
+  extension's folder, run `./scripts/build-zips.sh` and commit the updated zip alongside
+  the change — otherwise the download button silently serves stale files. This doesn't
+  apply to `todo-sync/`, which is paused and has no Download button.
+
+- **If an extension is published to the Chrome Web Store, keep `<ext>/store-listing.md`
+  in sync too** — same trigger as the docs-sync rule above (adding/removing/renaming an
   extension, or changing what one does, its permissions, or its `host_permissions`). A
   permission change in particular needs its justification text updated there, since the
   dashboard requires one per permission. See `PUBLISHING.md` for the full publish/update
   pipeline (`scripts/build-store-zips.sh`, `scripts/capture-store-screenshots.mjs`,
   `scripts/bump-store-version.mjs`) — a UI change to an already-published extension still
   needs a version bump via `bump-store-version.mjs` before the store will accept the
-  update, even if nothing in `store-listing/` needs editing.
+  update, even if nothing in `<ext>/store-listing.md` needs editing.
 
 - **CI is a backstop, not a replacement, for the two rules above.**
-  `.github/workflows/ci.yml` reruns every `test.mjs` and rebuilds `downloads/*.zip` on every
-  push to `main` (committing the fix itself if it drifted) and fails the check on a PR that
-  didn't. Still run `./scripts/build-zips.sh` yourself before committing — don't rely on CI
-  to clean up after you. Publishing an update to the Chrome Web Store itself can go through
-  `.github/workflows/publish.yml` (manual trigger) once an extension's first submission and
-  `store-listing/item-ids.json` entry exist — see `PUBLISHING.md`.
+  `.github/workflows/ci.yml` reruns every `test.mjs` and rebuilds every `<ext>/downloads/*.zip`
+  on every push to `main` (committing the fix itself if it drifted) and fails the check on
+  a PR that didn't. Still run `./scripts/build-zips.sh` yourself before committing — don't
+  rely on CI to clean up after you. Publishing an update to the Chrome Web Store itself
+  can go through `.github/workflows/publish.yml` (manual trigger) once an extension's
+  first submission and `scripts/item-ids.json` entry exist — see `PUBLISHING.md`.
