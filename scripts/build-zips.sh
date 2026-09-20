@@ -6,7 +6,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-extensions=(host-swap query-params tab-volume dark-mode color-picker)
+extensions=(host-swap query-params tab-volume dark-mode color-picker net-mock)
 
 mkdir -p downloads
 
