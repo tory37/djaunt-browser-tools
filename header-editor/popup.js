@@ -61,8 +61,8 @@ function paintPreview(row, resolved) {
 }
 
 function paintRow(row, tweak) {
-  row.querySelector('.tweak-host').textContent = bareHost(tweak.host) || 'no domain';
-  row.querySelector('.tweak-changes').textContent = summarizeChanges(tweak);
+  row.querySelector('.dj-row-line-from').textContent = bareHost(tweak.host) || 'no domain';
+  row.querySelector('.dj-row-line-to').textContent = summarizeChanges(tweak);
 
   const toggle = row.querySelector('.dj-switch');
   toggle.setAttribute('aria-checked', String(Boolean(tweak.enabled)));
@@ -87,7 +87,7 @@ function paintRow(row, tweak) {
   const showProblem = Boolean(problem) && !incomplete;
   row.querySelector('.host').classList.toggle('invalid', showProblem);
 
-  const rowError = row.querySelector('.row-error');
+  const rowError = row.querySelector('.dj-row-error');
   rowError.textContent = showProblem ? problem : '';
   rowError.hidden = !showProblem;
 
@@ -136,7 +136,7 @@ function save({ immediate = false } = {}) {
 
 function setOpen(row, open) {
   row.dataset.open = String(open);
-  row.querySelector('.disclose').setAttribute('aria-expanded', String(open));
+  row.querySelector('.dj-row-disclose').setAttribute('aria-expanded', String(open));
 }
 
 function createRow(tweak) {
@@ -155,7 +155,7 @@ function createRow(tweak) {
     save({ immediate });
   };
 
-  row.querySelector('.disclose').addEventListener('click', () => {
+  row.querySelector('.dj-row-disclose').addEventListener('click', () => {
     setOpen(row, row.dataset.open !== 'true');
   });
 
@@ -164,7 +164,7 @@ function createRow(tweak) {
     touch(true);
   });
 
-  row.querySelector('.remove').addEventListener('click', () => {
+  row.querySelector('.dj-row-remove').addEventListener('click', () => {
     tweaks = tweaks.filter((entry) => entry.id !== tweak.id);
     row.remove();
     save({ immediate: true });

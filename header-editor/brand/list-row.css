@@ -1,0 +1,170 @@
+/* Djaunt collapsible list row — one row in a scrollable list, each row a
+   disclosure: caret + two-line summary + a .dj-switch + a remove button,
+   expanding into a body of .dj-row-field / .dj-row-preview blocks. Blended
+   from djaunt-browser-tools' host-swap (.swap), query-params (.tweak) and
+   net-mock (.rule) popups, which had each implemented this identically.
+   Consumes role variables from tokens.css and the .dj-switch control from
+   components/popup only. */
+
+.dj-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.dj-list-empty {
+  padding: var(--dj-space-4);
+}
+
+.dj-row {
+  background: var(--dj-surface);
+  border-bottom: var(--dj-border-width) solid var(--dj-border);
+}
+
+.dj-row-head {
+  display: flex;
+  align-items: stretch;
+}
+
+.dj-row-disclose {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--dj-space-2);
+  min-width: 0;
+  padding: var(--dj-space-2) var(--dj-space-2) var(--dj-space-2) var(--dj-space-3);
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.dj-row-caret {
+  flex: 0 0 auto;
+  color: var(--dj-text-muted);
+  transition: transform var(--dj-dur-fast) var(--dj-ease);
+}
+
+.dj-row[data-open='true'] .dj-row-caret {
+  transform: rotate(90deg);
+}
+
+.dj-row-summary {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dj-row-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  line-height: 1.4;
+  color: var(--dj-text-muted);
+}
+
+.dj-row-line-to::before {
+  content: "→ ";
+  color: var(--dj-border);
+}
+
+.dj-row[data-state='active'] .dj-row-line-from {
+  color: var(--dj-text);
+}
+
+.dj-row[data-state='active'] .dj-row-line-to {
+  color: var(--dj-accent);
+}
+
+.dj-row[data-state='error'] .dj-row-line-to {
+  color: var(--dj-danger);
+}
+
+.dj-row .dj-switch {
+  align-self: center;
+}
+
+.dj-row-remove {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--dj-text-muted);
+  transition: color var(--dj-dur-base) var(--dj-ease);
+}
+
+.dj-row-remove:hover {
+  color: var(--dj-danger);
+}
+
+/* The expanded body recesses below the row it belongs to. */
+.dj-row-body {
+  display: none;
+  background: var(--dj-bg);
+  border-top: var(--dj-border-width) solid var(--dj-border);
+}
+
+.dj-row[data-open='true'] .dj-row-body {
+  display: block;
+}
+
+.dj-row-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-2);
+  padding: var(--dj-space-3) var(--dj-space-4);
+}
+
+.dj-row-field + .dj-row-field {
+  border-top: var(--dj-border-width) solid var(--dj-border);
+}
+
+.dj-row-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-2);
+  padding: var(--dj-space-3) var(--dj-space-4);
+  border-top: var(--dj-border-width) solid var(--dj-border);
+}
+
+.dj-row-preview code {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  line-height: 1.5;
+  word-break: break-all;
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: var(--dj-space-2);
+}
+
+.dj-row-preview-from {
+  color: var(--dj-text-muted);
+}
+
+.dj-row-preview-to {
+  color: var(--dj-accent);
+}
+
+.dj-row-preview-to.muted {
+  color: var(--dj-text-muted);
+}
+
+.dj-row-preview-arrow {
+  height: 14px;
+  color: var(--dj-text-muted);
+}
+
+.dj-row-error {
+  padding: 0 var(--dj-space-4) var(--dj-space-3);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-danger);
+}

@@ -13,7 +13,7 @@ cd "$(dirname "$0")/.."
 # Either a local checkout of djaunt-branding (fastest, no network) or its
 # jsDelivr base URL (for CI / anywhere without a sibling clone on disk).
 SRC="${DJAUNT_BRANDING_REF:-https://cdn.jsdelivr.net/gh/tory37/djaunt-branding@main}"
-extensions=(host-swap query-params tab-volume dark-mode color-picker net-mock todo-sync)
+extensions=(host-swap query-params header-editor tab-volume dark-mode color-picker net-mock todo-sync)
 
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
@@ -66,7 +66,7 @@ echo "synced brand/ from $SRC into root + ${#extensions[@]} extensions"
 # components/list-row is only used by the extensions built around a
 # collapsible row list — vendor it straight (no path rewrite needed, it has
 # no asset references of its own).
-list_row_extensions=(host-swap query-params net-mock)
+list_row_extensions=(host-swap query-params header-editor net-mock)
 fetch "components/list-row/list-row.css" "list-row.css"
 for ext in "${list_row_extensions[@]}"; do
   cp "$tmp/list-row.css" "$ext/brand/list-row.css"

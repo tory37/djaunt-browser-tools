@@ -1,7 +1,8 @@
 /* Header Editor popup — layout only. Every token and shared control comes from
-   brand/base.css; this file must not declare a raw color. */
+   brand/base.css and brand/list-row.css; this file must not declare a raw color. */
 
 @import url('brand/base.css');
+@import url('brand/list-row.css');
 
 body {
   width: 340px;
@@ -12,127 +13,7 @@ body {
   flex-direction: column;
 }
 
-.list {
-  display: flex;
-  flex-direction: column;
-  max-height: 460px;
-  overflow-y: auto;
-}
-
-.empty {
-  padding: var(--dj-space-4);
-}
-
-/* ---- collapsible tweak row ---- */
-
-.tweak {
-  background: var(--dj-surface);
-  border-bottom: var(--dj-border-width) solid var(--dj-border);
-}
-
-.tweak-head {
-  display: flex;
-  align-items: stretch;
-}
-
-.disclose {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  gap: var(--dj-space-2);
-  min-width: 0;
-  padding: var(--dj-space-2) var(--dj-space-2) var(--dj-space-2) var(--dj-space-3);
-  text-align: left;
-}
-
-.caret {
-  flex: 0 0 auto;
-  color: var(--dj-text-muted);
-  transition: transform var(--dj-dur-fast) var(--dj-ease);
-}
-
-.tweak[data-open='true'] .caret {
-  transform: rotate(90deg);
-}
-
-.tweak-summary {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.tweak-host,
-.tweak-changes {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-family: var(--dj-font-mono);
-  font-size: var(--dj-text-xs);
-  line-height: 1.4;
-  color: var(--dj-text-muted);
-}
-
-.tweak[data-state='active'] .tweak-host {
-  color: var(--dj-text);
-}
-
-.tweak[data-state='active'] .tweak-changes {
-  color: var(--dj-accent);
-}
-
-.tweak[data-state='error'] .tweak-changes {
-  color: var(--dj-danger);
-}
-
-.dj-switch {
-  align-self: center;
-}
-
-.remove {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  color: var(--dj-text-muted);
-  transition: color var(--dj-dur-base) var(--dj-ease);
-}
-
-.remove:hover {
-  color: var(--dj-danger);
-}
-
-/* The expanded body recesses below the row it belongs to. */
-.tweak-body {
-  display: none;
-  background: var(--dj-bg);
-  border-top: var(--dj-border-width) solid var(--dj-border);
-}
-
-.tweak[data-open='true'] .tweak-body {
-  display: block;
-}
-
-/* ---- fields ---- */
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--dj-space-2);
-  padding: var(--dj-space-3) var(--dj-space-4);
-}
-
-.field + .field {
-  border-top: var(--dj-border-width) solid var(--dj-border);
-}
-
-.preview {
-  display: flex;
-  flex-direction: column;
-  gap: var(--dj-space-2);
-  padding: var(--dj-space-3) var(--dj-space-4);
-  border-top: var(--dj-border-width) solid var(--dj-border);
-}
+/* ---- preview: a list of header changes, not a from/to rewrite ---- */
 
 .preview-list {
   display: flex;
@@ -169,12 +50,6 @@ body {
 .preview-remove code {
   color: var(--dj-danger);
   text-decoration: line-through;
-}
-
-.row-error {
-  padding: 0 var(--dj-space-4) var(--dj-space-3);
-  font-size: var(--dj-text-xs);
-  color: var(--dj-danger);
 }
 
 /* ---- actions ---- */
