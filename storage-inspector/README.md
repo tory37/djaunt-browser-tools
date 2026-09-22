@@ -35,9 +35,13 @@ immediately — no separate "connect" step.
 
 - **Local Storage / Session Storage** tabs switch which store you're looking at. Each shows
   every key, its value, a size badge, and a `JSON` badge when the value parses as one.
+- **JSON values are pretty-printed** in the value box (2-space indent) instead of showing the
+  raw stored string — most app storage is JSON under the hood, so this is usually the readable
+  form. Non-JSON strings show as-is.
 - **Filter** narrows the list by key or value substring as you type.
 - **Edit** a value by typing directly in its box; **Save** and **Revert** appear once it
-  differs from what's stored. **Delete** removes that key immediately.
+  differs from what's displayed. Saving re-formats valid JSON back to the standard
+  pretty-printed form. **Delete** removes that key immediately.
 - **Add** a new key/value pair from the fields above the list.
 - **Export JSON** downloads the current store (after any filter) as a `{key: value}` JSON
   file. **Clear all** removes every entry in the current store.

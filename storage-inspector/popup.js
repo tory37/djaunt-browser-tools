@@ -1,6 +1,6 @@
 import {
-  isRestrictedUrl, looksLikeJson, byteLength, formatBytes, sortEntries, filterEntries,
-  totalBytes, buildExport,
+  isRestrictedUrl, looksLikeJson, formatJsonPreview, byteLength, formatBytes, sortEntries,
+  filterEntries, totalBytes, buildExport,
 } from './storage.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
@@ -176,12 +176,11 @@ function renderEntryRow(entry) {
 
   const meta = document.createElement('span');
   meta.className = 'entry-meta';
-  if (looksLikeJson(entry.value)) {
-    const badge = document.createElement('span');
-    badge.className = 'json-badge';
-    badge.textContent = 'JSON';
-    meta.append(badge);
-  }
+  const badge = document.createElement('span');
+  badge.className = 'json-badge';
+  badge.textContent = 'JSON';
+  badge.hidden = !looksLikeJson(entry.value);
+  meta.append(badge);
   const size = document.createElement('span');
   size.className = 'entry-size';
   size.textContent = formatBytes(byteLength(entry.value));
@@ -197,8 +196,9 @@ function renderEntryRow(entry) {
 
   const valueArea = document.createElement('textarea');
   valueArea.className = 'entry-value mono';
-  valueArea.value = entry.value;
-  valueArea.rows = Math.min(6, Math.max(1, Math.ceil(entry.value.length / 60)));
+  let baseline = looksLikeJson(entry.value) ? formatJsonPreview(entry.value) : entry.value;
+  valueArea.value = baseline;
+  valueArea.rows = Math.min(10, Math.max(1, baseline.split('\n').length));
 
   const actions = document.createElement('div');
   actions.className = 'entry-actions';
@@ -214,7 +214,7 @@ function renderEntryRow(entry) {
   actions.append(saveBtn, revertBtn);
 
   valueArea.addEventListener('input', () => {
-    actions.hidden = valueArea.value === entry.value;
+    actions.hidden = valueArea.value === baseline;
   });
 
   saveBtn.addEventListener('click', async () => {
@@ -224,13 +224,16 @@ function renderEntryRow(entry) {
       return;
     }
     entry.value = valueArea.value;
+    baseline = looksLikeJson(entry.value) ? formatJsonPreview(entry.value) : entry.value;
+    valueArea.value = baseline;
+    badge.hidden = !looksLikeJson(entry.value);
     actions.hidden = true;
     size.textContent = formatBytes(byteLength(entry.value));
     showToast(`Saved "${entry.key}".`);
   });
 
   revertBtn.addEventListener('click', () => {
-    valueArea.value = entry.value;
+    valueArea.value = baseline;
     actions.hidden = true;
   });
 
