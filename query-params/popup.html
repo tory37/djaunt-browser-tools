@@ -14,9 +14,9 @@
     <span class="dj-pill" id="pill" data-state="idle">off</span>
   </header>
 
-  <div class="list" id="list"></div>
+  <div class="dj-list" id="list"></div>
 
-  <p class="empty dj-hint" id="empty" hidden>No tweaks yet.</p>
+  <p class="dj-list-empty dj-hint" id="empty" hidden>No tweaks yet.</p>
 
   <div class="actions">
     <button type="button" class="dj-btn" id="add">
@@ -33,24 +33,24 @@
 </div>
 
 <template id="rowTemplate">
-  <section class="tweak" data-open="false">
-    <div class="tweak-head">
-      <button type="button" class="disclose" aria-expanded="false">
-        <svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none"
+  <section class="dj-row" data-open="false">
+    <div class="dj-row-head">
+      <button type="button" class="dj-row-disclose" aria-expanded="false">
+        <svg class="dj-row-caret" width="14" height="14" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
              stroke-linejoin="round" aria-hidden="true">
           <path d="m9 18 6-6-6-6"/>
         </svg>
-        <span class="tweak-summary">
-          <span class="tweak-host"></span>
-          <span class="tweak-changes"></span>
+        <span class="dj-row-summary">
+          <span class="dj-row-line dj-row-line-from"></span>
+          <span class="dj-row-line dj-row-line-to"></span>
         </span>
       </button>
       <button type="button" class="dj-switch" role="switch" aria-checked="false"
               aria-label="Enable this tweak">
         <span class="dj-knob"></span>
       </button>
-      <button type="button" class="remove" aria-label="Delete this tweak">
+      <button type="button" class="dj-row-remove" aria-label="Delete this tweak">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
              aria-hidden="true">
@@ -59,29 +59,29 @@
       </button>
     </div>
 
-    <div class="tweak-body">
-      <div class="field">
+    <div class="dj-row-body">
+      <div class="dj-row-field">
         <label class="dj-label">Domain</label>
         <input type="text" class="host" spellcheck="false" autocomplete="off"
                placeholder="app.example.com">
         <p class="dj-hint">Scheme and path are ignored. Omit the port to match any port.</p>
       </div>
 
-      <div class="field">
+      <div class="dj-row-field">
         <label class="dj-label">Remove params</label>
         <textarea class="remove-params" rows="2" spellcheck="false" autocomplete="off"
                   placeholder="utm_source&#10;token"></textarea>
         <p class="dj-hint">One name per line, or separated by commas. Every copy of the name goes.</p>
       </div>
 
-      <div class="field">
+      <div class="dj-row-field">
         <label class="dj-label">Add or replace params</label>
         <textarea class="add-params" rows="2" spellcheck="false" autocomplete="off"
                   placeholder="debug=1&#10;lang=es"></textarea>
         <p class="dj-hint">One <code>key=value</code> per line. An existing key is overwritten.</p>
       </div>
 
-      <div class="field">
+      <div class="dj-row-field">
         <span class="dj-label">Apply to</span>
         <div class="dj-seg-group" role="radiogroup" aria-label="Request scope">
           <button type="button" class="dj-seg" role="radio" aria-checked="true"
@@ -92,19 +92,19 @@
         <p class="dj-hint scope-hint">Page and iframe loads only. Leaves API calls alone.</p>
       </div>
 
-      <div class="preview" aria-live="polite">
+      <div class="dj-row-preview" aria-live="polite">
         <span class="dj-label">Preview</span>
-        <code class="preview-from"></code>
-        <div class="preview-arrow" aria-hidden="true">
+        <code class="dj-row-preview-from"></code>
+        <div class="dj-row-preview-arrow" aria-hidden="true">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>
           </svg>
         </div>
-        <code class="preview-to"></code>
+        <code class="dj-row-preview-to"></code>
       </div>
 
-      <p class="row-error" hidden></p>
+      <p class="dj-row-error" hidden></p>
     </div>
   </section>
 </template>

@@ -1,9 +1,14 @@
-/* Djaunt popup primitives — shared by every extension in this repo.
-   Consumes role variables from tokens.css only; never a raw hex.
-   Each extension sets its element theme with data-dj-theme on <html>. */
-
 @import url('tokens.css');
 @import url('fonts.css');
+
+/* Djaunt popup/panel primitives — header, buttons, switch, segmented
+   control, pill, inputs, footer. Consumes role variables from tokens.css
+   only; never a raw hex. The consuming page loads tokens.css (and a font
+   source — Google Fonts or the self-hosted brand/fonts.css) itself before
+   this file; it isn't imported here so the component works the same way
+   whether tokens.css sits at ../tokens/tokens.css in this repo or wherever
+   a consumer vendors it to. Set the element theme with data-dj-theme on
+   <html>. */
 
 * {
   box-sizing: border-box;
