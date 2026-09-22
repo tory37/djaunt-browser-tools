@@ -22,6 +22,7 @@ const root = path.join(__dirname, '..');
 const extensions = [
   'host-swap',
   'query-params',
+  'header-editor',
   'tab-volume',
   'dark-mode',
   'color-picker',
