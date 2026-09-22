@@ -12,6 +12,7 @@ an index page showing off each extension. It's `index.html` at the repo root; en
 | [`host-swap/`](host-swap) | Chrome & Firefox | Rewrites hosts to other hosts before the request resolves, keeping the path, query string and fragment byte-identical. Built for pointing a fixed launch URL at a branch deploy without hand-editing a URL that carries live auth tokens. Holds as many swaps as you like, enabled one at a time. |
 | [`query-params/`](query-params) | Chrome & Firefox | Removes and adds query string parameters on a chosen domain before the request resolves, leaving the scheme, host, path and fragment untouched. Built for flipping flags and locales on a launch URL you cannot hand-edit. Holds as many tweaks as you like, each toggled on its own. |
 | [`header-editor/`](header-editor) | Chrome & Firefox | Sets and removes HTTP request headers on a chosen domain before the request resolves. Built for testing auth and feature-flag headers and for CORS debugging. Holds as many tweaks as you like, each toggled on its own. |
+| [`prettifier/`](prettifier) | Chrome & Firefox | Beautifies JSON and Markdown and runs a structural comparison between two versions of either — JSON diffed by property path, Markdown diffed section by section — with no host permissions at all. |
 | [`tab-volume/`](tab-volume) | Chrome & Firefox | Sets the volume of each tab from 0 to 100 percent, optionally saved for every tab on the same domain. |
 | [`dark-mode/`](dark-mode) | Chrome & Firefox | Forces a dark color scheme on any site, skipping ones that already look dark. Toggle it globally or override it per domain for the browsing session. |
 | [`color-picker/`](color-picker) | Chrome & Firefox | Picks any on-screen color, converts it between hex/RGB/HSL/OKLCH, checks WCAG contrast, and builds CSS gradients — with no host permissions at all. |
@@ -55,16 +56,17 @@ Each folder has its own README with the details.
 
 ## Tests
 
-`host-swap`, `query-params`, `header-editor`, `color-picker`, `net-mock` and `todo-sync`
-each have a dependency-free test file covering their core logic:
+`host-swap`, `query-params`, `header-editor`, `prettifier`, `color-picker`, `net-mock` and
+`todo-sync` each have a dependency-free test file covering their core logic:
 
 ```
 node host-swap/test.mjs
 node query-params/test.mjs
 node header-editor/test.mjs
+node prettifier/test.mjs
 node color-picker/test.mjs
 node net-mock/test.mjs
 node todo-sync/test.mjs
 ```
 
-All six exit non-zero on failure. `tab-volume` and `dark-mode` have no automated tests.
+All seven exit non-zero on failure. `tab-volume` and `dark-mode` have no automated tests.

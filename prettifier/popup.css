@@ -1,0 +1,197 @@
+/* Prettifier popup — layout only. Every token and shared control comes from
+   brand/base.css; this file must not declare a raw color. */
+
+@import url('brand/base.css');
+
+body {
+  width: 620px;
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  display: flex;
+  gap: var(--dj-space-3);
+  align-items: center;
+  padding: var(--dj-space-3) var(--dj-space-4) 0;
+}
+
+.tabs {
+  flex: 1 1 auto;
+}
+
+#format-group {
+  flex: 0 0 auto;
+  width: 180px;
+}
+
+/* base.css styles selected tabs via [aria-checked], but role="tab" elements
+   use aria-selected per the ARIA tab pattern — mirror the same selected look. */
+.dj-seg[role='tab'][aria-selected='true'] {
+  color: var(--dj-text);
+  border-color: var(--dj-accent);
+}
+
+.dj-seg[role='tab'][aria-selected='true'] + .dj-seg[role='tab'] {
+  border-left-color: var(--dj-accent);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-3);
+  padding: var(--dj-space-4);
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-2);
+}
+
+.field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.indent-group {
+  width: 108px;
+}
+
+.indent-group[hidden] {
+  display: none;
+}
+
+.mono-area {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+}
+
+textarea[readonly] {
+  color: var(--dj-text-muted);
+}
+
+.dj-hint.error {
+  color: var(--dj-danger);
+}
+
+.result-actions {
+  display: flex;
+  gap: var(--dj-space-2);
+}
+
+.mini-btn {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: 3px var(--dj-space-2);
+  transition: color var(--dj-dur-base) var(--dj-ease), border-color var(--dj-dur-base) var(--dj-ease);
+}
+
+.mini-btn:hover {
+  color: var(--dj-accent);
+  border-color: var(--dj-accent);
+}
+
+/* ---- compare ---- */
+
+.compare-columns {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--dj-space-2);
+}
+
+.compare-columns .field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.swap-btn {
+  flex: 0 0 auto;
+  padding: 7px;
+  margin-bottom: 1px;
+}
+
+.diff-summary {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+}
+
+.diff-summary .added { color: var(--dj-accent); }
+.diff-summary .removed { color: var(--dj-danger); }
+.diff-summary .changed { color: var(--dj-text); }
+
+.diff-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-1);
+  max-height: 220px;
+  overflow-y: auto;
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  background: var(--dj-surface);
+  padding: var(--dj-space-2);
+}
+
+.diff-list:empty {
+  display: none;
+}
+
+.diff-empty {
+  padding: var(--dj-space-2) 0;
+}
+
+.diff-entry {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+.diff-entry .diff-path {
+  color: var(--dj-text-muted);
+}
+
+.diff-entry.added { color: var(--dj-accent); }
+.diff-entry.removed { color: var(--dj-danger); }
+.diff-entry.changed { color: var(--dj-text); }
+
+.diff-entry del {
+  color: var(--dj-danger);
+  text-decoration: line-through;
+}
+
+.diff-entry ins {
+  color: var(--dj-accent);
+  text-decoration: none;
+}
+
+.diff-section-head {
+  font-family: var(--dj-font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: var(--dj-tracking-label);
+  text-transform: uppercase;
+  color: var(--dj-text-muted);
+  margin-top: var(--dj-space-2);
+}
+
+.diff-section-head:first-child {
+  margin-top: 0;
+}
+
+.actions {
+  display: flex;
+}
