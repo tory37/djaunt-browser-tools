@@ -1,0 +1,60 @@
+/* Header Editor popup — layout only. Every token and shared control comes from
+   brand/base.css and brand/list-row.css; this file must not declare a raw color. */
+
+@import url('brand/base.css');
+@import url('brand/list-row.css');
+
+body {
+  width: 340px;
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- preview: a list of header changes, not a from/to rewrite ---- */
+
+.preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.preview-list:empty::before {
+  content: 'Fill in the domain and a change';
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+}
+
+.preview-list code {
+  display: inline-block;
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  line-height: 1.5;
+  word-break: break-all;
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: var(--dj-space-1) var(--dj-space-2);
+}
+
+.preview-set code {
+  color: var(--dj-accent);
+}
+
+.preview-remove code {
+  color: var(--dj-danger);
+  text-decoration: line-through;
+}
+
+/* ---- actions ---- */
+
+.actions {
+  padding: var(--dj-space-3) var(--dj-space-4);
+  border-bottom: var(--dj-border-width) solid var(--dj-border);
+}

@@ -1,7 +1,7 @@
 # Chrome Web Store listing — Djaunt Tab Volume
 
 Copy-paste source for the Developer Dashboard forms. Keep this in sync with
-`tab-volume/README.md` and its `index.html` card when either changes.
+`README.md` and its `index.html` card when either changes.
 
 ## Store listing tab
 
@@ -21,8 +21,8 @@ Copy-paste source for the Developer Dashboard forms. Keep this in sync with
   - No account, no network calls, no data collection. Source and full docs:
     https://github.com/tory37/djaunt-browser-tools/tree/main/tab-volume
 
-- **Icon**: `tab-volume/icons/icon128.png`
-- **Screenshot(s)**: `store-assets/tab-volume/popup.png` (run `npm run store:screenshots`
+- **Icon**: `icons/icon128.png`
+- **Screenshot(s)**: `store-assets/popup.png` (run `npm run store:screenshots`
   to generate). Consider a second, hand-taken screenshot with the slider set below 100% and
   the toolbar badge visible.
 

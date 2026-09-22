@@ -6,8 +6,9 @@
 //
 // Usage: node scripts/publish-to-store.mjs <extension>
 // Requires env vars: CWS_CLIENT_ID, CWS_CLIENT_SECRET, CWS_REFRESH_TOKEN
-// Requires store-listing/item-ids.json to have a non-empty id for <extension>.
-// Requires store-zips/<extension>-<version>.zip to already be built (build-store-zips.sh).
+// Requires scripts/item-ids.json to have a non-empty id for <extension>.
+// Requires <extension>/store-zips/<extension>-<version>.zip to already be built
+// (build-store-zips.sh).
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -29,11 +30,11 @@ for (const [name, value] of Object.entries({ CWS_CLIENT_ID, CWS_CLIENT_SECRET, C
   }
 }
 
-const itemIds = JSON.parse(await readFile(path.join(root, 'store-listing', 'item-ids.json'), 'utf8'));
+const itemIds = JSON.parse(await readFile(path.join(root, 'scripts', 'item-ids.json'), 'utf8'));
 const itemId = itemIds[ext];
 if (!itemId) {
   console.error(
-    `No item id for "${ext}" in store-listing/item-ids.json. That means it hasn't been `
+    `No item id for "${ext}" in scripts/item-ids.json. That means it hasn't been `
     + 'submitted to the Web Store yet — do the first submission by hand (see PUBLISHING.md), '
     + 'then add its item id there before this can publish updates to it.',
   );
@@ -41,7 +42,7 @@ if (!itemId) {
 }
 
 const manifest = JSON.parse(await readFile(path.join(root, ext, 'manifest.json'), 'utf8'));
-const zipPath = path.join(root, 'store-zips', `${ext}-${manifest.version}.zip`);
+const zipPath = path.join(root, ext, 'store-zips', `${ext}-${manifest.version}.zip`);
 let zipBuffer;
 try {
   zipBuffer = await readFile(zipPath);

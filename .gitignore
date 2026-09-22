@@ -1,17 +1,17 @@
 # A stray packed extension bundle elsewhere is build output, not source — but
-# downloads/*.zip is the deliberate exception: index.html's Download buttons link to
-# those, so they're committed on purpose. Regenerate them with scripts/build-zips.sh.
+# <ext>/downloads/*.zip is the deliberate exception: index.html's Download buttons link
+# to those, so they're committed on purpose. Regenerate them with scripts/build-zips.sh.
 *.zip
-!/downloads/*.zip
+!*/downloads/*.zip
 
 .DS_Store
 node_modules/
 
 # Store-submission build output — regenerate with scripts/build-store-zips.sh and
-# scripts/capture-store-screenshots.mjs. Not committed, unlike downloads/*.zip above:
-# these are dev-only publishing artifacts, not something end users download.
-/store-zips/
-/store-assets/
+# scripts/capture-store-screenshots.mjs. Not committed, unlike <ext>/downloads/*.zip
+# above: these are dev-only publishing artifacts, not something end users download.
+*/store-zips/
+*/store-assets/
 /.tmp-profile/
 
 # Agent working files — plans, research, generated output.

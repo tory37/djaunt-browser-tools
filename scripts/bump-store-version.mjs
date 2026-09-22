@@ -42,4 +42,4 @@ console.log(`${ext}: ${major}.${minor}.${patch} -> ${next}`);
 execFileSync(path.join(root, 'scripts', 'build-zips.sh'), [], { stdio: 'inherit' });
 execFileSync(path.join(root, 'scripts', 'build-store-zips.sh'), [], { stdio: 'inherit' });
 
-console.log(`\nDone. Upload store-zips/${ext}-${next}.zip to the ${ext} listing's Package tab.`);
+console.log(`\nDone. Upload ${ext}/store-zips/${ext}-${next}.zip to the ${ext} listing's Package tab.`);

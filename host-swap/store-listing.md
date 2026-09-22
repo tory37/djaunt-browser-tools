@@ -1,7 +1,7 @@
 # Chrome Web Store listing — Djaunt Host Swap
 
 Copy-paste source for the Developer Dashboard forms. Keep this in sync with
-`host-swap/README.md` and its `index.html` card when either changes.
+`README.md` and its `index.html` card when either changes.
 
 ## Store listing tab
 
@@ -25,8 +25,8 @@ Copy-paste source for the Developer Dashboard forms. Keep this in sync with
   - No account, no network calls, no data collection. Source and full docs:
     https://github.com/tory37/djaunt-browser-tools/tree/main/host-swap
 
-- **Icon**: `host-swap/icons/icon128.png`
-- **Screenshot(s)**: `store-assets/host-swap/popup.png` (run `npm run store:screenshots` to
+- **Icon**: `icons/icon128.png`
+- **Screenshot(s)**: `store-assets/popup.png` (run `npm run store:screenshots` to
   generate). Consider a second, hand-taken screenshot showing an expanded swap row with a
   real from/to host filled in — the empty-state popup alone doesn't show what the tool does.
 

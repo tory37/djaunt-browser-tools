@@ -1,7 +1,7 @@
 # Chrome Web Store listing — Djaunt Color Picker
 
 Copy-paste source for the Developer Dashboard forms. Keep this in sync with
-`color-picker/README.md` and its `index.html` card when either changes.
+`README.md` and its `index.html` card when either changes.
 
 ## Store listing tab
 
@@ -14,11 +14,9 @@ Copy-paste source for the Developer Dashboard forms. Keep this in sync with
   Picks any on-screen color, converts it between hex/RGB/HSL/OKLCH, checks WCAG contrast,
   and builds CSS gradients — with no host permissions at all.
 
-  Built as a ColorZilla alternative that fixes its biggest complaints: ColorZilla asks for
-  access to every page you visit — this asks for none. ColorZilla's picker can sample the
-  wrong pixel on a HiDPI display — this one samples real captured pixel data, not a
-  CSS-pixel guess. ColorZilla nags about a paid tier — this has no tiers, accounts, or
-  network calls at all.
+  No access to the pages you visit is requested — ever. Color sampling uses real captured
+  pixel data, not a CSS-pixel guess, so it stays accurate on HiDPI displays. No accounts, no
+  paid tiers, no network calls of any kind.
 
   - Pick any pixel on screen (not just inside the tab) via the native EyeDropper API where
     supported, or a zoomed full-page picker elsewhere.
@@ -28,8 +26,8 @@ Copy-paste source for the Developer Dashboard forms. Keep this in sync with
   - No account, no network calls, no data collection. Source and full docs:
     https://github.com/tory37/djaunt-browser-tools/tree/main/color-picker
 
-- **Icon**: `color-picker/icons/icon128.png`
-- **Screenshot(s)**: `store-assets/color-picker/popup.png` (run `npm run store:screenshots`
+- **Icon**: `icons/icon128.png`
+- **Screenshot(s)**: `store-assets/popup.png` (run `npm run store:screenshots`
   to generate). Consider additional screenshots of the History, Gradient, and Contrast tabs
   with real content in them.
 

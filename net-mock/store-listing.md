@@ -1,7 +1,7 @@
 # Chrome Web Store listing — Djaunt Net Mock
 
 Copy-paste source for the Developer Dashboard forms. Keep this in sync with
-`net-mock/README.md`, `net-mock/API.md`, and its `index.html` card when any of them change.
+`README.md`, `API.md`, and its `index.html` card when any of them change.
 
 ## Store listing tab
 
@@ -24,8 +24,8 @@ Copy-paste source for the Developer Dashboard forms. Keep this in sync with
   - No account, no network calls of its own, no data collection. Source, full docs, and the
     scripting API: https://github.com/tory37/djaunt-browser-tools/tree/main/net-mock
 
-- **Icon**: `net-mock/icons/icon128.png`
-- **Screenshot(s)**: `store-assets/net-mock/popup.png` (run `npm run store:screenshots` to
+- **Icon**: `icons/icon128.png`
+- **Screenshot(s)**: `store-assets/popup.png` (run `npm run store:screenshots` to
   generate). Consider a second, hand-taken screenshot showing a configured rule and a match
   in the log — the empty-state popup alone doesn't show what it does.
 

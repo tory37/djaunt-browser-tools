@@ -2,7 +2,7 @@ name: Publish to Chrome Web Store
 
 # Manual only — this bumps a real published extension's version and submits it for
 # review, so it never runs on its own. Only usable for an extension that already has a
-# non-empty id in store-listing/item-ids.json (i.e. its first submission was already done
+# non-empty id in scripts/item-ids.json (i.e. its first submission was already done
 # by hand in the Developer Dashboard — see PUBLISHING.md).
 on:
   workflow_dispatch:
@@ -14,6 +14,7 @@ on:
         options:
           - host-swap
           - query-params
+          - header-editor
           - tab-volume
           - dark-mode
           - color-picker
@@ -46,7 +47,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "${{ inputs.extension }}/manifest.json" "downloads/${{ inputs.extension }}.zip"
+          git add "${{ inputs.extension }}/manifest.json" "${{ inputs.extension }}/downloads/${{ inputs.extension }}.zip"
           git commit -m "Bump ${{ inputs.extension }} version for Chrome Web Store release [skip ci]"
           git push
       - name: Upload and publish

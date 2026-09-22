@@ -1,7 +1,7 @@
 # Chrome Web Store listing — Djaunt Dark Mode
 
 Copy-paste source for the Developer Dashboard forms. Keep this in sync with
-`dark-mode/README.md` and its `index.html` card when either changes.
+`README.md` and its `index.html` card when either changes.
 
 ## Store listing tab
 
@@ -22,8 +22,8 @@ Copy-paste source for the Developer Dashboard forms. Keep this in sync with
   - No account, no network calls, no data collection. Source and full docs:
     https://github.com/tory37/djaunt-browser-tools/tree/main/dark-mode
 
-- **Icon**: `dark-mode/icons/icon128.png`
-- **Screenshot(s)**: `store-assets/dark-mode/popup.png` (run `npm run store:screenshots` to
+- **Icon**: `icons/icon128.png`
+- **Screenshot(s)**: `store-assets/popup.png` (run `npm run store:screenshots` to
   generate). Strongly consider a second, hand-taken before/after screenshot of a real page
   with dark mode applied — that's the actual selling point, not the popup.
 
