@@ -15,7 +15,7 @@ jobs:
           node-version: 20
       - name: Run each extension's test suite
         run: |
-          for ext in host-swap query-params header-editor prettifier tab-volume dark-mode color-picker net-mock todo-sync; do
+          for ext in host-swap query-params header-editor prettifier storage-inspector tab-volume dark-mode color-picker net-mock todo-sync; do
             echo "::group::$ext"
             node "$ext/test.mjs"
             echo "::endgroup::"

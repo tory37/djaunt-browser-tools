@@ -24,6 +24,7 @@ const extensions = [
   'query-params',
   'header-editor',
   'prettifier',
+  'storage-inspector',
   'tab-volume',
   'dark-mode',
   'color-picker',

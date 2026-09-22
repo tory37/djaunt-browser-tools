@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Djaunt Storage Inspector",
+  "version": "1.0.0",
+  "description": "Views, edits and deletes localStorage and sessionStorage entries for the active tab's page, with export to JSON — access is granted only to the tab you click on.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "storage-inspector@djaunt-browser-tools",
+      "strict_min_version": "121.0"
+    }
+  },
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Djaunt Storage Inspector",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

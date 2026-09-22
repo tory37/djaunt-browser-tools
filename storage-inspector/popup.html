@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" data-dj-theme="stone">
+<meta charset="utf-8">
+<title>Storage Inspector</title>
+<link rel="stylesheet" href="popup.css">
+<body>
+<div class="shell">
+  <header class="dj-head" id="head">
+    <span class="dj-mark" aria-hidden="true"></span>
+    <span class="dj-titles">
+      <span class="dj-wordmark" role="img" aria-label="Djaunt"></span>
+      <h1 class="dj-title">Storage Inspector</h1>
+    </span>
+  </header>
+
+  <div class="origin-row">
+    <span class="dj-label">Origin</span>
+    <span class="origin-value mono" id="origin-value">—</span>
+    <button type="button" class="mini-btn" id="refresh-btn">Refresh</button>
+  </div>
+
+  <p class="dj-hint blocked" id="blocked-message" hidden></p>
+
+  <div class="toolbar" id="toolbar">
+    <div class="dj-seg-group tabs" role="tablist" aria-label="Storage type">
+      <button type="button" class="dj-seg" role="tab" aria-selected="true" data-store="local">Local Storage</button>
+      <button type="button" class="dj-seg" role="tab" aria-selected="false" data-store="session">Session Storage</button>
+    </div>
+  </div>
+
+  <section class="panel" id="panel" role="tabpanel">
+    <input type="search" id="filter-input" class="mono" placeholder="Filter by key or value">
+
+    <div class="add-row">
+      <input type="text" id="new-key" class="mono" placeholder="new key">
+      <textarea id="new-value" class="mono" rows="1" placeholder="new value"></textarea>
+      <button type="button" class="dj-btn" id="add-btn">Add</button>
+    </div>
+    <p class="dj-hint error" id="add-error" hidden></p>
+
+    <div class="entry-list" id="entry-list"></div>
+    <p class="dj-hint empty-message" id="empty-message" hidden>No entries.</p>
+  </section>
+
+  <p class="dj-hint toast" id="toast" role="status" hidden></p>
+
+  <footer class="dj-foot" id="footer">
+    <span id="entry-summary"></span>
+    <span class="foot-actions">
+      <button type="button" class="mini-btn" id="export-btn">Export JSON</button>
+      <button type="button" class="mini-btn danger" id="clear-btn">Clear all</button>
+    </span>
+  </footer>
+</div>
+
+<script type="module" src="popup.js"></script>
+</body>
+</html>

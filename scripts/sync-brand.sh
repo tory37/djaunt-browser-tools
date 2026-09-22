@@ -13,7 +13,7 @@ cd "$(dirname "$0")/.."
 # Either a local checkout of djaunt-branding (fastest, no network) or its
 # jsDelivr base URL (for CI / anywhere without a sibling clone on disk).
 SRC="${DJAUNT_BRANDING_REF:-https://cdn.jsdelivr.net/gh/tory37/djaunt-branding@main}"
-extensions=(host-swap query-params header-editor prettifier tab-volume dark-mode color-picker net-mock todo-sync)
+extensions=(host-swap query-params header-editor prettifier storage-inspector tab-volume dark-mode color-picker net-mock todo-sync)
 
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
