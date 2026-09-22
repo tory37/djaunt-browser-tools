@@ -23,6 +23,7 @@ const extensions = [
   'host-swap',
   'query-params',
   'header-editor',
+  'prettifier',
   'tab-volume',
   'dark-mode',
   'color-picker',

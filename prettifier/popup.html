@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" data-dj-theme="radiant">
+<meta charset="utf-8">
+<title>Prettifier</title>
+<link rel="stylesheet" href="popup.css">
+<body>
+<div class="shell">
+  <header class="dj-head" id="head">
+    <span class="dj-mark" aria-hidden="true"></span>
+    <span class="dj-titles">
+      <span class="dj-wordmark" role="img" aria-label="Djaunt"></span>
+      <h1 class="dj-title">Prettifier</h1>
+    </span>
+  </header>
+
+  <div class="toolbar">
+    <div class="dj-seg-group tabs" role="tablist" aria-label="Mode">
+      <button type="button" class="dj-seg" role="tab" aria-selected="true" data-tab="beautify">Beautify</button>
+      <button type="button" class="dj-seg" role="tab" aria-selected="false" data-tab="compare">Compare</button>
+    </div>
+    <div class="dj-seg-group" role="radiogroup" aria-label="Format" id="format-group">
+      <button type="button" class="dj-seg" role="radio" aria-checked="true" data-format="json">JSON</button>
+      <button type="button" class="dj-seg" role="radio" aria-checked="false" data-format="markdown">Markdown</button>
+    </div>
+  </div>
+
+  <section class="panel" id="panel-beautify" role="tabpanel">
+    <div class="field">
+      <div class="field-head">
+        <span class="dj-label">Input</span>
+        <div class="dj-seg-group indent-group" role="radiogroup" aria-label="Indent size" id="indent-group">
+          <button type="button" class="dj-seg" role="radio" aria-checked="true" data-indent="2">2sp</button>
+          <button type="button" class="dj-seg" role="radio" aria-checked="false" data-indent="4">4sp</button>
+        </div>
+      </div>
+      <textarea id="beautify-input" class="mono-area" rows="8" spellcheck="false"
+                placeholder="Paste JSON or Markdown here"></textarea>
+    </div>
+
+    <p class="dj-hint error" id="beautify-error" hidden></p>
+
+    <div class="field">
+      <div class="field-head">
+        <span class="dj-label">Result</span>
+        <div class="result-actions">
+          <button type="button" class="mini-btn" id="beautify-copy">Copy</button>
+          <button type="button" class="mini-btn" id="beautify-download">Download</button>
+        </div>
+      </div>
+      <textarea id="beautify-output" class="mono-area" rows="8" spellcheck="false" readonly
+                placeholder="Beautified output appears here"></textarea>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-compare" role="tabpanel" hidden>
+    <div class="compare-columns">
+      <div class="field">
+        <span class="dj-label">A</span>
+        <textarea id="compare-a" class="mono-area" rows="7" spellcheck="false" placeholder="Original"></textarea>
+      </div>
+      <button type="button" class="mini-btn swap-btn" id="compare-swap" aria-label="Swap A and B">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m17 3 4 4-4 4"/><path d="M3 7h18"/><path d="m7 21-4-4 4-4"/><path d="M21 17H3"/>
+        </svg>
+      </button>
+      <div class="field">
+        <span class="dj-label">B</span>
+        <textarea id="compare-b" class="mono-area" rows="7" spellcheck="false" placeholder="Changed"></textarea>
+      </div>
+    </div>
+
+    <p class="dj-hint error" id="compare-error" hidden></p>
+
+    <div class="field">
+      <div class="field-head">
+        <span class="dj-label">Differences</span>
+        <span class="diff-summary" id="diff-summary"></span>
+      </div>
+      <div class="diff-list" id="diff-list"></div>
+      <p class="dj-hint diff-empty" id="diff-empty" hidden>No differences.</p>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="dj-btn" id="compare-download" disabled>
+        <svg class="dj-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 15V3"/><path d="m7 10 5 5 5-5"/><path d="M20 21H4"/>
+        </svg>
+        Download report
+      </button>
+    </div>
+  </section>
+
+  <footer class="dj-foot" id="status" role="status">Everything runs locally in the popup — nothing is sent anywhere.</footer>
+</div>
+
+<script type="module" src="popup.js"></script>
+</body>
+</html>
