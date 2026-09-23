@@ -6,7 +6,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-extensions=(host-swap query-params header-editor prettifier storage-inspector tab-volume dark-mode color-picker net-mock)
+extensions=(host-swap query-params header-editor prettifier storage-inspector tab-volume dark-mode color-picker net-mock clock-tools)
 
 for ext in "${extensions[@]}"; do
   mkdir -p "$ext/downloads"

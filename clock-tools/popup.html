@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" data-dj-theme="hoard">
+<meta charset="utf-8">
+<title>Clock Tools</title>
+<link rel="stylesheet" href="popup.css">
+<body>
+<div class="shell">
+  <header class="dj-head">
+    <span class="dj-mark" aria-hidden="true"></span>
+    <span class="dj-titles">
+      <span class="dj-wordmark" role="img" aria-label="Djaunt"></span>
+      <h1 class="dj-title">Clock Tools</h1>
+    </span>
+  </header>
+
+  <div class="dj-seg-group tabs" role="tablist" aria-label="Clock type">
+    <button type="button" class="dj-seg" role="tab" aria-selected="true" data-kind="stopwatch">Stopwatch</button>
+    <button type="button" class="dj-seg" role="tab" aria-selected="false" data-kind="countdown">Timer</button>
+    <button type="button" class="dj-seg" role="tab" aria-selected="false" data-kind="pomodoro">Pomodoro</button>
+  </div>
+
+  <section class="panel" data-panel="stopwatch" role="tabpanel">
+    <div class="add-row">
+      <input type="text" id="sw-name" class="mono" placeholder="Name (optional)">
+      <button type="button" class="dj-btn" id="sw-add">Add stopwatch</button>
+    </div>
+    <div class="entry-list" id="sw-list"></div>
+    <p class="dj-hint empty-message" id="sw-empty" hidden>No stopwatches yet.</p>
+  </section>
+
+  <section class="panel" data-panel="countdown" role="tabpanel" hidden>
+    <div class="add-row wrap">
+      <input type="text" id="cd-name" class="mono" placeholder="Name (optional)">
+      <input type="number" id="cd-h" class="mono num" min="0" placeholder="hh" aria-label="Hours">
+      <input type="number" id="cd-m" class="mono num" min="0" max="59" placeholder="mm" aria-label="Minutes">
+      <input type="number" id="cd-s" class="mono num" min="0" max="59" placeholder="ss" aria-label="Seconds">
+      <label class="dj-check"><input type="checkbox" id="cd-sound"> Sound</label>
+      <button type="button" class="dj-btn" id="cd-add">Add timer</button>
+    </div>
+    <p class="dj-hint error" id="cd-error" hidden></p>
+    <div class="entry-list" id="cd-list"></div>
+    <p class="dj-hint empty-message" id="cd-empty" hidden>No timers yet.</p>
+  </section>
+
+  <section class="panel" data-panel="pomodoro" role="tabpanel" hidden>
+    <div class="add-row wrap">
+      <input type="text" id="pm-name" class="mono" placeholder="Name (optional)">
+      <input type="number" id="pm-work" class="mono num" min="1" placeholder="work m" aria-label="Work minutes" value="25">
+      <input type="number" id="pm-break" class="mono num" min="1" placeholder="break m" aria-label="Break minutes" value="5">
+      <input type="number" id="pm-cycles" class="mono num" min="0" placeholder="cycles" aria-label="Cycles, blank for endless">
+      <label class="dj-check"><input type="checkbox" id="pm-sound"> Sound</label>
+      <button type="button" class="dj-btn" id="pm-add">Add pomodoro</button>
+    </div>
+    <p class="dj-hint error" id="pm-error" hidden></p>
+    <div class="entry-list" id="pm-list"></div>
+    <p class="dj-hint empty-message" id="pm-empty" hidden>No pomodoros yet.</p>
+  </section>
+</div>
+
+<script type="module" src="popup.js"></script>
+</body>
+</html>

@@ -29,6 +29,7 @@ const extensions = [
   'dark-mode',
   'color-picker',
   'net-mock',
+  'clock-tools',
 ];
 
 async function captureOne(ext) {

@@ -1,0 +1,208 @@
+/* Clock Tools popup — layout only. Every token and shared control comes from
+   brand/base.css; this file must not declare a raw color. */
+
+@import url('brand/base.css');
+
+body {
+  width: 460px;
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+}
+
+.mono {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+}
+
+.tabs {
+  margin: var(--dj-space-3) var(--dj-space-4) 0;
+}
+
+/* base.css styles selected segments via [aria-checked], but role="tab" elements use
+   aria-selected per the ARIA tab pattern — mirror the same selected look. */
+.dj-seg[role='tab'][aria-selected='true'] {
+  color: var(--dj-text);
+  border-color: var(--dj-accent);
+}
+
+.dj-seg[role='tab'][aria-selected='true'] + .dj-seg[role='tab'] {
+  border-left-color: var(--dj-accent);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-2);
+  padding: var(--dj-space-4);
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+.add-row {
+  display: flex;
+  gap: var(--dj-space-2);
+  align-items: center;
+}
+
+.add-row.wrap {
+  flex-wrap: wrap;
+}
+
+.add-row input[type='text'],
+.add-row input[type='number'] {
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: var(--dj-space-2);
+  color: var(--dj-text);
+}
+
+#sw-name, #cd-name, #pm-name {
+  flex: 1 1 120px;
+  min-width: 0;
+}
+
+.num {
+  width: 52px;
+  text-align: center;
+}
+
+.dj-check {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+  white-space: nowrap;
+}
+
+.dj-hint.error {
+  color: var(--dj-danger);
+}
+
+.entry-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-2);
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.entry-row {
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  background: var(--dj-surface);
+  padding: var(--dj-space-2) var(--dj-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-1);
+}
+
+.entry-row.done {
+  border-color: var(--dj-accent);
+}
+
+.entry-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--dj-space-2);
+}
+
+.entry-name {
+  font-weight: 600;
+  color: var(--dj-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.entry-phase {
+  font-family: var(--dj-font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: var(--dj-tracking-label);
+  text-transform: uppercase;
+  color: var(--dj-accent);
+  border: var(--dj-border-width) solid var(--dj-accent-deep);
+  border-radius: var(--dj-radius-sm);
+  padding: 1px 4px;
+  white-space: nowrap;
+}
+
+.entry-time {
+  font-family: var(--dj-font-mono);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--dj-text);
+  letter-spacing: 0.02em;
+}
+
+.entry-sub {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+}
+
+.entry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dj-space-2);
+  align-items: center;
+}
+
+.mini-btn {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: 3px var(--dj-space-2);
+  transition: color var(--dj-dur-base) var(--dj-ease), border-color var(--dj-dur-base) var(--dj-ease);
+}
+
+.mini-btn:hover {
+  color: var(--dj-accent);
+  border-color: var(--dj-accent);
+}
+
+.mini-btn.danger:hover {
+  color: var(--dj-danger);
+  border-color: var(--dj-danger);
+}
+
+.mini-btn.primary {
+  color: var(--dj-accent);
+  border-color: var(--dj-accent-deep);
+}
+
+.laps {
+  margin-top: var(--dj-space-1);
+  padding-top: var(--dj-space-1);
+  border-top: var(--dj-border-width) solid var(--dj-border);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 96px;
+  overflow-y: auto;
+}
+
+.lap-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+}
+
+.empty-message {
+  padding: var(--dj-space-2) 0;
+}
