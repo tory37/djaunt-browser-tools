@@ -66,12 +66,16 @@ beep.
   second, recomputes the badge, updates storage, and plays the alert sound directly
   (the service worker itself has no `Audio`/`AudioContext` to play one). It closes
   itself once nothing is left running.
-- **Firefox has no offscreen-document API**, but its MV3 background script (the
-  `scripts` key) stays loaded for as long as the browser runs, unlike Chrome's service
-  worker — so on Firefox, `background.js` just runs the same tick loop with a plain
-  `setInterval` directly, feature-detected via `Boolean(api.offscreen)`. Same files,
-  same folder, no separate build — it just takes the path each browser actually
-  supports.
+- **Firefox has no offscreen-document API, and its MV3 background script is suspended
+  when idle too** — not as aggressively as Chrome's service worker, but Firefox tears
+  the `scripts`-key background page down after roughly 30–90 seconds with nothing to
+  do, which kills a plain `setInterval` the same way. There's no Firefox equivalent of
+  Chrome's offscreen document (a page that's exempt from that suspension), so on
+  Firefox `background.js` just runs the same tick loop directly, feature-detected via
+  `Boolean(api.offscreen)`, and accepts that it's a *best-effort* fallback rather than
+  a true fix: it ticks live for a burst right after anything wakes the background page
+  (starting/pausing a timer, the once-a-minute `alarms` heartbeat), then goes idle
+  until the next wake-up. See Limits below for what that means in practice.
 - **The popup keeps its own lightweight 250ms refresh loop** purely for a smooth
   display while it's open, using the same `stepTimers` function; it also listens for
   `storage.onChanged` so a phase change or completion detected by the background engine
@@ -83,11 +87,22 @@ beep.
 - **The badge can only show one timer at a time.** With several running at once, it
   always shows the single most urgent one (soonest countdown/Pomodoro phase, or else the
   newest stopwatch) — open the popup to see everything.
-- **Sub-second precision isn't guaranteed.** Both the Chrome offscreen document and the
-  Firefox background script tick on a 1-second `setInterval`, so times can be briefly
-  off by up to a second, especially right after the computer wakes from sleep. The
-  once-a-minute `alarms` heartbeat re-syncs everything from stored timestamps, so this
-  never compounds — it's always accurate as of the last tick, never drifting further.
+- **On Firefox, the badge only ticks live in bursts while the popup is closed** —
+  roughly 30–90 seconds right after you start/pause a timer, then it freezes until the
+  next once-a-minute `alarms` heartbeat wakes the background page for another burst.
+  That's a real platform gap, not a bug to reopen: Firefox has no equivalent of
+  Chrome's offscreen document (a page exempt from idle suspension), so there's no
+  officially-supported way to tick a Firefox background page every second indefinitely.
+  Chrome doesn't have this problem — its badge stays live to the second continuously,
+  popup open or closed, for as long as a timer is running.
+- **None of the above ever produces a wrong time, on either browser.** Every timer
+  stores a start timestamp, not a running counter, so `remaining`/`elapsed` is always
+  computed fresh as `duration/accumulated − (now − startedAt)` wherever it's displayed
+  — reopening the popup after any gap (Firefox's badge freezing, the computer sleeping,
+  the extension reloading) shows the correct current value immediately, on the very
+  first render, with no dependency on anything having ticked while it was closed. What
+  degrades on Firefox is only the *passive, popup-closed* badge display and the timing
+  of the completion beep/flash — never the timer's actual data.
 - **No system notification, only the badge and an in-popup beep.** There's no OS-level
   notification when something finishes, so if the browser window isn't visible you
   could miss the moment it happens (though the flashing badge stays until you look).
