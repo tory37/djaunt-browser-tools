@@ -56,6 +56,10 @@ body {
   gap: var(--dj-space-2);
 }
 
+.field[hidden] {
+  display: none;
+}
+
 .field-head {
   display: flex;
   align-items: center;
@@ -67,6 +71,10 @@ body {
 }
 
 .indent-group[hidden] {
+  display: none;
+}
+
+#format-group[hidden] {
   display: none;
 }
 
@@ -194,4 +202,43 @@ textarea[readonly] {
 
 .actions {
   display: flex;
+}
+
+/* ---- url ---- */
+
+#url-input {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+}
+
+.url-params-head,
+.url-param-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  gap: var(--dj-space-2);
+  align-items: center;
+}
+
+.url-params-head {
+  padding: 0 0 0 var(--dj-space-1);
+}
+
+.url-params-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-1);
+}
+
+.url-param-key {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 0 0 var(--dj-space-1);
+}
+
+.url-param-value {
+  font-size: var(--dj-text-xs);
 }

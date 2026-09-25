@@ -69,16 +69,21 @@
 
       <div class="dj-row-field">
         <label class="dj-label">Remove params</label>
-        <textarea class="remove-params" rows="2" spellcheck="false" autocomplete="off"
-                  placeholder="utm_source&#10;token"></textarea>
-        <p class="dj-hint">One name per line, or separated by commas. Every copy of the name goes.</p>
+        <div class="param-box-list remove-params-list"></div>
+        <button type="button" class="mini-btn param-box-add remove-params-add">+ Param</button>
+        <p class="dj-hint">Every copy of the name goes.</p>
       </div>
 
       <div class="dj-row-field">
         <label class="dj-label">Add or replace params</label>
-        <textarea class="add-params" rows="2" spellcheck="false" autocomplete="off"
-                  placeholder="debug=1&#10;lang=es"></textarea>
-        <p class="dj-hint">One <code>key=value</code> per line. An existing key is overwritten.</p>
+        <div class="param-pair-list add-params-list">
+          <div class="param-pair-head" aria-hidden="true">
+            <span class="dj-label">Name</span>
+            <span class="dj-label">Value</span>
+          </div>
+        </div>
+        <button type="button" class="mini-btn param-box-add add-params-add">+ Param</button>
+        <p class="dj-hint">An existing key is overwritten.</p>
       </div>
 
       <div class="dj-row-field">
@@ -107,6 +112,31 @@
       <p class="dj-row-error" hidden></p>
     </div>
   </section>
+</template>
+
+<template id="paramBoxTemplate">
+  <div class="param-box">
+    <input type="text" class="param-box-input" spellcheck="false" autocomplete="off" placeholder="utm_source">
+    <button type="button" class="param-box-remove" aria-label="Remove this param">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+      </svg>
+    </button>
+  </div>
+</template>
+
+<template id="paramPairTemplate">
+  <div class="param-pair">
+    <input type="text" class="param-pair-key" spellcheck="false" autocomplete="off" placeholder="debug">
+    <input type="text" class="param-pair-value" spellcheck="false" autocomplete="off" placeholder="1">
+    <button type="button" class="param-box-remove" aria-label="Remove this param">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+      </svg>
+    </button>
+  </div>
 </template>
 
 <script type="module" src="popup.js"></script>

@@ -2,6 +2,7 @@ import { beautifyJson, diffJson, jsonDiffReport, summarizeJsonDiff } from './jso
 import {
   beautifyMarkdown, diffMarkdown, markdownDiffReport, summarizeMarkdownDiff,
 } from './markdown-tool.js';
+import { buildUrl, parseUrl, paramsFromUrl } from './url-tool.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 
@@ -15,6 +16,7 @@ const DEFAULT_STATE = {
   beautifyInput: '',
   compareA: '',
   compareB: '',
+  url: '',
 };
 
 let state = { ...DEFAULT_STATE };
@@ -39,9 +41,21 @@ const els = {
   diffEmpty: $('#diff-empty'),
   diffSummary: $('#diff-summary'),
   status: $('#status'),
+  formatGroup: $('#format-group'),
+  urlInput: $('#url-input'),
+  urlError: $('#url-error'),
+  urlParamsField: $('#url-params-field'),
+  urlParamsList: $('#url-params-list'),
+  urlParamsEmpty: $('#url-params-empty'),
+  urlOriginal: $('#url-original'),
+  urlModified: $('#url-modified'),
+  urlCopyOriginal: $('#url-copy-original'),
+  urlCopyModified: $('#url-copy-modified'),
+  urlParamTemplate: $('#urlParamTemplate'),
 };
 
 let lastReport = '';
+let urlParams = [];
 
 function save() {
   clearTimeout(saveTimer);
@@ -62,6 +76,8 @@ function activateTab(tab) {
   });
   $('#panel-beautify').hidden = tab !== 'beautify';
   $('#panel-compare').hidden = tab !== 'compare';
+  $('#panel-url').hidden = tab !== 'url';
+  els.formatGroup.hidden = tab === 'url';
   save();
 }
 
@@ -320,6 +336,63 @@ els.compareDownload.addEventListener('click', () => {
   downloadText(state.format === 'json' ? 'diff-report.txt' : 'diff-report.md', lastReport);
 });
 
+// ---- url ----
+
+async function copyToClipboard(text, message) {
+  if (!text) return;
+  await navigator.clipboard.writeText(text);
+  setStatus(message);
+}
+
+function renderUrlOutputs(url) {
+  els.urlOriginal.value = url ? url.toString() : '';
+  els.urlModified.value = url ? buildUrl(url, urlParams) : '';
+  els.urlCopyOriginal.disabled = !els.urlOriginal.value;
+  els.urlCopyModified.disabled = !els.urlModified.value;
+}
+
+function renderUrlParams() {
+  const { url, error } = parseUrl(state.url);
+  els.urlError.textContent = error || '';
+  els.urlError.hidden = !error;
+  els.urlParamsField.hidden = !url;
+
+  urlParams = paramsFromUrl(url);
+  els.urlParamsEmpty.hidden = urlParams.length > 0;
+  els.urlParamsList.replaceChildren();
+
+  urlParams.forEach((param, index) => {
+    const rowEl = els.urlParamTemplate.content.firstElementChild.cloneNode(true);
+    rowEl.querySelector('.url-param-key').textContent = param.key;
+    const valueInput = rowEl.querySelector('.url-param-value');
+    valueInput.value = param.value;
+    valueInput.addEventListener('input', () => {
+      urlParams[index].value = valueInput.value;
+      renderUrlOutputs(url);
+    });
+    rowEl.querySelector('.url-param-copy').addEventListener('click', () => {
+      copyToClipboard(valueInput.value, `Copied "${param.key}" to the clipboard.`);
+    });
+    els.urlParamsList.append(rowEl);
+  });
+
+  renderUrlOutputs(url);
+}
+
+els.urlInput.addEventListener('input', () => {
+  state.url = els.urlInput.value;
+  renderUrlParams();
+  save();
+});
+
+els.urlCopyOriginal.addEventListener('click', () => {
+  copyToClipboard(els.urlOriginal.value, 'Copied the original URL to the clipboard.');
+});
+
+els.urlCopyModified.addEventListener('click', () => {
+  copyToClipboard(els.urlModified.value, 'Copied the modified URL to the clipboard.');
+});
+
 // ---- startup ----
 
 (async () => {
@@ -329,10 +402,12 @@ els.compareDownload.addEventListener('click', () => {
   els.beautifyInput.value = state.beautifyInput;
   els.compareA.value = state.compareA;
   els.compareB.value = state.compareB;
+  els.urlInput.value = state.url;
 
   activateTab(state.tab);
   activateFormat(state.format);
   activateIndent(state.indent);
   runBeautify();
   runCompare();
+  renderUrlParams();
 })();

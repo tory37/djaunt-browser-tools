@@ -17,6 +17,7 @@
     <div class="dj-seg-group tabs" role="tablist" aria-label="Mode">
       <button type="button" class="dj-seg" role="tab" aria-selected="true" data-tab="beautify">Beautify</button>
       <button type="button" class="dj-seg" role="tab" aria-selected="false" data-tab="compare">Compare</button>
+      <button type="button" class="dj-seg" role="tab" aria-selected="false" data-tab="url">URL</button>
     </div>
     <div class="dj-seg-group" role="radiogroup" aria-label="Format" id="format-group">
       <button type="button" class="dj-seg" role="radio" aria-checked="true" data-format="json">JSON</button>
@@ -93,8 +94,54 @@
     </div>
   </section>
 
+  <section class="panel" id="panel-url" role="tabpanel" hidden>
+    <div class="field">
+      <span class="dj-label">URL</span>
+      <input type="text" id="url-input" class="mono-area" spellcheck="false" autocomplete="off"
+             placeholder="https://example.com/path?foo=bar&amp;baz=qux">
+    </div>
+
+    <p class="dj-hint error" id="url-error" hidden></p>
+
+    <div class="field" id="url-params-field" hidden>
+      <span class="dj-label">Params</span>
+      <div class="url-params-head" aria-hidden="true">
+        <span class="dj-label">Name</span>
+        <span class="dj-label">Value</span>
+      </div>
+      <div class="url-params-list" id="url-params-list"></div>
+      <p class="dj-hint" id="url-params-empty" hidden>No query parameters.</p>
+    </div>
+
+    <div class="field">
+      <div class="field-head">
+        <span class="dj-label">Original</span>
+        <button type="button" class="mini-btn" id="url-copy-original" disabled>Copy</button>
+      </div>
+      <textarea id="url-original" class="mono-area" rows="2" spellcheck="false" readonly
+                placeholder="Original URL appears here"></textarea>
+    </div>
+
+    <div class="field">
+      <div class="field-head">
+        <span class="dj-label">Modified</span>
+        <button type="button" class="mini-btn" id="url-copy-modified" disabled>Copy</button>
+      </div>
+      <textarea id="url-modified" class="mono-area" rows="2" spellcheck="false" readonly
+                placeholder="Modified URL appears here"></textarea>
+    </div>
+  </section>
+
   <footer class="dj-foot" id="status" role="status">Everything runs locally in the popup — nothing is sent anywhere.</footer>
 </div>
+
+<template id="urlParamTemplate">
+  <div class="url-param-row">
+    <span class="url-param-key"></span>
+    <input type="text" class="url-param-value mono-area" spellcheck="false" autocomplete="off">
+    <button type="button" class="mini-btn url-param-copy">Copy</button>
+  </div>
+</template>
 
 <script type="module" src="popup.js"></script>
 </body>

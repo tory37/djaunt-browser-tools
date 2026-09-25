@@ -19,3 +19,78 @@ body {
   padding: var(--dj-space-3) var(--dj-space-4);
   border-bottom: var(--dj-border-width) solid var(--dj-border);
 }
+
+/* ---- param boxes (remove list, add name/value pairs) ---- */
+
+.mini-btn {
+  font-family: var(--dj-font-mono);
+  font-size: var(--dj-text-xs);
+  color: var(--dj-text-muted);
+  background: var(--dj-surface);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  padding: 3px var(--dj-space-2);
+  transition: color var(--dj-dur-base) var(--dj-ease), border-color var(--dj-dur-base) var(--dj-ease);
+}
+
+.mini-btn:hover {
+  color: var(--dj-accent);
+  border-color: var(--dj-accent);
+}
+
+.param-box-add {
+  align-self: flex-start;
+  margin-top: var(--dj-space-1);
+}
+
+.param-box-list,
+.param-pair-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dj-space-1);
+}
+
+.param-box,
+.param-pair {
+  display: grid;
+  gap: var(--dj-space-1);
+  align-items: center;
+}
+
+.param-box {
+  grid-template-columns: 1fr auto;
+}
+
+.param-pair,
+.param-pair-head {
+  grid-template-columns: 1fr 1fr auto;
+}
+
+.param-pair-head {
+  display: grid;
+  padding: 0 0 0 var(--dj-space-1);
+}
+
+.param-box-input,
+.param-pair-key,
+.param-pair-value {
+  width: 100%;
+}
+
+.param-box-remove {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  color: var(--dj-text-muted);
+  border: var(--dj-border-width) solid var(--dj-border);
+  border-radius: var(--dj-radius-sm);
+  transition: color var(--dj-dur-base) var(--dj-ease), border-color var(--dj-dur-base) var(--dj-ease);
+}
+
+.param-box-remove:hover {
+  color: var(--dj-danger);
+  border-color: var(--dj-danger);
+}

@@ -1,7 +1,8 @@
 # Djaunt Prettifier
 
-A Chrome & Firefox extension (Manifest V3) that beautifies JSON and Markdown and runs a
-structural comparison between two versions of either — with no host permissions at all.
+A Chrome & Firefox extension (Manifest V3) that beautifies JSON and Markdown, runs a
+structural comparison between two versions of either, and parses a URL's query string into
+editable, copyable params — with no host permissions at all.
 
 It's built to replace pasting text into a random online "JSON diff" or "beautify" site: those
 send whatever you paste to someone else's server, which is a bad habit for anything that might
@@ -30,15 +31,15 @@ allows unsigned extensions (Nightly/ESR with `xpinstall.signatures.required` off
 
 ## Use
 
-Click the toolbar icon, pick **JSON** or **Markdown**, then pick a tab:
+Click the toolbar icon and pick a tab:
 
-- **Beautify.** Paste into Input; the formatted result appears in Result as you type. JSON
-  gets a 2- or 4-space indent (your choice); Markdown gets consistent heading spacing, a
-  single bullet marker, renumbered ordered lists, normalized horizontal rules, and collapsed
-  blank lines — fenced code blocks are left untouched either way. **Copy** or **Download** the
-  result.
-- **Compare.** Paste the original into A and the changed version into B (or click the swap
-  button to flip them). Differences appear live below:
+- **Beautify.** Pick **JSON** or **Markdown**, then paste into Input; the formatted result
+  appears in Result as you type. JSON gets a 2- or 4-space indent (your choice); Markdown gets
+  consistent heading spacing, a single bullet marker, renumbered ordered lists, normalized
+  horizontal rules, and collapsed blank lines — fenced code blocks are left untouched either
+  way. **Copy** or **Download** the result.
+- **Compare.** Pick **JSON** or **Markdown**, paste the original into A and the changed
+  version into B (or click the swap button to flip them). Differences appear live below:
   - **JSON** is diffed structurally, by parsed value, not by text — reordering an object's
     keys or reformatting its whitespace produces no diff at all. Each entry names the exact
     property path (`user.address.city`, `tags[2]`) and whether it was added, removed, changed,
@@ -50,6 +51,13 @@ Click the toolbar icon, pick **JSON** or **Markdown**, then pick a tab:
     that the line differs.
 
   **Download report** saves the same differences as a plain-text file.
+- **URL.** Paste a URL into the field at the top. Its query parameters appear below as
+  Name → Value rows, each with its own **Copy** button for grabbing just that value. Edit a
+  row's value to change it — the **Original** and **Modified** boxes below update live, each
+  with its own **Copy** button so you can grab either the untouched or the edited URL.
+  Clearing a row's value leaves an empty param (`key=`) rather than removing it. Param names
+  aren't editable. The scheme, host, path and fragment are never touched — only the query
+  string is rebuilt.
 
 ## How it works
 
@@ -65,6 +73,10 @@ Click the toolbar icon, pick **JSON** or **Markdown**, then pick a tab:
   nearest heading with `groupSections`, and diffs matching sections' blocks with `diffMarkdown`
   — including a word-level diff for changed paragraphs and an item-level diff for changed
   lists, both built on `diff.js`.
+- **`url-tool.js`** parses a pasted string with the standard `URL` constructor (`parseUrl`),
+  reads its query string into an ordered param list via `URLSearchParams` (`paramsFromUrl`,
+  keeping duplicate keys as separate rows), and rebuilds just the query string from an edited
+  param list while leaving the origin, path and hash untouched (`buildUrl`).
 - **Nothing is sent anywhere.** The manifest requests only `storage` (to remember what you last
   typed between popup opens) — no `host_permissions`, no content script, no network call.
   Download uses a `Blob` URL and an anchor's `download` attribute, not the `downloads` API.
@@ -94,9 +106,10 @@ script — the whole extension runs inside the popup.
 
 ## Tests
 
-`test.mjs` covers `diff.js`, `json-tool.js` and `markdown-tool.js`: LCS behavior, JSON
-beautify/minify/parse-error reporting, structural JSON diffing, Markdown block parsing,
-beautification, sectioning, and the section/list/paragraph-level Markdown diff.
+`test.mjs` covers `diff.js`, `json-tool.js`, `markdown-tool.js` and `url-tool.js`: LCS
+behavior, JSON beautify/minify/parse-error reporting, structural JSON diffing, Markdown block
+parsing, beautification, sectioning, the section/list/paragraph-level Markdown diff, and URL
+parsing, duplicate-key handling, and query-string rebuilding.
 
 ```
 node test.mjs

@@ -36,8 +36,9 @@ There is nothing to build and no dependencies to install.
 1. Click the toolbar button. Each saved tweak is one collapsed row.
 2. Click a row to expand it.
 3. **Domain** — the host to intercept, e.g. `app.example.com`. Nothing is pre-filled.
-4. **Remove params** — names to strip, one per line.
-5. **Add or replace params** — `key=value` per line.
+4. **Remove params** — one box per name to strip. `+ Param` adds another box.
+5. **Add or replace params** — one row per pair, with separate Name and Value columns.
+   `+ Param` adds another row.
 6. Flip that row's switch on. The badge shows how many tweaks are live.
 7. Open your URL as normal. Reload any tab that was already open.
 
@@ -73,11 +74,12 @@ any port; include one (`localhost:8080`) to match only that port. Matching is ex
 host — neither `app.example.com.evil.test` nor the subdomain `staging.app.example.com`
 matches.
 
-**Remove params.** One name per line, or separated by commas or spaces. Every copy of a name
-goes, including a valueless one (`?flag`). Removing a name that is not there does nothing.
+**Remove params.** One name per box. Every copy of a name goes, including a valueless one
+(`?flag`). Removing a name that is not there does nothing. An empty box is ignored.
 
-**Add or replace params.** One `key=value` per line. An `=` inside the value is kept, so
-`q=a=b` sets `q` to `a=b`. An empty value (`flag=`) is allowed.
+**Add or replace params.** One name/value pair per row, in separate columns. A `=` typed
+into the value is kept as-is, so a value of `a=b` sets the param to exactly that. An empty
+value (blank Value column) is allowed. A row with an empty Name is ignored.
 
 - The key already in the URL — its value is overwritten in place, and any duplicate copies
   of that key are dropped.

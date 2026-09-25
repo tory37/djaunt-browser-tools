@@ -6,6 +6,7 @@ import {
   beautifyMarkdown, diffMarkdown, groupSections, markdownDiffReport, parseMarkdownBlocks,
   summarizeMarkdownDiff,
 } from './markdown-tool.js';
+import { buildUrl, parseUrl, paramsFromUrl } from './url-tool.js';
 
 let pass = 0;
 const failures = [];
@@ -120,6 +121,35 @@ const codeDiff = diffMarkdown('# A\n\n```js\nx = 1\n```', '# A\n\n```js\nx = 2\n
 check('diffMarkdown: fenced code changes are reported, not silently ignored', codeDiff[0].changes[0].blockType, 'code');
 
 check('diffMarkdown: code fence content never touched by word diff', diffMarkdown('# A\n\n```\nsame\n```', '# A\n\n```\nsame\n```'), []);
+
+// ---- URL: parse / params / rebuild ----
+check('parseUrl: empty input yields no url and no error', parseUrl(''), { url: null, error: null });
+check('parseUrl: valid url has no error', parseUrl('https://example.com/?a=1').error, null);
+check('parseUrl: invalid url reports an error',
+  typeof parseUrl('not a url').error, 'string');
+check('parseUrl: trims surrounding whitespace',
+  parseUrl('  https://example.com  ').url.href, 'https://example.com/');
+
+check('paramsFromUrl: no url yields no params', paramsFromUrl(null), []);
+check('paramsFromUrl: extracts params in order',
+  paramsFromUrl(parseUrl('https://example.com/?b=2&a=1').url), [{ key: 'b', value: '2' }, { key: 'a', value: '1' }]);
+check('paramsFromUrl: keeps duplicate keys as separate rows',
+  paramsFromUrl(parseUrl('https://example.com/?a=1&a=2').url), [{ key: 'a', value: '1' }, { key: 'a', value: '2' }]);
+check('paramsFromUrl: a url with no query string has no params',
+  paramsFromUrl(parseUrl('https://example.com/path').url), []);
+
+const editUrl = parseUrl('https://example.com/path?token=abc&id=42#frag').url;
+check('buildUrl: unedited params round-trip to the same query string',
+  buildUrl(editUrl, paramsFromUrl(editUrl)), 'https://example.com/path?token=abc&id=42#frag');
+check('buildUrl: editing a value changes only that param',
+  buildUrl(editUrl, [{ key: 'token', value: 'xyz' }, { key: 'id', value: '42' }]),
+  'https://example.com/path?token=xyz&id=42#frag');
+check('buildUrl: a blank key drops that row',
+  buildUrl(editUrl, [{ key: '', value: 'abc' }, { key: 'id', value: '42' }]),
+  'https://example.com/path?id=42#frag');
+check('buildUrl: no params leaves no question mark',
+  buildUrl(parseUrl('https://example.com/path').url, []), 'https://example.com/path');
+check('buildUrl: no url yields an empty string', buildUrl(null, []), '');
 
 console.log(`${pass + failures.length} assertions, ${failures.length} failed`);
 for (const failure of failures) console.log(`  FAIL ${failure}`);

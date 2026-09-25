@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Djaunt Prettifier",
   "version": "1.0.0",
-  "description": "Beautifies JSON and Markdown and runs a structural comparison between two versions — which properties differ, which sections and bullets changed — with no host permissions at all.",
+  "description": "Beautifies JSON and Markdown, runs a structural comparison between two versions, and parses a URL's query string into editable, copyable params — with no host permissions at all.",
   "browser_specific_settings": {
     "gecko": {
       "id": "prettifier@djaunt-browser-tools",

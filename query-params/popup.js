@@ -18,6 +18,8 @@ const els = {
   add: document.getElementById('add'),
   status: document.getElementById('status'),
   rowTemplate: document.getElementById('rowTemplate'),
+  paramBoxTemplate: document.getElementById('paramBoxTemplate'),
+  paramPairTemplate: document.getElementById('paramPairTemplate'),
 };
 
 let tweaks = [];
@@ -132,21 +134,119 @@ function setOpen(row, open) {
   row.querySelector('.dj-row-disclose').setAttribute('aria-expanded', String(open));
 }
 
+/** Same split params.js uses to parse the remove list, but never throws — this only seeds UI boxes. */
+function splitRemoveNames(raw) {
+  return String(raw ?? '').split(/[\s,\n]+/).map((name) => name.trim()).filter(Boolean);
+}
+
+/** Same shape as params.js's add-list split, but never throws — this only seeds UI boxes. */
+function splitAddPairs(raw) {
+  return String(raw ?? '').split(/[\n,]+/).map((line) => line.trim()).filter(Boolean).map((entry) => {
+    const splitAt = entry.indexOf('=');
+    return splitAt < 0
+      ? { key: entry, value: '' }
+      : { key: entry.slice(0, splitAt).trim(), value: entry.slice(splitAt + 1).trim() };
+  });
+}
+
+function syncRemoveList(container, tweak) {
+  const names = Array.from(container.querySelectorAll('.param-box-input'))
+    .map((input) => input.value.trim())
+    .filter(Boolean);
+  tweak.remove = names.join('\n');
+}
+
+function addRemoveBox(container, tweak, touch, name = '', { focus = false } = {}) {
+  const box = els.paramBoxTemplate.content.firstElementChild.cloneNode(true);
+  const input = box.querySelector('.param-box-input');
+  input.value = name;
+
+  input.addEventListener('input', () => { syncRemoveList(container, tweak); touch(false); });
+  input.addEventListener('change', () => { syncRemoveList(container, tweak); touch(true); });
+
+  box.querySelector('.param-box-remove').addEventListener('click', () => {
+    box.remove();
+    if (!container.querySelector('.param-box')) addRemoveBox(container, tweak, touch);
+    syncRemoveList(container, tweak);
+    touch(true);
+  });
+
+  container.append(box);
+  if (focus) input.focus();
+  return box;
+}
+
+function syncAddList(container, tweak) {
+  const pairs = Array.from(container.querySelectorAll('.param-pair'))
+    .map((pairEl) => ({
+      key: pairEl.querySelector('.param-pair-key').value.trim(),
+      value: pairEl.querySelector('.param-pair-value').value,
+    }))
+    .filter((pair) => pair.key || pair.value);
+  tweak.add = pairs.map((pair) => `${pair.key}=${pair.value}`).join('\n');
+}
+
+function addAddPair(container, tweak, touch, key = '', value = '', { focus = false } = {}) {
+  const pairEl = els.paramPairTemplate.content.firstElementChild.cloneNode(true);
+  const keyInput = pairEl.querySelector('.param-pair-key');
+  const valueInput = pairEl.querySelector('.param-pair-value');
+  keyInput.value = key;
+  valueInput.value = value;
+
+  const onInput = () => { syncAddList(container, tweak); touch(false); };
+  const onChange = () => { syncAddList(container, tweak); touch(true); };
+  keyInput.addEventListener('input', onInput);
+  keyInput.addEventListener('change', onChange);
+  valueInput.addEventListener('input', onInput);
+  valueInput.addEventListener('change', onChange);
+
+  pairEl.querySelector('.param-box-remove').addEventListener('click', () => {
+    pairEl.remove();
+    if (!container.querySelector('.param-pair')) addAddPair(container, tweak, touch);
+    syncAddList(container, tweak);
+    touch(true);
+  });
+
+  container.append(pairEl);
+  if (focus) keyInput.focus();
+  return pairEl;
+}
+
 function createRow(tweak) {
   const row = els.rowTemplate.content.firstElementChild.cloneNode(true);
   row.dataset.id = tweak.id;
-
-  const fields = [
-    [row.querySelector('.host'), 'host'],
-    [row.querySelector('.remove-params'), 'remove'],
-    [row.querySelector('.add-params'), 'add'],
-  ];
-  for (const [input, key] of fields) input.value = tweak[key] ?? '';
 
   const touch = (immediate) => {
     paintRow(row, tweak);
     save({ immediate });
   };
+
+  const hostInput = row.querySelector('.host');
+  hostInput.value = tweak.host ?? '';
+  hostInput.addEventListener('input', () => {
+    tweak.host = hostInput.value;
+    touch(false);
+  });
+  hostInput.addEventListener('change', () => {
+    tweak.host = hostInput.value;
+    touch(true);
+  });
+
+  const removeList = row.querySelector('.remove-params-list');
+  const removeNames = splitRemoveNames(tweak.remove);
+  for (const name of (removeNames.length ? removeNames : [''])) addRemoveBox(removeList, tweak, touch, name);
+  row.querySelector('.remove-params-add').addEventListener('click', () => {
+    addRemoveBox(removeList, tweak, touch, '', { focus: true });
+  });
+
+  const addList = row.querySelector('.add-params-list');
+  const addPairs = splitAddPairs(tweak.add);
+  for (const pair of (addPairs.length ? addPairs : [{ key: '', value: '' }])) {
+    addAddPair(addList, tweak, touch, pair.key, pair.value);
+  }
+  row.querySelector('.add-params-add').addEventListener('click', () => {
+    addAddPair(addList, tweak, touch, '', '', { focus: true });
+  });
 
   row.querySelector('.dj-row-disclose').addEventListener('click', () => {
     setOpen(row, row.dataset.open !== 'true');
@@ -166,17 +266,6 @@ function createRow(tweak) {
   for (const seg of row.querySelectorAll('.dj-seg')) {
     seg.addEventListener('click', () => {
       tweak.scope = seg.dataset.scope;
-      touch(true);
-    });
-  }
-
-  for (const [input, key] of fields) {
-    input.addEventListener('input', () => {
-      tweak[key] = input.value;
-      touch(false);
-    });
-    input.addEventListener('change', () => {
-      tweak[key] = input.value;
       touch(true);
     });
   }
