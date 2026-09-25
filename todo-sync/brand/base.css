@@ -283,10 +283,7 @@ textarea {
 .dj-seg[aria-checked='true'] {
   color: var(--dj-text);
   border-color: var(--dj-accent);
-}
-
-.dj-seg[aria-checked='true'] + .dj-seg {
-  border-left-color: var(--dj-accent);
+  border-left: var(--dj-border-width) solid var(--dj-accent);
 }
 
 /* ---- footer status line ---- */

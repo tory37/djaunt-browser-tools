@@ -70,6 +70,14 @@
   --dj-warning: #F0C24B;
   --dj-danger: #E0492E;
   --dj-info: #7FD8F0;
+
+  /* ---- Derived accent scale ----
+     --dj-accent-hi / --dj-accent / --dj-accent-deep (below, per theme) are
+     the 400/500/700 steps of a 5-step ramp; these two fill the 300 and 600
+     gaps from those same per-theme anchors, so anything needing a full ramp
+     has one for every theme without hand-picking two new hex values each. */
+  --dj-accent-300: color-mix(in srgb, var(--dj-accent-hi) 70%, white 30%);
+  --dj-accent-600: color-mix(in srgb, var(--dj-accent) 55%, var(--dj-accent-deep) 45%);
 }
 
 /* ============================================================
@@ -81,6 +89,14 @@
   --dj-accent: #D4A017;
   --dj-accent-hi: #F0C24B;
   --dj-accent-deep: #6E4A0E;
+  /* Categorical accents -- for coding several simultaneous meaningful
+     states/categories on one surface (status lanes, a gauge's zones), never
+     a second mood. See BRANDING.md §2 "Categorical / multi-accent
+     surfaces". Muted relative to --dj-accent on purpose: they support, they
+     don't compete with the theme's own mood. */
+  --dj-accent-2: #3BB07C;
+  --dj-accent-3: #816ACD;
+  --dj-accent-4: #C65373;
   --dj-bg: #0D0C0A;
   --dj-surface: #14120F;
   --dj-surface-raised: #1C1913;
@@ -94,6 +110,9 @@
   --dj-accent: #FF6B2C;
   --dj-accent-hi: #FF9560;
   --dj-accent-deep: #7A2408;
+  --dj-accent-2: #54D7A7;
+  --dj-accent-3: #5A74D8;
+  --dj-accent-4: #D754B0;
   --dj-bg: #100A07;
   --dj-surface: #1A100B;
   --dj-surface-raised: #241610;
@@ -107,6 +126,9 @@
   --dj-accent: #7FD8F0;
   --dj-accent-hi: #B3EAF8;
   --dj-accent-deep: #14556E;
+  --dj-accent-2: #DB94D7;
+  --dj-accent-3: #CCDB94;
+  --dj-accent-4: #94DBBB;
   --dj-bg: #070F12;
   --dj-surface: #0C1720;
   --dj-surface-raised: #122029;
@@ -120,6 +142,9 @@
   --dj-accent: #9B8CFF;
   --dj-accent-hi: #C3B8FF;
   --dj-accent-deep: #3B2C86;
+  --dj-accent-2: #E0E9A2;
+  --dj-accent-3: #BCE9A2;
+  --dj-accent-4: #A2BCE9;
   --dj-bg: #0A0912;
   --dj-surface: #12101F;
   --dj-surface-raised: #1A1729;
@@ -133,6 +158,9 @@
   --dj-accent: #93A98C;
   --dj-accent-hi: #BACBB4;
   --dj-accent-deep: #3C4D39;
+  --dj-accent-2: #8697AF;
+  --dj-accent-3: #AF86A4;
+  --dj-accent-4: #ABAF86;
   --dj-bg: #0A0C09;
   --dj-surface: #111510;
   --dj-surface-raised: #181D16;
@@ -146,6 +174,9 @@
   --dj-accent: #A8E01F;
   --dj-accent-hi: #C9F05E;
   --dj-accent-deep: #47660A;
+  --dj-accent-2: #557EC1;
+  --dj-accent-3: #AD5AC3;
+  --dj-accent-4: #ADBB44;
   --dj-bg: #080F04;
   --dj-surface: #0F170A;
   --dj-surface-raised: #15200E;
@@ -159,6 +190,9 @@
   --dj-accent: #B0A7C9;
   --dj-accent-hi: #D6CFE6;
   --dj-accent-deep: #3A3450;
+  --dj-accent-2: #C3C6AA;
+  --dj-accent-3: #B0C6AA;
+  --dj-accent-4: #AAB5C6;
   --dj-bg: #08080B;
   --dj-surface: #0F0F14;
   --dj-surface-raised: #16161D;
@@ -172,6 +206,9 @@
   --dj-accent: #FFE9A3;
   --dj-accent-hi: #FFF6D6;
   --dj-accent-deep: #8A6A1E;
+  --dj-accent-2: #B4EED6;
+  --dj-accent-3: #C3B4EE;
+  --dj-accent-4: #EEB4C2;
   --dj-bg: #12100A;
   --dj-surface: #1C1810;
   --dj-surface-raised: #262016;
@@ -185,6 +222,9 @@
   --dj-accent: #2FB3C9;
   --dj-accent-hi: #77D7E5;
   --dj-accent-deep: #0E4A57;
+  --dj-accent-2: #B359B5;
+  --dj-accent-3: #9EAC4C;
+  --dj-accent-4: #4CAC7A;
   --dj-bg: #050F11;
   --dj-surface: #0B1A1D;
   --dj-surface-raised: #102429;
@@ -216,48 +256,58 @@
 
 /* ============================================================
    TERMINAL / CLI — 16-color ANSI scheme
+   Every slot below is derived from existing per-theme role tokens (never a
+   fresh hand-picked hex), so a Djaunt terminal genuinely follows whichever
+   element is active. Semantic slots (red/green/blue) stay pinned to the
+   fixed danger/success/info tokens for tool-output consistency (git status,
+   diagnostics) across themes; yellow/magenta/cyan carry the theme's own
+   accent + categorical accents, continuing Hoard's own convention (its
+   accent already sits in the yellow slot) out to every element.
    ============================================================ */
 :root {
-  --dj-term-bg: #0D0C0A;
-  --dj-term-fg: #EDE6D6;
-  --dj-term-cursor: #F0C24B;
-  --dj-term-selection: #2A251C;
+  --dj-term-bg: var(--dj-bg);
+  --dj-term-fg: var(--dj-text);
+  --dj-term-cursor: var(--dj-accent-hi);
+  --dj-term-selection: var(--dj-border);
 
-  --dj-ansi-black: #14120F;
-  --dj-ansi-red: #C7452B;
-  --dj-ansi-green: #7FA83F;
-  --dj-ansi-yellow: #D4A017;
-  --dj-ansi-blue: #4A7FA8;
-  --dj-ansi-magenta: #8A6FC4;
-  --dj-ansi-cyan: #3E9EAF;
-  --dj-ansi-white: #C8C0AE;
+  --dj-ansi-black: var(--dj-surface);
+  --dj-ansi-red: color-mix(in srgb, var(--dj-danger) 80%, black);
+  --dj-ansi-green: color-mix(in srgb, var(--dj-success) 80%, black);
+  --dj-ansi-yellow: var(--dj-accent);
+  --dj-ansi-blue: color-mix(in srgb, var(--dj-info) 75%, black);
+  --dj-ansi-magenta: var(--dj-accent-3);
+  --dj-ansi-cyan: var(--dj-accent-2);
+  --dj-ansi-white: var(--dj-bone-300);
 
-  --dj-ansi-bright-black: #3A342A;
-  --dj-ansi-bright-red: #E0492E;
-  --dj-ansi-bright-green: #A8E01F;
-  --dj-ansi-bright-yellow: #F0C24B;
-  --dj-ansi-bright-blue: #7FB3D8;
-  --dj-ansi-bright-magenta: #B0A7C9;
-  --dj-ansi-bright-cyan: #7FD8F0;
-  --dj-ansi-bright-white: #FBF8F1;
+  --dj-ansi-bright-black: var(--dj-border);
+  --dj-ansi-bright-red: var(--dj-danger);
+  --dj-ansi-bright-green: var(--dj-success);
+  --dj-ansi-bright-yellow: var(--dj-accent-hi);
+  --dj-ansi-bright-blue: var(--dj-info);
+  --dj-ansi-bright-magenta: var(--dj-accent-4);
+  --dj-ansi-bright-cyan: color-mix(in srgb, var(--dj-accent-2) 70%, white 30%);
+  --dj-ansi-bright-white: var(--dj-bone-100);
 }
 
 /* ============================================================
    CODE SYNTAX — "Djaunt Hoard"
+   Same derivation approach as the ANSI scheme above: every slot maps to an
+   existing per-theme role token, so a Djaunt syntax theme follows whichever
+   element is active instead of staying gold-only.
    ============================================================ */
 :root {
-  --dj-code-bg: #0A0908;
-  --dj-code-fg: #EDE6D6;
-  --dj-code-comment: #615C52;
-  --dj-code-keyword: #D4A017;
-  --dj-code-string: #A8E01F;
-  --dj-code-number: #FF9560;
-  --dj-code-function: #F6D77E;
-  --dj-code-type: #7FD8F0;
-  --dj-code-variable: #EDE6D6;
-  --dj-code-operator: #C8C0AE;
-  --dj-code-punctuation: #8E887A;
-  --dj-code-invalid: #E0492E;
-  --dj-code-line-highlight: #14120F;
-  --dj-code-selection: #2A251C;
+  --dj-code-bg: var(--dj-bg);
+  --dj-code-fg: var(--dj-text);
+  --dj-code-comment: var(--dj-bone-500);
+  --dj-code-keyword: var(--dj-accent);
+  --dj-code-string: var(--dj-accent-2);
+  --dj-code-number: var(--dj-accent-hi);
+  --dj-code-function: var(--dj-accent-300);
+  --dj-code-type: var(--dj-accent-3);
+  --dj-code-variable: var(--dj-text);
+  --dj-code-operator: var(--dj-bone-300);
+  --dj-code-punctuation: var(--dj-text-muted);
+  --dj-code-invalid: var(--dj-danger);
+  --dj-code-line-highlight: var(--dj-surface);
+  --dj-code-selection: var(--dj-border);
 }
