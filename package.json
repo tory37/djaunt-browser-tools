@@ -4,6 +4,8 @@
   "type": "module",
   "description": "Dev-only tooling for this repo (store screenshot capture). The extensions themselves have no dependencies and no build step.",
   "scripts": {
+    "sync-brand": "./scripts/sync-brand.sh",
+    "sync-brand:zips": "./scripts/sync-brand.sh && ./scripts/build-zips.sh",
     "store:screenshots": "node scripts/capture-store-screenshots.mjs"
   },
   "devDependencies": {
