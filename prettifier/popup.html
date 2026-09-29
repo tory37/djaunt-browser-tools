@@ -97,8 +97,12 @@
   <section class="panel" id="panel-url" role="tabpanel" hidden>
     <div class="field">
       <span class="dj-label">URL</span>
-      <input type="text" id="url-input" class="mono-area" spellcheck="false" autocomplete="off"
-             placeholder="https://example.com/path?foo=bar&amp;baz=qux">
+      <div class="url-input-row">
+        <input type="text" id="url-input" class="mono-area" spellcheck="false" autocomplete="off"
+               placeholder="https://example.com/path?foo=bar&amp;baz=qux">
+        <button type="button" class="mini-btn" id="url-apply">Apply</button>
+      </div>
+      <p class="dj-hint" id="url-stale" hidden>The URL above has changed — click Apply to load it into the params list.</p>
     </div>
 
     <p class="dj-hint error" id="url-error" hidden></p>
@@ -108,9 +112,12 @@
       <div class="url-params-head" aria-hidden="true">
         <span class="dj-label">Name</span>
         <span class="dj-label">Value</span>
+        <span></span>
+        <span></span>
       </div>
       <div class="url-params-list" id="url-params-list"></div>
       <p class="dj-hint" id="url-params-empty" hidden>No query parameters.</p>
+      <button type="button" class="mini-btn url-param-add" id="url-add-param">+ Add param</button>
     </div>
 
     <div class="field">
@@ -137,9 +144,10 @@
 
 <template id="urlParamTemplate">
   <div class="url-param-row">
-    <span class="url-param-key"></span>
-    <input type="text" class="url-param-value mono-area" spellcheck="false" autocomplete="off">
+    <input type="text" class="url-param-key mono-area" spellcheck="false" autocomplete="off" placeholder="name" aria-label="Param name">
+    <input type="text" class="url-param-value mono-area" spellcheck="false" autocomplete="off" placeholder="value" aria-label="Param value">
     <button type="button" class="mini-btn url-param-copy">Copy</button>
+    <button type="button" class="mini-btn url-param-delete" title="Delete this param" aria-label="Delete this param">✕</button>
   </div>
 </template>
 

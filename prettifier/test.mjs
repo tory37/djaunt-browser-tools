@@ -6,7 +6,7 @@ import {
   beautifyMarkdown, diffMarkdown, groupSections, markdownDiffReport, parseMarkdownBlocks,
   summarizeMarkdownDiff,
 } from './markdown-tool.js';
-import { buildUrl, parseUrl, paramsFromUrl } from './url-tool.js';
+import { addParam, buildUrl, parseUrl, paramsFromUrl, removeParam } from './url-tool.js';
 
 let pass = 0;
 const failures = [];
@@ -150,6 +150,20 @@ check('buildUrl: a blank key drops that row',
 check('buildUrl: no params leaves no question mark',
   buildUrl(parseUrl('https://example.com/path').url, []), 'https://example.com/path');
 check('buildUrl: no url yields an empty string', buildUrl(null, []), '');
+
+const three = [{ key: 'a', value: '1' }, { key: 'b', value: '2' }, { key: 'c', value: '3' }];
+check('removeParam: drops only the row at that index', removeParam(three, 1),
+  [{ key: 'a', value: '1' }, { key: 'c', value: '3' }]);
+check('removeParam: does not mutate the input', (removeParam(three, 0), three.length), 3);
+check('addParam: appends a blank row', addParam([{ key: 'a', value: '1' }]),
+  [{ key: 'a', value: '1' }, { key: '', value: '' }]);
+check('buildUrl: a freshly added blank row is skipped until named',
+  buildUrl(editUrl, addParam(paramsFromUrl(editUrl))), 'https://example.com/path?token=abc&id=42#frag');
+check('buildUrl: deleting a row removes it from the url',
+  buildUrl(editUrl, removeParam(paramsFromUrl(editUrl), 0)), 'https://example.com/path?id=42#frag');
+check('buildUrl: a row added and named appears at the end',
+  buildUrl(editUrl, [...paramsFromUrl(editUrl), { key: 'new', value: 'x y' }]),
+  'https://example.com/path?token=abc&id=42&new=x+y#frag');
 
 console.log(`${pass + failures.length} assertions, ${failures.length} failed`);
 for (const failure of failures) console.log(`  FAIL ${failure}`);

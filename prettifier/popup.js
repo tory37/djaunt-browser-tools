@@ -2,7 +2,7 @@ import { beautifyJson, diffJson, jsonDiffReport, summarizeJsonDiff } from './jso
 import {
   beautifyMarkdown, diffMarkdown, markdownDiffReport, summarizeMarkdownDiff,
 } from './markdown-tool.js';
-import { buildUrl, parseUrl, paramsFromUrl } from './url-tool.js';
+import { addParam, buildUrl, parseUrl, paramsFromUrl, removeParam } from './url-tool.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 
@@ -17,6 +17,7 @@ const DEFAULT_STATE = {
   compareA: '',
   compareB: '',
   url: '',
+  appliedUrl: '',
 };
 
 let state = { ...DEFAULT_STATE };
@@ -44,9 +45,12 @@ const els = {
   formatGroup: $('#format-group'),
   urlInput: $('#url-input'),
   urlError: $('#url-error'),
+  urlApply: $('#url-apply'),
+  urlStale: $('#url-stale'),
   urlParamsField: $('#url-params-field'),
   urlParamsList: $('#url-params-list'),
   urlParamsEmpty: $('#url-params-empty'),
+  urlAddParam: $('#url-add-param'),
   urlOriginal: $('#url-original'),
   urlModified: $('#url-modified'),
   urlCopyOriginal: $('#url-copy-original'),
@@ -56,6 +60,7 @@ const els = {
 
 let lastReport = '';
 let urlParams = [];
+let urlParsed = null;
 
 function save() {
   clearTimeout(saveTimer);
@@ -344,46 +349,86 @@ async function copyToClipboard(text, message) {
   setStatus(message);
 }
 
-function renderUrlOutputs(url) {
-  els.urlOriginal.value = url ? url.toString() : '';
-  els.urlModified.value = url ? buildUrl(url, urlParams) : '';
+function renderUrlOutputs() {
+  els.urlOriginal.value = urlParsed ? urlParsed.toString() : '';
+  els.urlModified.value = urlParsed ? buildUrl(urlParsed, urlParams) : '';
   els.urlCopyOriginal.disabled = !els.urlOriginal.value;
   els.urlCopyModified.disabled = !els.urlModified.value;
 }
 
-function renderUrlParams() {
-  const { url, error } = parseUrl(state.url);
-  els.urlError.textContent = error || '';
-  els.urlError.hidden = !error;
-  els.urlParamsField.hidden = !url;
-
-  urlParams = paramsFromUrl(url);
+// Rebuilds the rows from urlParams. Typing in a row updates urlParams in place and
+// only refreshes the outputs, so the row keeps focus; add/delete re-render the list.
+function renderUrlRows() {
   els.urlParamsEmpty.hidden = urlParams.length > 0;
   els.urlParamsList.replaceChildren();
 
   urlParams.forEach((param, index) => {
     const rowEl = els.urlParamTemplate.content.firstElementChild.cloneNode(true);
-    rowEl.querySelector('.url-param-key').textContent = param.key;
+    const keyInput = rowEl.querySelector('.url-param-key');
     const valueInput = rowEl.querySelector('.url-param-value');
+    keyInput.value = param.key;
     valueInput.value = param.value;
+    keyInput.addEventListener('input', () => {
+      urlParams[index].key = keyInput.value;
+      renderUrlOutputs();
+    });
     valueInput.addEventListener('input', () => {
       urlParams[index].value = valueInput.value;
-      renderUrlOutputs(url);
+      renderUrlOutputs();
     });
     rowEl.querySelector('.url-param-copy').addEventListener('click', () => {
-      copyToClipboard(valueInput.value, `Copied "${param.key}" to the clipboard.`);
+      copyToClipboard(valueInput.value, `Copied "${keyInput.value || 'value'}" to the clipboard.`);
+    });
+    rowEl.querySelector('.url-param-delete').addEventListener('click', () => {
+      urlParams = removeParam(urlParams, index);
+      renderUrlRows();
+      renderUrlOutputs();
     });
     els.urlParamsList.append(rowEl);
   });
+}
 
-  renderUrlOutputs(url);
+function renderUrlParams() {
+  const { url, error } = parseUrl(state.appliedUrl);
+  els.urlError.textContent = error || '';
+  els.urlError.hidden = !error;
+  els.urlParamsField.hidden = !url;
+
+  urlParsed = url;
+  urlParams = paramsFromUrl(url);
+  renderUrlRows();
+  renderUrlOutputs();
+}
+
+els.urlAddParam.addEventListener('click', () => {
+  urlParams = addParam(urlParams);
+  renderUrlRows();
+  renderUrlOutputs();
+  els.urlParamsList.lastElementChild?.querySelector('.url-param-key').focus();
+});
+
+function updateUrlStale() {
+  els.urlStale.hidden = els.urlInput.value.trim() === state.appliedUrl.trim();
+}
+
+// The params list only re-parses on Apply, so it never silently drifts from (or
+// gets overwritten by) whatever is in the URL field.
+function applyUrl() {
+  state.appliedUrl = els.urlInput.value;
+  renderUrlParams();
+  updateUrlStale();
+  save();
 }
 
 els.urlInput.addEventListener('input', () => {
   state.url = els.urlInput.value;
-  renderUrlParams();
+  updateUrlStale();
   save();
 });
+els.urlInput.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') applyUrl();
+});
+els.urlApply.addEventListener('click', applyUrl);
 
 els.urlCopyOriginal.addEventListener('click', () => {
   copyToClipboard(els.urlOriginal.value, 'Copied the original URL to the clipboard.');
@@ -410,4 +455,5 @@ els.urlCopyModified.addEventListener('click', () => {
   runBeautify();
   runCompare();
   renderUrlParams();
+  updateUrlStale();
 })();

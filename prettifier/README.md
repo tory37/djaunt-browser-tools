@@ -2,7 +2,7 @@
 
 A Chrome & Firefox extension (Manifest V3) that beautifies JSON and Markdown, runs a
 structural comparison between two versions of either, and parses a URL's query string into
-editable, copyable params — with no host permissions at all.
+editable, copyable params you can add to and delete from — with no host permissions at all.
 
 It's built to replace pasting text into a random online "JSON diff" or "beautify" site: those
 send whatever you paste to someone else's server, which is a bad habit for anything that might
@@ -51,13 +51,15 @@ Click the toolbar icon and pick a tab:
     that the line differs.
 
   **Download report** saves the same differences as a plain-text file.
-- **URL.** Paste a URL into the field at the top. Its query parameters appear below as
-  Name → Value rows, each with its own **Copy** button for grabbing just that value. Edit a
-  row's value to change it — the **Original** and **Modified** boxes below update live, each
-  with its own **Copy** button so you can grab either the untouched or the edited URL.
-  Clearing a row's value leaves an empty param (`key=`) rather than removing it. Param names
-  aren't editable. The scheme, host, path and fragment are never touched — only the query
-  string is rebuilt.
+- **URL.** Paste a URL into the field at the top and click **Apply** (or press Enter) to load
+  its query parameters into editable Name / Value rows below. The list only reloads on Apply,
+  so your row edits are never overwritten by a stray keystroke in the URL field; a note appears
+  whenever the field has changed since the last Apply. Edit a name or value, **Copy** just a row's value, delete a
+  row with **✕**, or add a new one with **+ Add param** (a new row is ignored until you give
+  it a name). The **Original** and **Modified** boxes below update live, each with its own
+  **Copy** button so you can grab either the untouched or the edited URL. Clearing a value
+  leaves an empty param (`key=`); to remove the param entirely, delete its row. The scheme,
+  host, path and fragment are never touched — only the query string is rebuilt.
 
 ## How it works
 
@@ -75,7 +77,7 @@ Click the toolbar icon and pick a tab:
   lists, both built on `diff.js`.
 - **`url-tool.js`** parses a pasted string with the standard `URL` constructor (`parseUrl`),
   reads its query string into an ordered param list via `URLSearchParams` (`paramsFromUrl`,
-  keeping duplicate keys as separate rows), and rebuilds just the query string from an edited
+  keeping duplicate keys as separate rows), adds/removes rows (`addParam`, `removeParam`), and rebuilds just the query string from an edited
   param list while leaving the origin, path and hash untouched (`buildUrl`).
 - **Nothing is sent anywhere.** The manifest requests only `storage` (to remember what you last
   typed between popup opens) — no `host_permissions`, no content script, no network call.
@@ -109,7 +111,7 @@ script — the whole extension runs inside the popup.
 `test.mjs` covers `diff.js`, `json-tool.js`, `markdown-tool.js` and `url-tool.js`: LCS
 behavior, JSON beautify/minify/parse-error reporting, structural JSON diffing, Markdown block
 parsing, beautification, sectioning, the section/list/paragraph-level Markdown diff, and URL
-parsing, duplicate-key handling, and query-string rebuilding.
+parsing, duplicate-key handling, adding/removing params, and query-string rebuilding.
 
 ```
 node test.mjs

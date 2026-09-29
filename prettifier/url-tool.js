@@ -19,6 +19,16 @@ export function paramsFromUrl(url) {
   return Array.from(url.searchParams.entries()).map(([key, value]) => ({ key, value }));
 }
 
+/** A copy of the list without the row at `index`. */
+export function removeParam(params, index) {
+  return params.filter((_, i) => i !== index);
+}
+
+/** A copy of the list with a blank row appended; buildUrl skips it until it's given a name. */
+export function addParam(params) {
+  return [...params, { key: '', value: '' }];
+}
+
 /** Rebuilds the URL's query string from a (possibly edited) param list. A blank key drops that row. */
 export function buildUrl(url, params) {
   if (!url) return '';

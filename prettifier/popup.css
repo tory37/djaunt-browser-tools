@@ -206,7 +206,15 @@ textarea[readonly] {
 
 /* ---- url ---- */
 
+.url-input-row {
+  display: flex;
+  gap: var(--dj-space-2);
+  align-items: center;
+}
+
 #url-input {
+  flex: 1;
+  min-width: 0;
   font-family: var(--dj-font-mono);
   font-size: var(--dj-text-xs);
 }
@@ -214,7 +222,7 @@ textarea[readonly] {
 .url-params-head,
 .url-param-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) 56px 32px;
   gap: var(--dj-space-2);
   align-items: center;
 }
@@ -229,16 +237,17 @@ textarea[readonly] {
   gap: var(--dj-space-1);
 }
 
-.url-param-key {
-  font-family: var(--dj-font-mono);
-  font-size: var(--dj-text-xs);
-  color: var(--dj-text-muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding: 0 0 0 var(--dj-space-1);
-}
-
+.url-param-key,
 .url-param-value {
   font-size: var(--dj-text-xs);
+}
+
+.url-param-add {
+  margin-top: var(--dj-space-2);
+}
+
+.url-param-copy,
+.url-param-delete {
+  padding-left: 0;
+  padding-right: 0;
 }
