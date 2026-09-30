@@ -1,8 +1,9 @@
 # Djaunt Prettifier
 
-A Chrome & Firefox extension (Manifest V3) that beautifies JSON and Markdown, runs a
-structural comparison between two versions of either, and parses a URL's query string into
-editable, copyable params you can add to and delete from — with no host permissions at all.
+A Chrome & Firefox extension (Manifest V3) that beautifies JSON, renders Markdown in a live
+two-panel editor, runs a structural comparison between two versions of either, and parses a
+URL's query string into editable, copyable params you can add to and delete from — with no
+host permissions at all.
 
 It's built to replace pasting text into a random online "JSON diff" or "beautify" site: those
 send whatever you paste to someone else's server, which is a bad habit for anything that might
@@ -33,11 +34,22 @@ allows unsigned extensions (Nightly/ESR with `xpinstall.signatures.required` off
 
 Click the toolbar icon and pick a tab:
 
-- **Beautify.** Pick **JSON** or **Markdown**, then paste into Input; the formatted result
-  appears in Result as you type. JSON gets a 2- or 4-space indent (your choice); Markdown gets
-  consistent heading spacing, a single bullet marker, renumbered ordered lists, normalized
-  horizontal rules, and collapsed blank lines — fenced code blocks are left untouched either
-  way. **Copy** or **Download** the result.
+- **Beautify.** Pick **JSON** or **Markdown**.
+  - **JSON:** paste into Input; the formatted result appears in Result as you type, with a
+    2- or 4-space indent (your choice). **Copy** or **Download** it.
+  - **Markdown:** the popup widens into two panels — an editor on the left, a live rendered
+    preview on the right. Paste or type and the preview updates on every keystroke. It renders
+    full CommonMark plus GitHub-style tables, strikethrough, task lists (`- [x]`) and
+    autolinks; headings get anchors, so `[jump](#some-heading)` links scroll the preview.
+    The editor's buttons: **Tidy** rewrites the source in place (consistent heading spacing,
+    a single bullet marker, renumbered ordered lists, normalized horizontal rules, collapsed
+    blank lines — fenced code untouched; **Ctrl+Z** undoes it), **Copy** and **Download** the
+    Markdown. **Copy rendered** on the preview copies the document as formatted text, so it
+    pastes as real headings, lists and tables into email or a rich-text editor.
+  - The preview is safe to paste untrusted text into: raw HTML in the source is shown as
+    literal text, never executed; `javascript:` links are refused; and **images are not
+    loaded** (a remote image would contact its server, which this extension doesn't do) —
+    each shows as an `[image: alt]` link instead. Inline `data:image/…` images do render.
 - **Compare.** Pick **JSON** or **Markdown**, paste the original into A and the changed
   version into B (or click the swap button to flip them). Differences appear live below:
   - **JSON** is diffed structurally, by parsed value, not by text — reordering an object's
@@ -70,6 +82,10 @@ Click the toolbar icon and pick a tab:
   parsed values recursively to build the structural diff (`diffJson`). A parse error is
   reported with the line and column it occurred at, when the engine's own error message
   provides one.
+- **`markdown-render.js`** wraps the vendored **[markdown-it](https://github.com/markdown-it/markdown-it)**
+  parser (`vendor/`, MIT — its licence sits beside it) with the safety settings above, heading
+  ids, task-list checkboxes, new-tab links and scrollable tables. The manifest's CSP also sets
+  `img-src 'self' data:`, so even a rendering bug couldn't fetch a remote image.
 - **`markdown-tool.js`** parses Markdown into typed blocks (heading, paragraph, list, code
   fence, blockquote, horizontal rule) with `parseMarkdownBlocks`, groups them under their
   nearest heading with `groupSections`, and diffs matching sections' blocks with `diffMarkdown`
@@ -85,7 +101,8 @@ Click the toolbar icon and pick a tab:
 
 ## Limits
 
-- **This is a heuristic comparator, not a Markdown renderer.** It understands ATX headings
+- **The Compare tab is a heuristic comparator, not a renderer** (Beautify → Markdown is the
+  renderer). It understands ATX headings
   (`#`/`##`), bullet and numbered lists, fenced code, blockquotes, horizontal rules and
   paragraphs — not tables, nested lists, footnotes, or inline HTML. Anything else is treated as
   a plain paragraph.
@@ -97,6 +114,8 @@ Click the toolbar icon and pick a tab:
   or a document's paragraphs can show fewer changes than you'd expect from a plain text diff,
   since the comparator is finding the smallest edit that explains the difference, not comparing
   line-by-line.
+- **The preview doesn't render footnotes, definition lists, math, diagrams, or raw HTML**
+  (HTML is shown as text on purpose), and code blocks aren't syntax-highlighted.
 - Very large inputs (many thousands of lines) will diff slowly — the LCS algorithm is
   quadratic in the number of compared items. It's sized for pasting a response body or a
   document, not a whole repository.
@@ -104,14 +123,17 @@ Click the toolbar icon and pick a tab:
 ## Permissions
 
 `storage` only. No `host_permissions`, no `<all_urls>`, no content scripts, no background
-script — the whole extension runs inside the popup.
+script — the whole extension runs inside the popup. The manifest also pins the extension-page
+CSP to `script-src 'self'; object-src 'self'; img-src 'self' data:`.
 
 ## Tests
 
-`test.mjs` covers `diff.js`, `json-tool.js`, `markdown-tool.js` and `url-tool.js`: LCS
+`test.mjs` covers `diff.js`, `json-tool.js`, `markdown-tool.js`, `markdown-render.js` and
+`url-tool.js`: LCS
 behavior, JSON beautify/minify/parse-error reporting, structural JSON diffing, Markdown block
-parsing, beautification, sectioning, the section/list/paragraph-level Markdown diff, and URL
-parsing, duplicate-key handling, adding/removing params, and query-string rebuilding.
+parsing, beautification, sectioning, the section/list/paragraph-level Markdown diff, Markdown rendering
+(including that raw HTML, `javascript:` links and remote images never reach the preview as
+markup), and URL parsing, duplicate-key handling, adding/removing params, and query-string rebuilding.
 
 ```
 node test.mjs

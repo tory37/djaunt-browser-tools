@@ -2,7 +2,7 @@
   "name": "djaunt-browser-tools",
   "private": true,
   "type": "module",
-  "description": "Dev-only tooling for this repo (store screenshot capture). The extensions themselves have no dependencies and no build step.",
+  "description": "Dev-only tooling for this repo (store screenshot capture). The extensions themselves have no build step and load no remote code; the one third-party library, markdown-it in prettifier/vendor/, is vendored in as a plain file.",
   "scripts": {
     "sync-brand": "./scripts/sync-brand.sh",
     "sync-brand:zips": "./scripts/sync-brand.sh && ./scripts/build-zips.sh",

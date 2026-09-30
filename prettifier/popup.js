@@ -2,6 +2,7 @@ import { beautifyJson, diffJson, jsonDiffReport, summarizeJsonDiff } from './jso
 import {
   beautifyMarkdown, diffMarkdown, markdownDiffReport, summarizeMarkdownDiff,
 } from './markdown-tool.js';
+import { HEADING_ID_PREFIX, renderMarkdown, slugify } from './markdown-render.js';
 import { addParam, buildUrl, parseUrl, paramsFromUrl, removeParam } from './url-tool.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
@@ -32,6 +33,17 @@ const els = {
   beautifyError: $('#beautify-error'),
   beautifyCopy: $('#beautify-copy'),
   beautifyDownload: $('#beautify-download'),
+  beautifySplit: $('#beautify-split'),
+  beautifyInputLabel: $('#beautify-input-label'),
+  beautifyResultLabel: $('#beautify-result-label'),
+  jsonResultActions: $('#json-result-actions'),
+  mdEditorActions: $('#md-editor-actions'),
+  mdPreviewActions: $('#md-preview-actions'),
+  mdTidy: $('#md-tidy'),
+  mdCopy: $('#md-copy'),
+  mdDownload: $('#md-download'),
+  mdCopyHtml: $('#md-copy-html'),
+  mdPreview: $('#md-preview'),
   indentGroup: $('#indent-group'),
   compareA: $('#compare-a'),
   compareB: $('#compare-b'),
@@ -83,6 +95,7 @@ function activateTab(tab) {
   $('#panel-compare').hidden = tab !== 'compare';
   $('#panel-url').hidden = tab !== 'url';
   els.formatGroup.hidden = tab === 'url';
+  applyBeautifyLayout();
   save();
 }
 
@@ -97,7 +110,7 @@ function activateFormat(format) {
   $$('#format-group .dj-seg').forEach((btn) => {
     btn.setAttribute('aria-checked', String(btn.dataset.format === format));
   });
-  els.indentGroup.hidden = format !== 'json';
+  applyBeautifyLayout();
   runBeautify();
   runCompare();
   save();
@@ -124,16 +137,45 @@ $$('#indent-group .dj-seg').forEach((btn) => {
 
 // ---- beautify ----
 
+// JSON is a paste → result flow; Markdown is a two-panel editor with a live rendered
+// preview, so the panel's labels, buttons and (in the popup's case) width follow the format.
+function applyBeautifyLayout() {
+  const isMarkdown = state.format === 'markdown';
+  els.beautifySplit.classList.toggle('is-markdown', isMarkdown);
+  document.body.classList.toggle('wide', isMarkdown && state.tab === 'beautify');
+  els.beautifyInputLabel.textContent = isMarkdown ? 'Markdown' : 'Input';
+  els.beautifyResultLabel.textContent = isMarkdown ? 'Preview' : 'Result';
+  els.beautifyInput.placeholder = isMarkdown ? 'Paste or type Markdown here' : 'Paste JSON or Markdown here';
+  els.indentGroup.hidden = isMarkdown;
+  els.mdEditorActions.hidden = !isMarkdown;
+  els.mdPreviewActions.hidden = !isMarkdown;
+  els.jsonResultActions.hidden = isMarkdown;
+  els.beautifyOutput.hidden = isMarkdown;
+  els.mdPreview.hidden = !isMarkdown;
+}
+
+function renderPreview(text) {
+  // Swapping innerHTML resets scrollTop, which would snap the preview to the top on every
+  // keystroke — carry it across.
+  const top = els.mdPreview.scrollTop;
+  els.mdPreview.innerHTML = text.trim() ? renderMarkdown(text) : '';
+  els.mdPreview.scrollTop = top;
+}
+
 function runBeautify() {
   const text = els.beautifyInput.value;
+  if (state.format === 'markdown') {
+    els.beautifyError.hidden = true;
+    renderPreview(text);
+    return;
+  }
   if (!text.trim()) {
     els.beautifyOutput.value = '';
     els.beautifyError.hidden = true;
     return;
   }
   try {
-    const output = state.format === 'json' ? beautifyJson(text, state.indent) : beautifyMarkdown(text);
-    els.beautifyOutput.value = output;
+    els.beautifyOutput.value = beautifyJson(text, state.indent);
     els.beautifyError.hidden = true;
   } catch (error) {
     els.beautifyOutput.value = '';
@@ -148,10 +190,75 @@ els.beautifyInput.addEventListener('input', () => {
   save();
 });
 
+// Keep the preview roughly aligned with wherever the editor is scrolled to.
+els.beautifyInput.addEventListener('scroll', () => {
+  if (state.format !== 'markdown') return;
+  const editor = els.beautifyInput;
+  const preview = els.mdPreview;
+  const editorRange = editor.scrollHeight - editor.clientHeight;
+  const previewRange = preview.scrollHeight - preview.clientHeight;
+  if (editorRange <= 0 || previewRange <= 0) return;
+  preview.scrollTop = (editor.scrollTop / editorRange) * previewRange;
+});
+
+// In-page links (#some-heading) scroll the preview instead of navigating the popup.
+els.mdPreview.addEventListener('click', (event) => {
+  const link = event.target.closest('a[href^="#"]');
+  if (!link) return;
+  event.preventDefault();
+  let fragment = link.getAttribute('href').slice(1);
+  try { fragment = decodeURIComponent(fragment); } catch { /* keep it raw */ }
+  const id = HEADING_ID_PREFIX + slugify(fragment);
+  const target = Array.from(els.mdPreview.querySelectorAll('[id]')).find((el) => el.id === id);
+  if (!target) return;
+  els.mdPreview.scrollTop += target.getBoundingClientRect().top - els.mdPreview.getBoundingClientRect().top;
+});
+
 els.beautifyCopy.addEventListener('click', async () => {
   if (!els.beautifyOutput.value) return;
   await navigator.clipboard.writeText(els.beautifyOutput.value);
   setStatus('Copied beautified output to the clipboard.');
+});
+
+els.mdCopy.addEventListener('click', async () => {
+  if (!els.beautifyInput.value) return;
+  await navigator.clipboard.writeText(els.beautifyInput.value);
+  setStatus('Copied the Markdown to the clipboard.');
+});
+
+els.mdCopyHtml.addEventListener('click', async () => {
+  const html = els.mdPreview.innerHTML;
+  if (!html) return;
+  const text = els.mdPreview.innerText;
+  if (globalThis.ClipboardItem && navigator.clipboard.write) {
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html], { type: 'text/html' }),
+      'text/plain': new Blob([text], { type: 'text/plain' }),
+    })]);
+    setStatus('Copied the rendered document — paste it as formatted text.');
+  } else {
+    await navigator.clipboard.writeText(html);
+    setStatus('Copied the rendered HTML to the clipboard.');
+  }
+});
+
+// Rewrites the editor in place. execCommand keeps the edit on the textarea's undo stack
+// (assigning .value would wipe it); the assignment is only the fallback.
+els.mdTidy.addEventListener('click', () => {
+  const input = els.beautifyInput;
+  if (!input.value.trim()) return;
+  const tidy = beautifyMarkdown(input.value);
+  if (tidy === input.value) {
+    setStatus('Already tidy.');
+    return;
+  }
+  input.focus();
+  input.select();
+  if (!document.execCommand('insertText', false, tidy)) {
+    input.value = tidy;
+    input.dispatchEvent(new Event('input'));
+  }
+  setStatus('Tidied the Markdown — Ctrl+Z undoes it.');
 });
 
 function downloadText(filename, text) {
@@ -166,7 +273,12 @@ function downloadText(filename, text) {
 
 els.beautifyDownload.addEventListener('click', () => {
   if (!els.beautifyOutput.value) return;
-  downloadText(state.format === 'json' ? 'pretty.json' : 'pretty.md', els.beautifyOutput.value);
+  downloadText('pretty.json', els.beautifyOutput.value);
+});
+
+els.mdDownload.addEventListener('click', () => {
+  if (!els.beautifyInput.value) return;
+  downloadText('document.md', els.beautifyInput.value);
 });
 
 // ---- compare ----

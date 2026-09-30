@@ -6,6 +6,7 @@ import {
   beautifyMarkdown, diffMarkdown, groupSections, markdownDiffReport, parseMarkdownBlocks,
   summarizeMarkdownDiff,
 } from './markdown-tool.js';
+import { renderMarkdown, slugify } from './markdown-render.js';
 import { addParam, buildUrl, parseUrl, paramsFromUrl, removeParam } from './url-tool.js';
 
 let pass = 0;
@@ -121,6 +122,45 @@ const codeDiff = diffMarkdown('# A\n\n```js\nx = 1\n```', '# A\n\n```js\nx = 2\n
 check('diffMarkdown: fenced code changes are reported, not silently ignored', codeDiff[0].changes[0].blockType, 'code');
 
 check('diffMarkdown: code fence content never touched by word diff', diffMarkdown('# A\n\n```\nsame\n```', '# A\n\n```\nsame\n```'), []);
+
+// ---- Markdown: rendering ----
+const has = (html, fragment) => html.includes(fragment);
+check('render: heading gets a prefixed slug id', has(renderMarkdown('# Hello, World!'), '<h1 id="md-hello-world">'), true);
+check('render: duplicate headings get distinct ids',
+  [has(renderMarkdown('# A\n\n# A'), 'id="md-a"'), has(renderMarkdown('# A\n\n# A'), 'id="md-a-1"')], [true, true]);
+check('slugify: punctuation dropped, spaces dashed', slugify('  Foo  Bar? '), 'foo-bar');
+check('render: emphasis, strong, inline code',
+  renderMarkdown('*a* **b** `c`').trim(), '<p><em>a</em> <strong>b</strong> <code>c</code></p>');
+check('render: fenced code keeps language class', has(renderMarkdown('```js\nlet x = 1;\n```'), 'class="language-js"'), true);
+check('render: ordered list', has(renderMarkdown('1. a\n2. b'), '<ol>'), true);
+check('render: blockquote', has(renderMarkdown('> quote'), '<blockquote>'), true);
+check('render: strikethrough', has(renderMarkdown('~~gone~~'), '<s>gone</s>'), true);
+check('render: table is wrapped so it scrolls sideways',
+  has(renderMarkdown('| a | b |\n|---|---|\n| 1 | 2 |'), '<div class="md-table-wrap"><table>'), true);
+check('render: bare URL autolinks', has(renderMarkdown('see https://example.com now'), '<a href="https://example.com"'), true);
+check('render: links open in a new tab, safely',
+  has(renderMarkdown('[x](https://example.com)'), 'target="_blank" rel="noopener noreferrer"'), true);
+check('render: in-page anchor links stay in the popup', has(renderMarkdown('[x](#top)'), 'target='), false);
+
+const tasks = renderMarkdown('- [ ] todo\n- [x] done\n- plain');
+check('render: task list marks the list', has(tasks, 'class="md-task-list"'), true);
+check('render: unchecked task box', has(tasks, '<input type="checkbox" class="md-task" disabled> todo'), true);
+check('render: checked task box', has(tasks, 'class="md-task" disabled checked> done'), true);
+check('render: a non-task item in a task list is untouched', has(tasks, '<li>plain</li>'), true);
+check('render: brackets outside a list are not a task', has(renderMarkdown('[ ] nope'), '<input'), false);
+
+// Safety: the preview is assigned to innerHTML, so none of this may reach it as markup.
+check('render: raw <script> is escaped', has(renderMarkdown('<script>alert(1)</script>'), '<script'), false);
+check('render: raw <img onerror> is escaped', has(renderMarkdown('<img src=x onerror=alert(1)>'), '<img'), false);
+check('render: javascript: links are refused', has(renderMarkdown('[x](javascript:alert(1))'), '<a'), false);
+check('render: javascript: links with entity tricks are refused',
+  has(renderMarkdown('[x](jav&#x61;script:alert(1))'), '<a'), false);
+check('render: remote images never become <img>', has(renderMarkdown('![pixel](https://evil.example/t.png)'), '<img'), false);
+check('render: remote images become a labelled link',
+  has(renderMarkdown('![pixel](https://evil.example/t.png)'), '>[image: pixel]</a>'), true);
+check('render: inline data:image images are kept',
+  has(renderMarkdown('![d](data:image/png;base64,iVBORw0KGgo=)'), '<img src="data:image/png;base64,iVBORw0KGgo="'), true);
+check('render: alt text is escaped', has(renderMarkdown('![<b>x</b>](https://a.example/i.png)'), '<b>'), false);
 
 // ---- URL: parse / params / rebuild ----
 check('parseUrl: empty input yields no url and no error', parseUrl(''), { url: null, error: null });

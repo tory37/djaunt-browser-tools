@@ -26,30 +26,43 @@
   </div>
 
   <section class="panel" id="panel-beautify" role="tabpanel">
-    <div class="field">
-      <div class="field-head">
-        <span class="dj-label">Input</span>
-        <div class="dj-seg-group indent-group" role="radiogroup" aria-label="Indent size" id="indent-group">
-          <button type="button" class="dj-seg" role="radio" aria-checked="true" data-indent="2">2sp</button>
-          <button type="button" class="dj-seg" role="radio" aria-checked="false" data-indent="4">4sp</button>
+    <div class="split" id="beautify-split">
+      <div class="field">
+        <div class="field-head">
+          <span class="dj-label" id="beautify-input-label">Input</span>
+          <div class="dj-seg-group indent-group" role="radiogroup" aria-label="Indent size" id="indent-group">
+            <button type="button" class="dj-seg" role="radio" aria-checked="true" data-indent="2">2sp</button>
+            <button type="button" class="dj-seg" role="radio" aria-checked="false" data-indent="4">4sp</button>
+          </div>
+          <div class="result-actions" id="md-editor-actions" hidden>
+            <button type="button" class="mini-btn" id="md-tidy"
+                    title="Normalize heading spacing, bullets, numbering and blank lines in place (Ctrl+Z undoes it)">Tidy</button>
+            <button type="button" class="mini-btn" id="md-copy">Copy</button>
+            <button type="button" class="mini-btn" id="md-download">Download</button>
+          </div>
         </div>
+        <textarea id="beautify-input" class="mono-area" rows="8" spellcheck="false"
+                  placeholder="Paste JSON or Markdown here"></textarea>
       </div>
-      <textarea id="beautify-input" class="mono-area" rows="8" spellcheck="false"
-                placeholder="Paste JSON or Markdown here"></textarea>
-    </div>
 
-    <p class="dj-hint error" id="beautify-error" hidden></p>
+      <p class="dj-hint error" id="beautify-error" hidden></p>
 
-    <div class="field">
-      <div class="field-head">
-        <span class="dj-label">Result</span>
-        <div class="result-actions">
-          <button type="button" class="mini-btn" id="beautify-copy">Copy</button>
-          <button type="button" class="mini-btn" id="beautify-download">Download</button>
+      <div class="field">
+        <div class="field-head">
+          <span class="dj-label" id="beautify-result-label">Result</span>
+          <div class="result-actions" id="json-result-actions">
+            <button type="button" class="mini-btn" id="beautify-copy">Copy</button>
+            <button type="button" class="mini-btn" id="beautify-download">Download</button>
+          </div>
+          <div class="result-actions" id="md-preview-actions" hidden>
+            <button type="button" class="mini-btn" id="md-copy-html"
+                    title="Copy the rendered document — pastes as formatted text into email, Docs, etc.">Copy rendered</button>
+          </div>
         </div>
+        <textarea id="beautify-output" class="mono-area" rows="8" spellcheck="false" readonly
+                  placeholder="Beautified output appears here"></textarea>
+        <div id="md-preview" class="md-preview" tabindex="0" aria-label="Rendered Markdown preview" hidden></div>
       </div>
-      <textarea id="beautify-output" class="mono-area" rows="8" spellcheck="false" readonly
-                placeholder="Beautified output appears here"></textarea>
     </div>
   </section>
 
