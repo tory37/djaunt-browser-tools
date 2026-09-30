@@ -17,6 +17,20 @@ body.wide {
   display: none !important;
 }
 
+/* Opened in a full browser tab (popup.html?tab): use the window instead of a fixed width. */
+body.in-tab,
+body.in-tab.wide {
+  width: auto;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+body.in-tab .split.is-markdown #beautify-input,
+body.in-tab .md-preview {
+  height: calc(100vh - 220px);
+  min-height: 380px;
+}
+
 .shell {
   display: flex;
   flex-direction: column;

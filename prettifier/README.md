@@ -32,7 +32,9 @@ allows unsigned extensions (Nightly/ESR with `xpinstall.signatures.required` off
 
 ## Use
 
-Click the toolbar icon and pick a tab:
+Click the toolbar icon and pick a tab. **Open in tab ↗** (top right) moves the whole tool into
+a full browser tab, carrying over what you've typed — the roomiest way to use the Markdown
+editor. It needs no extra permission.
 
 - **Beautify.** Pick **JSON** or **Markdown**.
   - **JSON:** paste into Input; the formatted result appears in Result as you type, with a

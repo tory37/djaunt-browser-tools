@@ -7,6 +7,8 @@ import { addParam, buildUrl, parseUrl, paramsFromUrl, removeParam } from './url-
 
 const api = globalThis.browser ?? globalThis.chrome;
 
+const IN_TAB = new URLSearchParams(location.search).has('tab');
+
 const SAVE_DEBOUNCE_MS = 250;
 const STORAGE_KEY = 'prettifier-state';
 
@@ -55,6 +57,7 @@ const els = {
   diffSummary: $('#diff-summary'),
   status: $('#status'),
   formatGroup: $('#format-group'),
+  openTab: $('#open-tab'),
   urlInput: $('#url-input'),
   urlError: $('#url-error'),
   urlApply: $('#url-apply'),
@@ -548,6 +551,20 @@ els.urlCopyOriginal.addEventListener('click', () => {
 
 els.urlCopyModified.addEventListener('click', () => {
   copyToClipboard(els.urlModified.value, 'Copied the modified URL to the clipboard.');
+});
+
+// ---- open in tab ----
+
+document.body.classList.toggle('in-tab', IN_TAB);
+els.openTab.hidden = IN_TAB;
+
+// Flush state first (saves are debounced, and the popup closes as the tab takes focus), so
+// the tab picks up exactly what was just typed. Creating a tab needs no extra permission.
+els.openTab.addEventListener('click', async () => {
+  clearTimeout(saveTimer);
+  await api.storage.local.set({ [STORAGE_KEY]: state });
+  await api.tabs.create({ url: api.runtime.getURL('popup.html?tab') });
+  window.close();
 });
 
 // ---- startup ----
