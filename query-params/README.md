@@ -1,5 +1,11 @@
 # Djaunt Query Params
 
+> **Deprecated.** Use [`url-rewrite/`](../url-rewrite) if you need to change query params
+> *and* reroute a host. Run separately, this and `host-swap` each register their own
+> redirect, and Chrome applies only one extension's redirect per request, picked by install
+> order. URL Rewrite does both in one row, in a fixed order. This one still works fine on its
+> own if param edits are all you need.
+
 A Chrome & Firefox extension (Manifest V3) that **removes and adds query string parameters**
 on a domain you choose, before the request resolves. Keep as many tweaks as you like and turn
 them on one at a time.

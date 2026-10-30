@@ -168,6 +168,22 @@
     padding: 2px 7px;
   }
 
+  .badge-deprecated {
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    padding: 1px 6px;
+  }
+
+  .card p.deprecation-note {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--text);
+    margin: 0;
+    padding: var(--step-2) var(--step-3);
+    border-left: 2px solid var(--border-strong);
+  }
+
   .card p.desc {
     font-size: 13.5px;
     line-height: 1.6;
@@ -287,9 +303,12 @@
           <img class="icon" src="host-swap/icons/icon128.png" alt="">
           <div>
             <h2>Djaunt Host Swap</h2>
-            <span class="badge">Chrome</span> <span class="badge">Firefox</span>
+            <span class="badge">Chrome</span> <span class="badge">Firefox</span> <span class="badge badge-deprecated">Deprecated</span>
           </div>
         </div>
+        <p class="deprecation-note">
+          Still works if you only need this. Need both host and params changes? Use URL Rewrite.
+        </p>
         <p class="desc">
           Rewrites hosts to other hosts before the request resolves, keeping the path, query
           string and fragment byte-identical. Point a fixed launch URL at a branch deploy
@@ -312,9 +331,12 @@
           <img class="icon" src="query-params/icons/icon128.png" alt="">
           <div>
             <h2>Djaunt Query Params</h2>
-            <span class="badge">Chrome</span> <span class="badge">Firefox</span>
+            <span class="badge">Chrome</span> <span class="badge">Firefox</span> <span class="badge badge-deprecated">Deprecated</span>
           </div>
         </div>
+        <p class="deprecation-note">
+          Still works if you only need this. Need both host and params changes? Use URL Rewrite.
+        </p>
         <p class="desc">
           Removes and adds query string parameters on a chosen domain before the request
           resolves, leaving the scheme, host, path and fragment untouched. Flip flags and
