@@ -1,5 +1,11 @@
 # Djaunt Host Swap
 
+> **Deprecated.** Use [`url-rewrite/`](../url-rewrite) if you need to reroute a host *and*
+> change query params. Run separately, this and `query-params` each register their own
+> redirect, and Chrome applies only one extension's redirect per request, picked by install
+> order. URL Rewrite does both in one row, in a fixed order. This one still works fine on its
+> own if host swaps are all you need.
+
 A Chrome & Firefox extension (Manifest V3) that rewrites hosts to other hosts **before the
 request resolves**, keeping the path, query string and fragment byte-identical. Keep as many
 swaps as you like and turn them on one at a time.
