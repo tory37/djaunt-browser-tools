@@ -1,6 +1,7 @@
 {
   "host-swap": "",
   "query-params": "",
+  "url-rewrite": "",
   "header-editor": "",
   "prettifier": "",
   "storage-inspector": "",

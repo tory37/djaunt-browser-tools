@@ -11,6 +11,7 @@ an index page showing off each extension. It's `index.html` at the repo root; en
 |---|---|---|
 | [`host-swap/`](host-swap) | Chrome & Firefox | **Deprecated** — use [`url-rewrite/`](url-rewrite) if you need both. Rewrites hosts to other hosts before the request resolves, keeping the path, query string and fragment byte-identical. Built for pointing a fixed launch URL at a branch deploy without hand-editing a URL that carries live auth tokens. Holds as many swaps as you like, enabled one at a time. |
 | [`query-params/`](query-params) | Chrome & Firefox | **Deprecated** — use [`url-rewrite/`](url-rewrite) if you need both. Removes and adds query string parameters on a chosen domain before the request resolves, leaving the scheme, host, path and fragment untouched. Built for flipping flags and locales on a launch URL you cannot hand-edit. Holds as many tweaks as you like, each toggled on its own. |
+| [`url-rewrite/`](url-rewrite) | Chrome & Firefox | Reroutes a host to another host and removes or sets query string parameters before the request resolves — one row does both, in a fixed order. Replaces running `host-swap` and `query-params` side by side, where Chrome applies only one extension's redirect per request. A path on the target is prepended, so a branch deploy under a path works. Holds as many rewrites as you like, each toggled on its own. |
 | [`header-editor/`](header-editor) | Chrome & Firefox | Sets and removes HTTP request headers on a chosen domain before the request resolves. Built for testing auth and feature-flag headers and for CORS debugging. Holds as many tweaks as you like, each toggled on its own. |
 | [`prettifier/`](prettifier) | Chrome & Firefox | Beautifies JSON, renders Markdown in a live two-panel editor (full CommonMark + GFM, safe to paste untrusted text into), runs a structural comparison between two versions of either — JSON diffed by property path, Markdown diffed section by section — and parses a URL's query string into editable Name → Value rows you can add to, delete from and copy, with no host permissions at all. |
 | [`storage-inspector/`](storage-inspector) | Chrome & Firefox | Views, edits and deletes localStorage and sessionStorage entries for the active tab's page, with export to JSON — access granted only to the tab you click on. |
@@ -58,13 +59,14 @@ Each folder has its own README with the details.
 
 ## Tests
 
-`host-swap`, `query-params`, `header-editor`, `prettifier`, `storage-inspector`,
-`color-picker`, `net-mock`, `clock-tools` and `todo-sync` each have a dependency-free
-test file covering their core logic:
+`host-swap`, `query-params`, `url-rewrite`, `header-editor`, `prettifier`,
+`storage-inspector`, `color-picker`, `net-mock`, `clock-tools` and `todo-sync` each have a
+dependency-free test file covering their core logic:
 
 ```
 node host-swap/test.mjs
 node query-params/test.mjs
+node url-rewrite/test.mjs
 node header-editor/test.mjs
 node prettifier/test.mjs
 node storage-inspector/test.mjs
@@ -74,4 +76,4 @@ node clock-tools/test.mjs
 node todo-sync/test.mjs
 ```
 
-All nine exit non-zero on failure. `tab-volume` and `dark-mode` have no automated tests.
+All ten exit non-zero on failure. `tab-volume` and `dark-mode` have no automated tests.

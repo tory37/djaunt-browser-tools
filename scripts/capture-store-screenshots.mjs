@@ -8,7 +8,7 @@
 //
 // Output goes to <ext>/store-assets/popup.png — gitignored, regenerate on demand.
 // This only captures the popup UI. Extensions with a bigger surface (host-swap and
-// query-params expanded rows, dark-mode/tab-volume applied to a real page, net-mock's
+// query-params/url-rewrite expanded rows, dark-mode/tab-volume applied to a real page, net-mock's
 // rule list) are worth a second, hand-taken screenshot showing that in action before
 // submitting — the store allows up to 5 per listing and rewards more than one.
 import { chromium } from 'playwright';
@@ -22,6 +22,7 @@ const root = path.join(__dirname, '..');
 const extensions = [
   'host-swap',
   'query-params',
+  'url-rewrite',
   'header-editor',
   'prettifier',
   'storage-inspector',
