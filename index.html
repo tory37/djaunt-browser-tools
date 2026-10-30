@@ -260,6 +260,37 @@
     border-color: var(--accent);
   }
 
+  .deprecated {
+    margin-top: var(--step-7);
+    padding-top: var(--step-6);
+    border-top: 1px solid var(--border);
+  }
+
+  .section-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--step-2);
+    margin-bottom: var(--step-5);
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .section-intro {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--muted);
+    max-width: 64ch;
+    margin: 0;
+  }
+
   footer {
     margin-top: var(--step-7);
     padding-top: var(--step-5);
@@ -298,63 +329,6 @@
     </header>
 
     <section class="grid">
-      <article class="card" style="--accent:#d4a017">
-        <div class="card-head">
-          <img class="icon" src="host-swap/icons/icon128.png" alt="">
-          <div>
-            <h2>Djaunt Host Swap</h2>
-            <span class="badge">Chrome</span> <span class="badge">Firefox</span> <span class="badge badge-deprecated">Deprecated</span>
-          </div>
-        </div>
-        <p class="deprecation-note">
-          Still works if you only need this. Need both host and params changes? Use URL Rewrite.
-        </p>
-        <p class="desc">
-          Rewrites hosts to other hosts before the request resolves, keeping the path, query
-          string and fragment byte-identical. Point a fixed launch URL at a branch deploy
-          without hand-editing a URL that carries live auth tokens.
-        </p>
-        <ul class="features">
-          <li>Holds as many swaps as you like, enabled one at a time</li>
-          <li>Redirects before DNS resolves — the original host is never contacted</li>
-          <li>Rules persist across browser restarts</li>
-        </ul>
-        <a class="download-btn" href="host-swap/downloads/host-swap.zip" download>Download .zip</a>
-        <div class="card-links">
-          <a href="https://github.com/tory37/djaunt-browser-tools/tree/main/host-swap">Source</a>
-          <a href="https://github.com/tory37/djaunt-browser-tools/blob/main/host-swap/README.md">README</a>
-        </div>
-      </article>
-
-      <article class="card" style="--accent:#7fd8f0">
-        <div class="card-head">
-          <img class="icon" src="query-params/icons/icon128.png" alt="">
-          <div>
-            <h2>Djaunt Query Params</h2>
-            <span class="badge">Chrome</span> <span class="badge">Firefox</span> <span class="badge badge-deprecated">Deprecated</span>
-          </div>
-        </div>
-        <p class="deprecation-note">
-          Still works if you only need this. Need both host and params changes? Use URL Rewrite.
-        </p>
-        <p class="desc">
-          Removes and adds query string parameters on a chosen domain before the request
-          resolves, leaving the scheme, host, path and fragment untouched. Flip flags and
-          locales on a launch URL you cannot hand-edit.
-        </p>
-        <ul class="features">
-          <li>Removed and added params each get their own box — no comma-separated lists</li>
-          <li>Holds as many tweaks as you like, each toggled on its own</li>
-          <li>Applies per domain — no expiry, no tab or session scoping</li>
-          <li>Rewrites before the request resolves, so nothing is ever double-fetched</li>
-        </ul>
-        <a class="download-btn" href="query-params/downloads/query-params.zip" download>Download .zip</a>
-        <div class="card-links">
-          <a href="https://github.com/tory37/djaunt-browser-tools/tree/main/query-params">Source</a>
-          <a href="https://github.com/tory37/djaunt-browser-tools/blob/main/query-params/README.md">README</a>
-        </div>
-      </article>
-
       <article class="card" style="--accent:#7fd8f0">
         <div class="card-head">
           <img class="icon" src="url-rewrite/icons/icon128.png" alt="">
@@ -583,6 +557,73 @@
            doesn't fit a general audience (see todo-sync/README.md's Status note).
            Card removed from this public page until that's resolved; restore it from
            git history (or the previous revision of this file) once it is. -->
+    </section>
+
+    <section class="deprecated" aria-labelledby="deprecated-heading">
+      <div class="section-head">
+        <h2 class="section-title" id="deprecated-heading">Deprecated</h2>
+        <p class="section-intro">
+          Still work on their own. If you need a host swap and param changes together, use URL Rewrite.
+        </p>
+      </div>
+      <div class="grid">
+        <article class="card" style="--accent:#d4a017">
+          <div class="card-head">
+            <img class="icon" src="host-swap/icons/icon128.png" alt="">
+            <div>
+              <h2>Djaunt Host Swap</h2>
+              <span class="badge">Chrome</span> <span class="badge">Firefox</span> <span class="badge badge-deprecated">Deprecated</span>
+            </div>
+          </div>
+          <p class="deprecation-note">
+            Still works if you only need this. Need both host and params changes? Use URL Rewrite.
+          </p>
+          <p class="desc">
+            Rewrites hosts to other hosts before the request resolves, keeping the path, query
+            string and fragment byte-identical. Point a fixed launch URL at a branch deploy
+            without hand-editing a URL that carries live auth tokens.
+          </p>
+          <ul class="features">
+            <li>Holds as many swaps as you like, enabled one at a time</li>
+            <li>Redirects before DNS resolves — the original host is never contacted</li>
+            <li>Rules persist across browser restarts</li>
+          </ul>
+          <a class="download-btn" href="host-swap/downloads/host-swap.zip" download>Download .zip</a>
+          <div class="card-links">
+            <a href="https://github.com/tory37/djaunt-browser-tools/tree/main/host-swap">Source</a>
+            <a href="https://github.com/tory37/djaunt-browser-tools/blob/main/host-swap/README.md">README</a>
+          </div>
+        </article>
+
+        <article class="card" style="--accent:#7fd8f0">
+          <div class="card-head">
+            <img class="icon" src="query-params/icons/icon128.png" alt="">
+            <div>
+              <h2>Djaunt Query Params</h2>
+              <span class="badge">Chrome</span> <span class="badge">Firefox</span> <span class="badge badge-deprecated">Deprecated</span>
+            </div>
+          </div>
+          <p class="deprecation-note">
+            Still works if you only need this. Need both host and params changes? Use URL Rewrite.
+          </p>
+          <p class="desc">
+            Removes and adds query string parameters on a chosen domain before the request
+            resolves, leaving the scheme, host, path and fragment untouched. Flip flags and
+            locales on a launch URL you cannot hand-edit.
+          </p>
+          <ul class="features">
+            <li>Removed and added params each get their own box — no comma-separated lists</li>
+            <li>Holds as many tweaks as you like, each toggled on its own</li>
+            <li>Applies per domain — no expiry, no tab or session scoping</li>
+            <li>Rewrites before the request resolves, so nothing is ever double-fetched</li>
+          </ul>
+          <a class="download-btn" href="query-params/downloads/query-params.zip" download>Download .zip</a>
+          <div class="card-links">
+            <a href="https://github.com/tory37/djaunt-browser-tools/tree/main/query-params">Source</a>
+            <a href="https://github.com/tory37/djaunt-browser-tools/blob/main/query-params/README.md">README</a>
+          </div>
+        </article>
+      </div>
     </section>
 
     <footer>
